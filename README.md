@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quiz Avocado - Mental Health Assessment Quiz
 
-## Getting Started
+A multi-page quiz application built with Next.js, designed to provide personalized mental health assessments powered by AI.
 
-First, run the development server:
+## 🥑 About
+
+Quiz Avocado is an interactive quiz platform that helps users understand their mental health patterns and receive AI-powered recommendations through a friendly avocado companion.
+
+## 🚀 Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel
+
+## 📦 Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The development server runs on [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Project Structure
 
-## Learn More
+```
+quiz-avocado/
+├── app/
+│   ├── components/     # Reusable components
+│   ├── quiz/          # Quiz pages
+│   ├── layout.tsx     # Root layout
+│   ├── page.tsx       # Home page (gender selection)
+│   └── globals.css    # Global styles
+├── public/            # Static assets
+│   ├── avocado-logo.svg
+│   ├── avocado-character.svg
+│   ├── male-person.svg
+│   └── female-person.svg
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 Color Palette
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Avocado Green: `#9FD356`
+- Avocado Brown: `#4A3728`
+- Light Yellow: `#f5f3c8`
+- Background: `#f5f5f0`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📄 License
 
-## Deploy on Vercel
+This project is private and proprietary.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔗 Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
