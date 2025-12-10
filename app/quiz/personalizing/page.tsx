@@ -32,6 +32,22 @@ export default function PersonalizingPage() {
   const router = useRouter();
   const [phase, setPhase] = useState<'loading' | 'ready' | 'insights'>('loading');
   
+  // Device detection
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  useEffect(() => {
+    const checkDevice = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 640);
+      setIsTablet(width >= 640 && width < 1024);
+      setIsDesktop(width >= 1024);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+  
   // User data
   const [avatar, setAvatar] = useState('girl');
   const [timeCommitment, setTimeCommitment] = useState(15);
@@ -138,9 +154,15 @@ export default function PersonalizingPage() {
   const [slideUpY, setSlideUpY] = useState('-22vh');
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
+      const width = window.innerWidth;
+      if (width < 640) {
+        // Mobile - same logic as desktop
+        setSlideUpY('-41vh');
+      } else if (width < 1024) {
+        // Tablet - no slide up
         setSlideUpY('0');
       } else {
+        // Desktop
         setSlideUpY('-380px');
       }
     };
@@ -293,47 +315,128 @@ export default function PersonalizingPage() {
 
       {/* Main Content */}
       <div className={`flex-1 relative overflow-x-hidden ${phase === 'insights' ? 'overflow-hidden flex flex-col justify-start' : 'overflow-y-auto'}`}>
-        {/* Loading Phase Content */}
-        <motion.div
-          className={`px-4 ${phase === 'insights' ? 'hidden lg:block' : ''}`}
-          animate={{ 
-            y: phase === 'insights' ? -600 : 0,
-            opacity: phase === 'insights' ? 0 : 1
-          }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-        >
-          <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
-            <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
+        
+        {/* Loading Phase Content - DESKTOP VERSION */}
+        {isDesktop && (
+          <motion.div
+            className="px-4"
+            animate={{ 
+              y: phase === 'insights' ? -600 : 0,
+              opacity: phase === 'insights' ? 0 : 1
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          >
+            <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+              <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
 
-            <div className="w-full space-y-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="space-y-2">
+              <div className="w-full space-y-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="space-y-2">
               <div className="flex justify-between items-center">
-                    <span className="text-gray-800 font-medium">
-                      {i === 1 ? 'Checking your needs...' : i === 2 ? 'Understanding your goals...' : 'Finalizing your personalized plan...'}
+                      <span className="text-gray-800 font-medium">
+                        {i === 1 ? 'Checking your needs...' : i === 2 ? 'Understanding your goals...' : 'Finalizing your personalized plan...'}
                 </span>
-                    <span className="text-[#6B9D47] font-bold">
-                      {Math.round(i === 1 ? progress1 : i === 2 ? progress2 : progress3)}%
+                      <span className="text-[#6B9D47] font-bold">
+                        {Math.round(i === 1 ? progress1 : i === 2 ? progress2 : progress3)}%
                 </span>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <motion.div 
+                        className="h-full bg-[#6B9D47]" 
+                        style={{ width: `${i === 1 ? progress1 : i === 2 ? progress2 : progress3}%` }} 
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-[#6B9D47]" 
-                      style={{ width: `${i === 1 ? progress1 : i === 2 ? progress2 : progress3}%` }} 
-                    />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Loading Phase Content - MOBILE VERSION (same as desktop) */}
+        {isMobile && (
+          <motion.div
+            className="px-4"
+            animate={{ 
+              y: phase === 'insights' ? -400 : 0,
+              opacity: phase === 'insights' ? 0 : 1
+            }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          >
+            <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+              <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
+
+              <div className="w-full space-y-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-800 font-medium">
+                        {i === 1 ? 'Checking your needs...' : i === 2 ? 'Understanding your goals...' : 'Finalizing your personalized plan...'}
+                      </span>
+                      <span className="text-[#6B9D47] font-bold">
+                        {Math.round(i === 1 ? progress1 : i === 2 ? progress2 : progress3)}%
+                      </span>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <motion.div 
+                        className="h-full bg-[#6B9D47]" 
+                        style={{ width: `${i === 1 ? progress1 : i === 2 ? progress2 : progress3}%` }} 
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Loading Phase Content - TABLET VERSION */}
+        {isTablet && (
+          <AnimatePresence>
+            {phase !== 'insights' && (
+              <motion.div
+                className="px-4"
+                initial={{ y: 0, opacity: 1 }}
+                exit={{ y: -300, opacity: 0 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+              >
+                <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+                  <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
+                  <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
+
+                  <div className="w-full space-y-6">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="space-y-2">
+              <div className="flex justify-between items-center">
+                          <span className="text-gray-800 font-medium">
+                            {i === 1 ? 'Checking your needs...' : i === 2 ? 'Understanding your goals...' : 'Finalizing your personalized plan...'}
+                </span>
+                          <span className="text-[#6B9D47] font-bold">
+                            {Math.round(i === 1 ? progress1 : i === 2 ? progress2 : progress3)}%
+                </span>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <motion.div 
+                            className="h-full bg-[#6B9D47]" 
+                            style={{ width: `${i === 1 ? progress1 : i === 2 ? progress2 : progress3}%` }} 
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
 
         {/* Card Container - Moves Up */}
         <motion.div
           className="px-4 mt-4"
           animate={{ y: phase === 'insights' ? slideUpY : 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <div className="max-w-md mx-auto">
             <AnimatePresence mode="wait">
@@ -354,6 +457,7 @@ export default function PersonalizingPage() {
                   key="final"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
                   className={`relative ${phase === 'insights' ? 'mt-6 sm:mt-8 lg:mt-2' : 'mt-[4vh] min-[400px]:mt-[6vh] sm:mt-[10vh] md:mt-[132px]'}`}
                 >
                   <div className="relative bg-[#EAF4E2] rounded-2xl min-[400px]:rounded-3xl border border-[#d4e5c9] py-4 min-[400px]:py-6 pl-4 min-[400px]:pl-6 pr-[40%] min-[400px]:pr-[45%]" style={{ clipPath: 'inset(-50% 0 0 round 16px)' }}>
