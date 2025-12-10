@@ -510,12 +510,12 @@ export default function PersonalizingPage() {
                   className={`relative ${phase === 'insights' ? 'mt-6 sm:mt-8 lg:mt-2' : 'mt-[4vh] min-[400px]:mt-[6vh] sm:mt-[10vh] md:mt-[132px]'}`}
                 >
                   <div className="relative bg-[#EAF4E2] rounded-2xl min-[400px]:rounded-3xl border border-[#d4e5c9] py-4 min-[400px]:py-6 pl-4 min-[400px]:pl-6 pr-[40%] min-[400px]:pr-[45%]" style={{ clipPath: 'inset(-50% 0 0 round 16px)' }}>
-                    <h3 className="text-base min-[400px]:text-lg sm:text-xl font-bold text-[#1a1a1a] leading-relaxed min-[400px]:leading-loose tracking-wide">
+                    <h3 className="text-base min-[400px]:text-lg sm:text-xl font-bold text-[#1a1a1a] leading-relaxed min-[400px]:leading-loose tracking-wide break-words">
                       {userName ? (
                         <>
-                          <span className="text-[#6B9D47] inline-block max-w-[120px] min-[400px]:max-w-[160px] sm:max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap align-bottom">{userName}</span><span className="text-[#1a1a1a]">,</span>
-                          <br />
-                          <span>your personal mental health insights are ready!</span>
+                          <span className="text-[#6B9D47] whitespace-nowrap">{userName.length > 15 ? userName.slice(0, 15) + '...' : userName}</span><span className="text-[#1a1a1a]">,</span>
+                          {userName.length > 10 && <br />}
+                          <span className="break-normal">{userName.length <= 10 ? ' ' : ''}your personal mental health insights are ready!</span>
                         </>
                       ) : 'Your personal mental health insights are ready!'}
                     </h3>
