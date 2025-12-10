@@ -30,7 +30,13 @@ const getBezierY = (t: number, p0y: number, p1y: number, p2y: number) => {
 
 export default function PersonalizingPage() {
   const router = useRouter();
-  const [phase, setPhase] = useState<'loading' | 'ready' | 'insights'>('loading');
+  const [phase, setPhase] = useState<'loading' | 'ready' | 'insights' | 'companion'>('loading');
+  
+  // Companion page state
+  const [companionType, setCompanionType] = useState<'3d' | 'chat'>('3d');
+  const [isMuted, setIsMuted] = useState(false);
+  const [rotationDegrees, setRotationDegrees] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Device detection
   const [isDesktop, setIsDesktop] = useState(true);
@@ -69,6 +75,7 @@ export default function PersonalizingPage() {
   const [progress2, setProgress2] = useState(0);
   const [progress3, setProgress3] = useState(0);
   const [activeBar, setActiveBar] = useState(1);
+  const [progressStarted, setProgressStarted] = useState(false);
   
   const shownModalsRef = useRef<number[]>([]);
   const progress1Ref = useRef(0);
@@ -105,6 +112,7 @@ export default function PersonalizingPage() {
         setProgress1(0);
         setProgress2(0);
         setProgress3(0);
+        setProgressStarted(false);
         progress1Ref.current = 0;
         progress2Ref.current = 0;
         progress3Ref.current = 0;
@@ -150,6 +158,34 @@ export default function PersonalizingPage() {
 
   const capitalizeFirst = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 
+  // Companion handlers
+  const handleReplay = () => {
+    setRotationDegrees(prev => prev - 360);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMuteToggle = () => {
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    if (audioRef.current) {
+      audioRef.current.muted = newMutedState;
+    }
+  };
+
+  const handleCompanionContinue = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('companionType', companionType);
+    }
+    router.push('/quiz/subscription');
+  };
+
+  const companionAvatarImage = avatar === 'girl' 
+    ? '/ai-companion-girl.png' 
+    : '/ai-companion-boy.png';
+
   // Responsive Animation
   const [slideUpY, setSlideUpY] = useState('-22vh');
   useEffect(() => {
@@ -171,21 +207,31 @@ export default function PersonalizingPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Start progress after 0.5s delay
+  useEffect(() => {
+    if (phase === 'loading' && !progressStarted) {
+      const timer = setTimeout(() => {
+        setProgressStarted(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, progressStarted]);
+
   // Initial review timer
   useEffect(() => {
-    if (phase === 'loading' && activeBar === 1 && !showReview) {
+    if (phase === 'loading' && activeBar === 1 && !showReview && progressStarted) {
       const timer = setTimeout(() => {
         setActiveReviewImage('/processing-review-1.png');
         setShowReview(true);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [phase, activeBar]);
+  }, [phase, activeBar, progressStarted]);
 
   // Progress Logic
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (phase === 'loading' && !showModal) {
+    if (phase === 'loading' && !showModal && progressStarted) {
       const updateProgress = () => {
         const currentBar = activeBar;
         const ref = currentBar === 1 ? progress1Ref : currentBar === 2 ? progress2Ref : progress3Ref;
@@ -435,7 +481,10 @@ export default function PersonalizingPage() {
         {/* Card Container - Moves Up */}
         <motion.div
           className="px-4 mt-4"
-          animate={{ y: phase === 'insights' ? slideUpY : 0 }}
+          animate={{ 
+            y: phase === 'companion' ? '-100vh' : phase === 'insights' ? slideUpY : 0,
+            opacity: phase === 'companion' ? 0 : 1
+          }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <div className="max-w-md mx-auto">
@@ -464,7 +513,7 @@ export default function PersonalizingPage() {
                     <h3 className="text-base min-[400px]:text-lg sm:text-xl font-bold text-[#1a1a1a] leading-relaxed min-[400px]:leading-loose tracking-wide">
                       {userName ? (
                         <>
-                          <span className="text-[#6B9D47] inline-block max-w-[120px] min-[400px]:max-w-[160px] sm:max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap align-bottom">{userName}</span><span className="text-[#1a1a1a] -ml-1">,</span>
+                          <span className="text-[#6B9D47] inline-block max-w-[120px] min-[400px]:max-w-[160px] sm:max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap align-bottom">{userName}</span><span className="text-[#1a1a1a]">,</span>
                           <br />
                           <span>your personal mental health insights are ready!</span>
                         </>
@@ -562,17 +611,33 @@ export default function PersonalizingPage() {
 
         {/* Footer Button */}
         <AnimatePresence>
-          {(showFinalContent && phase === 'ready') || phase === 'insights' ? (
+          {phase !== 'exiting' && ((showFinalContent && phase === 'ready') || phase === 'insights') ? (
              <motion.div
                className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8"
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
-               exit={{ opacity: 0, y: 20 }}
+               exit={{ opacity: 0, y: 100 }}
+               transition={{ duration: 0.4 }}
              >
                <div className="max-w-md mx-auto">
           <button
-                   onClick={phase === 'ready' ? () => setPhase('insights') : () => router.push('/')}
-                   onTouchEnd={(e) => { e.preventDefault(); phase === 'ready' ? setPhase('insights') : router.push('/'); }}
+                   onClick={() => {
+                     if (phase === 'ready') {
+                       setPhase('insights');
+                     } else {
+                       setPhase('exiting');
+                       setTimeout(() => router.push('/quiz/ai-companion'), 500);
+                     }
+                   }}
+                   onTouchEnd={(e) => { 
+                     e.preventDefault(); 
+                     if (phase === 'ready') {
+                       setPhase('insights');
+                     } else {
+                       setPhase('exiting');
+                       setTimeout(() => router.push('/quiz/ai-companion'), 500);
+                     }
+                   }}
                    className="w-full font-semibold text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
                  >
                    {phase === 'ready' ? "Let's see your results" : "Continue"}
