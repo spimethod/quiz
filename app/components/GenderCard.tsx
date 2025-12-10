@@ -24,7 +24,8 @@ export default function GenderCard({ gender, imageUrl, label }: GenderCardProps)
   return (
     <div 
       onClick={handleClick}
-      className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-transform hover:scale-105 flex flex-col max-w-sm w-full"
+      onTouchEnd={(e) => { e.preventDefault(); handleClick(); }}
+      className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-transform hover:scale-105 flex flex-col max-w-sm w-full select-none"
     >
       <div className="relative w-full aspect-[3/4] bg-gray-100">
         <Image

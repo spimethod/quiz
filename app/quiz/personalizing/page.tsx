@@ -572,7 +572,8 @@ export default function PersonalizingPage() {
                <div className="max-w-md mx-auto">
           <button
                    onClick={phase === 'ready' ? () => setPhase('insights') : () => router.push('/')}
-                   className="w-full font-semibold text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+                   onTouchEnd={(e) => { e.preventDefault(); phase === 'ready' ? setPhase('insights') : router.push('/'); }}
+                   className="w-full font-semibold text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
                  >
                    {phase === 'ready' ? "Let's see your results" : "Continue"}
           </button>
@@ -607,8 +608,9 @@ export default function PersonalizingPage() {
                      setShowAlreadyProcessedModal(false);
                      // Allow user to proceed to insights
                      setTimeout(() => setPhase('insights'), 100);
-                   }} 
-                   className="w-full py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md"
+                   }}
+                   onTouchEnd={(e) => { e.preventDefault(); setShowAlreadyProcessedModal(false); setTimeout(() => setPhase('insights'), 100); }}
+                   className="w-full py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md select-none"
                  >
                    Continue
                  </button>
@@ -632,8 +634,8 @@ export default function PersonalizingPage() {
                    {activeModalId === 1 ? 'Is it important for you to recharge after busy days?' : activeModalId === 2 ? 'Do you check in with your feelings during the day?' : 'Do small routines help you feel calmer?'}
                  </h3>
                  <div className="flex gap-3">
-                   <button onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl border-2 border-[#6B9D47] text-[#6B9D47] font-semibold hover:bg-[#f0fdf4] transition-all hover:scale-105 active:scale-95">No</button>
-                   <button onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md">Yes</button>
+                   <button onClick={() => setShowModal(false)} onTouchEnd={(e) => { e.preventDefault(); setShowModal(false); }} className="flex-1 py-3 rounded-xl border-2 border-[#6B9D47] text-[#6B9D47] font-semibold hover:bg-[#f0fdf4] transition-all hover:scale-105 active:scale-95 select-none">No</button>
+                   <button onClick={() => setShowModal(false)} onTouchEnd={(e) => { e.preventDefault(); setShowModal(false); }} className="flex-1 py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md select-none">Yes</button>
                  </div>
                </motion.div>
             </div>

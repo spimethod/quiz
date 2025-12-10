@@ -99,7 +99,8 @@ export default function PacePage() {
               <div
                 key={option.id}
                 onClick={() => handleSelect(option.id)}
-                className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 ${
+                onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.id); }}
+                className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 select-none ${
                   isSelected
                     ? 'bg-[#f0fdf4] border-[#6B9D47] shadow-md scale-[1.02]'
                     : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'

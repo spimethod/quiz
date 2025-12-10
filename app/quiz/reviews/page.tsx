@@ -18,7 +18,8 @@ export default function ReviewsPage() {
   const footerContent = (
     <button
       onClick={handleContinue}
-      className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer max-w-md"
+      onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+      className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer max-w-md select-none"
     >
       Continue
     </button>

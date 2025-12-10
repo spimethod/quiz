@@ -91,8 +91,9 @@ export default function FeelingsPage() {
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
+        onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
         disabled={selectedOptions.length === 0 && !customValue.trim()}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 ${
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
           selectedOptions.length === 0 && !customValue.trim()
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
@@ -145,7 +146,8 @@ export default function FeelingsPage() {
               <button
                 key={option}
                 onClick={() => toggleOption(option)}
-                className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
+                onTouchEnd={(e) => { e.preventDefault(); toggleOption(option); }}
+                className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
                   selectedOptions.includes(option)
                     ? 'bg-[#6B9D47] text-white shadow-md scale-105'
                     : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'

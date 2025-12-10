@@ -88,7 +88,8 @@ export default function RatingPage() {
           <div className="text-center">
             <button
               onClick={handleMaybeLater}
-              className="text-gray-500 hover:text-gray-700 text-sm sm:text-base transition-colors duration-200"
+              onTouchEnd={(e) => { e.preventDefault(); handleMaybeLater(); }}
+              className="text-gray-500 hover:text-gray-700 text-sm sm:text-base transition-colors duration-200 select-none"
             >
               Maybe later
             </button>
@@ -97,7 +98,8 @@ export default function RatingPage() {
           {/* Rate Button */}
           <button
             onClick={handleRate}
-            className="w-full bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 sm:py-4 px-8 sm:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+            onTouchEnd={(e) => { e.preventDefault(); handleRate(); }}
+            className="w-full bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 sm:py-4 px-8 sm:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
           >
             Yes, I'll rate
           </button>

@@ -100,7 +100,8 @@ export default function Home() {
         <div className="flex flex-row gap-3 w-full mb-6 px-2">
           <button
             onClick={() => handleGenderSelect('female')}
-            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform"
+            onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('female'); }}
+            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
           >
             <span>Female</span>
             <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +111,8 @@ export default function Home() {
           
           <button
             onClick={() => handleGenderSelect('male')}
-            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform"
+            onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('male'); }}
+            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
           >
             <span>Male</span>
             <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,11 +125,11 @@ export default function Home() {
         <div className="text-[10px] text-center text-gray-500 leading-tight max-w-xs mx-auto mb-8">
           <p>
             By clicking "Male" or "Female" you agree with the{' '}
-            <button onClick={() => setActiveModal('terms')} className="text-blue-500 hover:underline">Terms of Use and Service</button>,{' '}
-            <button onClick={() => setActiveModal('privacy')} className="text-blue-500 hover:underline">Privacy Policy</button>,{' '}
-            <button onClick={() => setActiveModal('subscription')} className="text-blue-500 hover:underline">Subscription Policy</button>{' '}
+            <button onClick={() => setActiveModal('terms')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('terms'); }} className="text-blue-500 hover:underline select-none">Terms of Use and Service</button>,{' '}
+            <button onClick={() => setActiveModal('privacy')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('privacy'); }} className="text-blue-500 hover:underline select-none">Privacy Policy</button>,{' '}
+            <button onClick={() => setActiveModal('subscription')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('subscription'); }} className="text-blue-500 hover:underline select-none">Subscription Policy</button>{' '}
             and{' '}
-            <button onClick={() => setActiveModal('cookie')} className="text-blue-500 hover:underline">Cookie Policy</button>.
+            <button onClick={() => setActiveModal('cookie')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('cookie'); }} className="text-blue-500 hover:underline select-none">Cookie Policy</button>.
           </p>
         </div>
 
@@ -137,7 +139,8 @@ export default function Home() {
           <div className="flex flex-col items-center gap-2">
             <button
               onClick={handleReplay}
-              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer"
+              onTouchEnd={(e) => { e.preventDefault(); handleReplay(); }}
+              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer select-none"
             >
               <svg 
                 className="w-7 h-7 transition-transform duration-500"
@@ -156,7 +159,8 @@ export default function Home() {
           <div className="flex flex-col items-center gap-2">
             <button
               onClick={handleMuteToggle}
-              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer relative"
+              onTouchEnd={(e) => { e.preventDefault(); handleMuteToggle(); }}
+              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer relative select-none"
             >
               {isMuted ? (
                 /* Muted Icon (Crossed out) */

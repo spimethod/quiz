@@ -107,8 +107,9 @@ export default function MainGoalPage() {
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
+        onTouchEnd={(e) => { if (selectedGoal && (selectedGoal !== 'custom' || customValue.trim())) { e.preventDefault(); handleContinue(); } }}
         disabled={!selectedGoal || (selectedGoal === 'custom' && !customValue.trim())}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 ${
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
           selectedGoal && (selectedGoal !== 'custom' || customValue.trim())
             ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -150,7 +151,8 @@ export default function MainGoalPage() {
               <div
                 key={option.id}
                 onClick={() => handleSelect(option.id)}
-                className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 ${
+                onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.id); }}
+                className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 select-none ${
                   isSelected
                     ? 'bg-[#f0fdf4] border-[#6B9D47] shadow-md scale-[1.02]'
                     : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'

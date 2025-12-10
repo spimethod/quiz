@@ -102,8 +102,9 @@ export default function GoalsPage() {
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
+        onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
         disabled={selectedOptions.length === 0 && !customValue.trim()}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 ${
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
           selectedOptions.length > 0 || customValue.trim()
             ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -153,7 +154,8 @@ export default function GoalsPage() {
             <button
               key={option}
               onClick={() => handleSelect(option)}
-              className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 ${
+              onTouchEnd={(e) => { e.preventDefault(); handleSelect(option); }}
+              className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
                 selectedOptions.includes(option)
                   ? 'bg-[#6B9D47] text-white shadow-md'
                   : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'

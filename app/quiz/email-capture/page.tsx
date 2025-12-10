@@ -103,8 +103,9 @@ export default function EmailCapturePage() {
         <div className="mb-4 sm:mb-6">
           <button
             onClick={handleContinue}
+            onTouchEnd={(e) => { if (email.trim() && !emailError && !isLoading) { e.preventDefault(); handleContinue(); } }}
             disabled={!email.trim() || !!emailError || isLoading}
-            className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 sm:py-4 px-8 sm:px-12 rounded-xl transition-all duration-300 flex items-center justify-center ${
+            className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 sm:py-4 px-8 sm:px-12 rounded-xl transition-all duration-300 flex items-center justify-center select-none ${
               email.trim() && !emailError && !isLoading
                 ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
                 : isLoading

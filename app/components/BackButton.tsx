@@ -21,7 +21,8 @@ export default function BackButton({ className = '', onClick }: BackButtonProps)
   return (
     <button
       onClick={handleClick}
-      className={`p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110 ${className}`}
+      onTouchEnd={(e) => { e.preventDefault(); handleClick(); }}
+      className={`p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110 select-none ${className}`}
       aria-label="Go back"
     >
       <svg 

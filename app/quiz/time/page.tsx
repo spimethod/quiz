@@ -107,7 +107,8 @@ export default function TimePage() {
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer transition-all duration-300"
+        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer transition-all duration-300 select-none"
       >
         Continue
       </button>
@@ -228,7 +229,8 @@ export default function TimePage() {
             <button
               key={time}
               onClick={() => handleSelect(time)}
-              className={`py-3 sm:py-4 px-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-200 border-2 ${
+              onTouchEnd={(e) => { e.preventDefault(); handleSelect(time); }}
+              className={`py-3 sm:py-4 px-4 rounded-2xl font-semibold text-base sm:text-lg transition-all duration-200 border-2 select-none ${
                 selectedTime === time
                   ? 'bg-[#6B9D47] border-[#6B9D47] text-white shadow-md scale-[1.02]'
                   : 'bg-white border-gray-200 text-gray-700 hover:border-[#6B9D47] hover:text-[#6B9D47]'

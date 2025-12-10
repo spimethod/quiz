@@ -39,7 +39,8 @@ export default function AgePage() {
   const footerContent = (
     <button
       onClick={handleContinue}
-      className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-2 sm:py-2.5 md:py-3 px-8 sm:px-10 md:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer w-full max-w-md"
+      onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+      className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-2 sm:py-2.5 md:py-3 px-8 sm:px-10 md:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer w-full max-w-md select-none"
     >
       Continue
     </button>

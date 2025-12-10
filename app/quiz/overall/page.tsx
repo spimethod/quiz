@@ -77,7 +77,8 @@ export default function OverallPage() {
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+        className="w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
       >
         Continue
       </button>
@@ -119,7 +120,8 @@ export default function OverallPage() {
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-200 hover:scale-110 ${
+              onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.value); }}
+              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-200 hover:scale-110 select-none ${
                 selectedValue === option.value ? 'ring-4 ring-offset-2 ring-gray-300' : ''
               }`}
               style={{ backgroundColor: option.color }}

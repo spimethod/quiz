@@ -26,8 +26,9 @@ export default function NamePage() {
     <div className="w-full max-w-md mx-auto">
       <button
         onClick={handleContinue}
+        onTouchEnd={(e) => { if (name.trim()) { e.preventDefault(); handleContinue(); } }}
         disabled={!name.trim()}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 rounded-xl transition-all duration-300 ${
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 rounded-xl transition-all duration-300 select-none ${
           name.trim()
             ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'

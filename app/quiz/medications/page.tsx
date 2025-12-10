@@ -81,7 +81,8 @@ export default function MedicationsPage() {
           {/* Yes Button */}
           <button
             onClick={handleYes}
-            className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+            onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
+            className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
           >
             <span className="text-2xl sm:text-3xl mb-1">💊</span>
             <span className="text-sm sm:text-base font-medium text-gray-700">
@@ -92,7 +93,8 @@ export default function MedicationsPage() {
           {/* No Button */}
           <button
             onClick={handleNo}
-            className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+            onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
+            className="flex-1 flex flex-col items-center justify-center py-4 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
           >
             <span className="text-2xl sm:text-3xl mb-1">🫙</span>
             <span className="text-sm sm:text-base font-medium text-gray-700">
@@ -105,7 +107,8 @@ export default function MedicationsPage() {
         <button
           type="button"
           onClick={handleContinue}
-          className="w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+          onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+          className="w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
         >
           Continue
         </button>
