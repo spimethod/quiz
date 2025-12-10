@@ -7,25 +7,36 @@ import Modal from './components/Modal';
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [rotationDegrees, setRotationDegrees] = useState(0);
   const router = useRouter();
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedGender', gender);
     }
-    router.push('/quiz/age');
+    router.push('/quiz/reviews');
+  };
+
+  const handleMuteToggle = () => {
+    setIsMuted(!isMuted);
+  };
+
+  const handleReplay = () => {
+    setIsMuted(false); // Unmute on replay
+    setRotationDegrees(prev => prev - 180); // Вычитаем 180° для вращения против часовой стрелки
   };
 
   return (
-    <div className="h-screen flex flex-col animate-fadeIn overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden">
       {/* Header with Logo */}
-      <header className="flex-shrink-0 pt-3 pb-6 md:pb-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-center md:justify-start">
+      <header className="flex-shrink-0 pt-6 pb-2 flex justify-center">
+        <div className="flex justify-center">
           <Image
             src="/avocado-logo.png"
             alt="Avocado"
-            width={280}
-            height={90}
+            width={200}
+            height={64}
             priority
             className="h-10 md:h-12 lg:h-14 w-auto"
           />
@@ -33,102 +44,139 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 pb-4 flex items-start justify-center">
-        <div className="max-w-5xl w-full">
-          {/* Title and Description */}
-          <div className="text-center mb-4 md:mb-6">
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight px-0 md:px-0 max-w-[60%] lg:max-w-[700px] mx-auto">
-              GET YOUR PERSONAL<br />MENTAL HEALTH REPORT
-            </h1>
-            <p className="text-[11px] sm:text-[13px] md:text-[14px] lg:text-[16px] text-gray-700 max-w-[60%] lg:max-w-[700px] mx-auto mb-6 leading-snug px-0 md:px-4 lg:px-6 text-justify">
-              Receive an <strong className="font-semibold">AI-powered</strong>, objective evaluation with <strong className="font-semibold">personalized recommendations</strong> and a <strong className="font-semibold">step-by-step improvement plan</strong> — guided by <strong className="font-semibold">Avocado</strong>, your <strong className="font-semibold">AI companion</strong> built on the latest <strong className="font-semibold">psychological science</strong>
-            </p>
-            <p className="text-xl md:text-2xl font-bold text-gray-900 mb-6">
-              3-MINUTE QUIZ
-            </p>
+      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8">
+        {/* Main Title */}
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1a1a1a] leading-tight mb-4 mt-2 uppercase tracking-tight">
+          GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
+        </h1>
+
+        {/* Description Text */}
+        <p className="text-center text-gray-600 text-xs sm:text-sm leading-relaxed mb-6 px-2 text-justify">
+          Receive an <span className="font-bold text-gray-800">AI-powered</span> evaluation with <span className="font-bold text-gray-800">tailored advice</span> and a <span className="font-bold text-gray-800">clear improvement plan</span> — guided by <span className="font-bold text-gray-800">Avocado</span>, your <span className="font-bold text-gray-800">AI companion</span>.
+        </p>
+
+        {/* Subtitle */}
+        <h2 className="text-xl font-bold text-[#1a1a1a] uppercase mb-2 tracking-wide">
+          3-MINUTE QUIZ
+        </h2>
+
+        {/* Illustration Row */}
+        <div className="flex justify-center items-end w-full gap-0 mb-6 px-2">
+          {/* Female Door */}
+          <div className="relative w-[30%] h-48 sm:h-64 flex-shrink-0">
+            <Image
+              src="/door-female.png"
+              alt="Female Door"
+              fill
+              className="object-contain object-bottom mix-blend-multiply"
+              priority
+            />
           </div>
 
           {/* Avocado Character */}
-          <div className="flex justify-center mb-4 md:mb-6">
-            <div className="relative w-40 h-40 md:w-52 md:h-52 lg:w-64 lg:h-64 max-w-[25vh] max-h-[25vh]">
-        <Image
-                src="/avocado-character.png"
-                alt="Avocado Character"
-                fill
-                className="object-contain"
-          priority
-        />
-            </div>
+          <div className="relative w-[45%] h-56 sm:h-72 flex-shrink-0 -mb-3 z-10 -mx-4">
+            <Image
+              src="/home-avocado.png"
+              alt="Avocado Character"
+              fill
+              className="object-contain object-bottom"
+              priority
+            />
           </div>
 
-          {/* Gender Selection Buttons */}
-          <div className="flex flex-row gap-2 md:gap-4 max-w-2xl mx-auto mb-4 md:mb-6 px-6 md:px-4">
-            <button
-              onClick={() => handleGenderSelect('female')}
-              className="flex-1 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-medium text-base md:text-lg py-2.5 md:py-3 px-3 md:px-6 rounded-xl transition-all duration-300 ease-in-out flex items-center justify-between group shadow-md hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer transform"
-            >
-              <span>Female</span>
-              <svg 
-                className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-2" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-            
-            <button
-              onClick={() => handleGenderSelect('male')}
-              className="flex-1 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-medium text-base md:text-lg py-2.5 md:py-3 px-3 md:px-6 rounded-xl transition-all duration-300 ease-in-out flex items-center justify-between group shadow-md hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer transform"
-            >
-              <span>Male</span>
-              <svg 
-                className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-2" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Footer with Policies */}
-          <div className="text-center text-xs md:text-sm text-gray-600 max-w-2xl mx-auto px-4 md:px-4 mt-1">
-            <p>
-              By clicking "Male" or "Female" you agree with the{' '}
-              <button
-                onClick={() => setActiveModal('terms')}
-                className="text-blue-600 hover:underline"
-              >
-                Terms of Use and Service
-              </button>
-              ,{' '}
-              <button
-                onClick={() => setActiveModal('privacy')}
-                className="text-blue-600 hover:underline"
-              >
-                Privacy Policy
-              </button>
-              ,{' '}
-              <button
-                onClick={() => setActiveModal('subscription')}
-                className="text-blue-600 hover:underline"
-              >
-                Subscription Policy
-              </button>
-              {' '}and{' '}
-              <button
-                onClick={() => setActiveModal('cookie')}
-                className="text-blue-600 hover:underline"
-              >
-                Cookie Policy
-              </button>
-              .
-            </p>
+          {/* Male Door */}
+          <div className="relative w-[30%] h-48 sm:h-64 flex-shrink-0">
+            <Image
+              src="/door-male.png"
+              alt="Male Door"
+              fill
+              className="object-contain object-bottom mix-blend-multiply"
+              priority
+            />
           </div>
         </div>
+
+        {/* Buttons */}
+        <div className="flex flex-row gap-3 w-full mb-6 px-2">
+          <button
+            onClick={() => handleGenderSelect('female')}
+            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform"
+          >
+            <span>Female</span>
+            <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          
+          <button
+            onClick={() => handleGenderSelect('male')}
+            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform"
+          >
+            <span>Male</span>
+            <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Footer Links */}
+        <div className="text-[10px] text-center text-gray-500 leading-tight max-w-xs mx-auto mb-8">
+          <p>
+            By clicking "Male" or "Female" you agree with the{' '}
+            <button onClick={() => setActiveModal('terms')} className="text-blue-500 hover:underline">Terms of Use and Service</button>,{' '}
+            <button onClick={() => setActiveModal('privacy')} className="text-blue-500 hover:underline">Privacy Policy</button>,{' '}
+            <button onClick={() => setActiveModal('subscription')} className="text-blue-500 hover:underline">Subscription Policy</button>{' '}
+            and{' '}
+            <button onClick={() => setActiveModal('cookie')} className="text-blue-500 hover:underline">Cookie Policy</button>.
+          </p>
+        </div>
+
+        {/* Audio Controls - ADDED HERE */}
+        <div className="flex justify-center gap-12 mt-auto pb-8">
+          {/* Replay Button */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={handleReplay}
+              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer"
+            >
+              <svg 
+                className="w-7 h-7 transition-transform duration-500"
+                style={{ transform: `rotate(${rotationDegrees}deg)` }}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Replay</span>
+          </div>
+
+          {/* Mute Button */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={handleMuteToggle}
+              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer relative"
+            >
+              {isMuted ? (
+                /* Muted Icon (Crossed out) */
+                <div className="relative">
+                  <svg className="w-7 h-7 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  <div className="absolute top-1/2 left-[-20%] w-[140%] h-0.5 bg-white rotate-45 transform -translate-y-1/2 shadow-sm"></div>
+                </div>
+              ) : (
+                /* Unmuted Icon */
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              )}
+            </button>
+            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Mute</span>
+          </div>
+        </div>
+
       </main>
 
       {/* Modals */}
@@ -139,9 +187,7 @@ export default function Home() {
       >
         <div className="text-gray-700 space-y-4">
           <p className="font-semibold">Welcome to Avocado!</p>
-          
           <p>These Terms of Use ("Terms," "Agreement") govern your access to and use of the website, quiz, and related services operated by <strong>AvocadoAI LLC</strong> ("Avocado," "we," "us," or "our"). By accessing or using the Avocado website (the "Site") or any of our digital products, you agree to be bound by these Terms and our <strong>Privacy Policy</strong>, which is incorporated herein by reference.</p>
-          
           <p>If you do not agree to these Terms, please do not use the Site or Services.</p>
           
           <h3 className="font-bold text-lg mt-6">1. About Avocado</h3>

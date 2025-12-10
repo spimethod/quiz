@@ -26,3 +26,4 @@ export default function ScaleWrapper({ children }: { children: React.ReactNode }
     </div>
   );
 }
+

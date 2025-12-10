@@ -2,13 +2,26 @@
 
 import { useRouter } from 'next/navigation';
 
-export default function BackButton() {
+interface BackButtonProps {
+  className?: string;
+  onClick?: () => void;
+}
+
+export default function BackButton({ className = '', onClick }: BackButtonProps) {
   const router = useRouter();
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <button
-      onClick={() => router.back()}
-      className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110"
+      onClick={handleClick}
+      className={`p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110 ${className}`}
       aria-label="Go back"
     >
       <svg 
