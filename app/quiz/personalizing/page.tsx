@@ -348,7 +348,7 @@ export default function PersonalizingPage() {
               className="h-full w-auto object-contain"
             />
           </div>
-          {phase !== 'insights' && (
+          {phase !== 'insights' && phase !== 'companion' && (
             <div className="w-32 sm:w-40 h-1.5 bg-gray-200 rounded-full mt-3 overflow-hidden">
               <div 
                 className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
@@ -367,8 +367,8 @@ export default function PersonalizingPage() {
           <motion.div
             className="px-4"
             animate={{ 
-              y: phase === 'insights' ? -600 : 0,
-              opacity: phase === 'insights' ? 0 : 1
+              y: phase === 'insights' || phase === 'companion' ? -600 : 0,
+              opacity: phase === 'insights' || phase === 'companion' ? 0 : 1
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
@@ -405,8 +405,8 @@ export default function PersonalizingPage() {
           <motion.div
             className="px-4"
             animate={{ 
-              y: phase === 'insights' ? -400 : 0,
-              opacity: phase === 'insights' ? 0 : 1
+              y: phase === 'insights' || phase === 'companion' ? -400 : 0,
+              opacity: phase === 'insights' || phase === 'companion' ? 0 : 1
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
@@ -441,7 +441,7 @@ export default function PersonalizingPage() {
         {/* Loading Phase Content - TABLET VERSION */}
         {isTablet && (
           <AnimatePresence>
-            {phase !== 'insights' && (
+            {phase !== 'insights' && phase !== 'companion' && (
               <motion.div
                 className="px-4"
                 initial={{ y: 0, opacity: 1 }}
@@ -609,24 +609,23 @@ export default function PersonalizingPage() {
           </div>
         </motion.div>
 
-        {/* Footer Button */}
+        {/* Footer Button - Insights Phase */}
         <AnimatePresence>
-          {phase !== 'exiting' && ((showFinalContent && phase === 'ready') || phase === 'insights') ? (
+          {((showFinalContent && phase === 'ready') || phase === 'insights') ? (
              <motion.div
-               className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8"
+               className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8 z-20"
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                exit={{ opacity: 0, y: 100 }}
                transition={{ duration: 0.4 }}
              >
                <div className="max-w-md mx-auto">
-          <button
+                 <button
                    onClick={() => {
                      if (phase === 'ready') {
                        setPhase('insights');
                      } else {
-                       setPhase('exiting');
-                       setTimeout(() => router.push('/quiz/ai-companion'), 500);
+                       setPhase('companion');
                      }
                    }}
                    onTouchEnd={(e) => { 
@@ -634,17 +633,149 @@ export default function PersonalizingPage() {
                      if (phase === 'ready') {
                        setPhase('insights');
                      } else {
-                       setPhase('exiting');
-                       setTimeout(() => router.push('/quiz/ai-companion'), 500);
+                       setPhase('companion');
                      }
                    }}
                    className="w-full font-semibold text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
                  >
                    {phase === 'ready' ? "Let's see your results" : "Continue"}
-          </button>
-        </div>
+                 </button>
+               </div>
              </motion.div>
           ) : null}
+        </AnimatePresence>
+
+        {/* Companion Phase Content */}
+        <AnimatePresence>
+          {phase === 'companion' && (
+            <motion.div
+              className="absolute inset-0 top-[60px] sm:top-[70px] flex flex-col bg-[#f5f5f0] z-10"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+              <div className="flex-1 flex flex-col items-center px-4 overflow-y-auto pb-32">
+                <div className="max-w-md w-full mx-auto flex flex-col items-center">
+                  {/* Title */}
+                  <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 mt-4">
+                    Your personalized insights are ready!
+                  </h1>
+
+                  {/* Subtitle */}
+                  <p className="text-gray-500 text-base sm:text-lg mb-6">
+                    Avocado AI Assistant
+                  </p>
+
+                  {/* Avatar Image */}
+                  <div className="w-full max-w-sm mb-6">
+                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg">
+                      <Image
+                        src={companionAvatarImage}
+                        alt="AI Companion"
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                  {/* Audio Controls */}
+                  <div className="flex justify-center gap-12 mb-8">
+                    {/* Replay Button */}
+                    <div className="flex flex-col items-center gap-2">
+                      <button
+                        onClick={handleReplay}
+                        onTouchEnd={(e) => { e.preventDefault(); handleReplay(); }}
+                        className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer select-none"
+                      >
+                        <svg 
+                          className="w-7 h-7 transition-transform duration-500"
+                          style={{ transform: `rotate(${rotationDegrees}deg)` }}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                      </button>
+                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Replay</span>
+                    </div>
+
+                    {/* Mute Button */}
+                    <div className="flex flex-col items-center gap-2">
+                      <button
+                        onClick={handleMuteToggle}
+                        onTouchEnd={(e) => { e.preventDefault(); handleMuteToggle(); }}
+                        className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer relative select-none"
+                      >
+                        {isMuted ? (
+                          <div className="relative">
+                            <svg className="w-7 h-7 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            </svg>
+                            <div className="absolute top-1/2 left-[-20%] w-[140%] h-0.5 bg-white rotate-45 transform -translate-y-1/2 shadow-sm"></div>
+                          </div>
+                        ) : (
+                          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                          </svg>
+                        )}
+                      </button>
+                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Mute</span>
+                    </div>
+                  </div>
+
+                  {/* Companion Type Switcher */}
+                  <div className="w-full max-w-sm mb-8">
+                    <div className="relative bg-[#e8f0e0] rounded-full p-1 flex">
+                      {/* Sliding background */}
+                      <div 
+                        className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-[#7da35e] rounded-full transition-all duration-300 ease-out shadow-md ${
+                          companionType === 'chat' ? 'left-[calc(50%+2px)]' : 'left-1'
+                        }`}
+                      />
+                      
+                      {/* 3D AI Companion Option */}
+                      <button
+                        onClick={() => setCompanionType('3d')}
+                        onTouchEnd={(e) => { e.preventDefault(); setCompanionType('3d'); }}
+                        className={`relative z-10 flex-1 py-3 px-4 text-sm font-semibold rounded-full transition-colors duration-300 select-none ${
+                          companionType === '3d' ? 'text-white' : 'text-[#6b8f4f]'
+                        }`}
+                      >
+                        3D AI Companion
+                      </button>
+                      
+                      {/* AI Companion Chat Option */}
+          <button
+                        onClick={() => setCompanionType('chat')}
+                        onTouchEnd={(e) => { e.preventDefault(); setCompanionType('chat'); }}
+                        className={`relative z-10 flex-1 py-3 px-4 text-sm font-semibold rounded-full transition-colors duration-300 select-none ${
+                          companionType === 'chat' ? 'text-white' : 'text-[#6b8f4f]'
+                        }`}
+                      >
+                        AI Companion Chat
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Companion Footer Button */}
+              <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8">
+                <div className="max-w-md mx-auto">
+                  <button
+                    onClick={handleCompanionContinue}
+                    onTouchEnd={(e) => { e.preventDefault(); handleCompanionContinue(); }}
+                    className="w-full font-semibold text-lg sm:text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+                  >
+                    Continue my journey
+          </button>
+        </div>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Modals */}
