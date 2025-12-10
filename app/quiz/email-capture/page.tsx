@@ -72,14 +72,14 @@ export default function EmailCapturePage() {
         {/* Title */}
         <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
-            Get Your Personal Wellness Plan
+            Get Your Personal{' '}<span className="whitespace-nowrap sm:whitespace-normal">Wellness Plan</span>
           </h1>
         </div>
 
         {/* Subtitle */}
         <div className="mb-6 sm:mb-8">
           <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed">
-            Enter your email to receive science-backed mental health recommendations from Avocado AI.
+            Enter your email to receive science-backed mental health recommendations from{' '}<span className="whitespace-nowrap sm:whitespace-normal">Avocado AI.</span>
           </p>
         </div>
 

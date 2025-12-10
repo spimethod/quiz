@@ -48,9 +48,9 @@ export default function CommitmentPage() {
     return () => clearInterval(interval);
   }, [isHolding, holdProgress]);
 
-  // Auto-transition when progress reaches 100%
+  // Auto-transition when progress reaches 95% (smoother transition without pause)
   useEffect(() => {
-    if (holdProgress >= 100) {
+    if (holdProgress >= 95) {
       // Save commitment flag
       localStorage.setItem('commitmentSigned', 'true');
       router.push('/quiz/email-capture');
@@ -71,6 +71,7 @@ export default function CommitmentPage() {
       currentStep={CURRENT_STEP}
       totalSteps={TOTAL_STEPS}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
+      hideBackButton={isAlreadyCommitted}
     >
       {/* Already Committed Overlay */}
       {isAlreadyCommitted && (
