@@ -154,6 +154,24 @@ export default function CommitmentPage() {
                   priority
                 />
 
+                {/* Soft pulsing glow around button */}
+                <div className="absolute left-1/2 top-[calc(58%+13px)] min-[300px]:top-[calc(58%+18px)] min-[390px]:top-[calc(58%+23px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.28, 1]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(107,157,71,0.9) 0%, rgba(107,157,71,0.7) 40%, rgba(107,157,71,0) 70%)'
+                    }}
+                  />
+                </div>
+
                 {/* Button positioned at center of belly - sized to match pit */}
                 <button
                   onMouseDown={handleMouseDown}
@@ -205,6 +223,24 @@ export default function CommitmentPage() {
                   priority
                 />
 
+                {/* Soft pulsing glow around button - Desktop */}
+                <div className="absolute left-1/2 top-[calc(58%+31px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.28, 1]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(107,157,71,0.9) 0%, rgba(107,157,71,0.7) 40%, rgba(107,157,71,0) 70%)'
+                    }}
+                  />
+                </div>
+
                 {/* Button positioned at center of belly - sized to match pit */}
                 <button
                   onMouseDown={handleMouseDown}
@@ -255,6 +291,24 @@ export default function CommitmentPage() {
                 className="object-contain"
                 priority
               />
+
+              {/* Soft pulsing glow around button - Girl Version */}
+              <div className="absolute left-[42.3%] top-[66.8%] -translate-x-1/2 -translate-y-1/2 w-[55%] aspect-square pointer-events-none z-5">
+                <motion.div
+                  animate={{
+                    scale: [1, 1.28, 1]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(107,157,71,0.9) 0%, rgba(107,157,71,0.7) 40%, rgba(107,157,71,0) 70%)'
+                  }}
+                />
+              </div>
 
               {/* Button positioned at center of belly */}
               <button
