@@ -709,45 +709,105 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
 
                 {/* Container with Chat Button and Carousel */}
                 <div className="relative w-full max-w-[440px] sm:max-w-[500px]">
-                  {/* Vertical Switcher - Chat Button Only - OUTSIDE carousel */}
-                  <div className="absolute left-[-55px] top-1/2 -translate-y-1/2 z-30">
-                    <div className="flex flex-col items-center gap-2">
-                      <button
-                          onClick={() => setCompanionType(companionType === '3d' ? 'chat' : '3d')}
-                          onTouchEnd={(e) => { e.preventDefault(); setCompanionType(companionType === '3d' ? 'chat' : '3d'); }}
-                          className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 select-none bg-[#7da35e] text-white hover:bg-[#6b8f4f] hover:scale-105 active:scale-95"
-                          title="Toggle Chat"
-                        >
-                          {companionType === '3d' ? (
-                            /* Chat bubble icon when showing 3D avatar */
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                          ) : (
-                            /* Voice/Microphone icon when showing chat */
-                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                            </svg>
-                          )}
-                        </button>
-                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                        {companionType === 'chat' ? '3D' : 'Read'}
-                      </span>
+                  {/* Vertical Switcher - MOBILE: bottom position */}
+                  {isMobile && (
+                    <div className="absolute left-1/2 -translate-x-1/2 -bottom-36 z-30">
+                      <div className="flex flex-col items-center gap-2">
+                        <button
+                            onClick={() => setCompanionType(companionType === '3d' ? 'chat' : '3d')}
+                            onTouchEnd={(e) => { e.preventDefault(); setCompanionType(companionType === '3d' ? 'chat' : '3d'); }}
+                            className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 select-none bg-[#7da35e] text-white hover:bg-[#6b8f4f] hover:scale-105 active:scale-95"
+                            title="Toggle Chat"
+                          >
+                            {companionType === '3d' ? (
+                              /* Chat bubble icon when showing 3D avatar */
+                              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                            ) : (
+                              /* Audio waveform icon when showing chat */
+                              <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                                {/* Sound wave bars */}
+                                <rect x="2" y="9" width="2" height="6" rx="1" />
+                                <rect x="5.5" y="6" width="2" height="12" rx="1" />
+                                <rect x="9" y="4" width="2" height="16" rx="1" />
+                                <rect x="12.5" y="7" width="2" height="10" rx="1" />
+                                <rect x="16" y="5" width="2" height="14" rx="1" />
+                                <rect x="19.5" y="8" width="2" height="8" rx="1" />
+                              </svg>
+                            )}
+                          </button>
+                        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                          {companionType === 'chat' ? 'Listen' : 'Read'}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Vertical Switcher - WEB/TABLET: left side position */}
+                  {!isMobile && (
+                    <div className="absolute left-[-55px] top-1/2 -translate-y-1/2 z-30">
+                      <div className="flex flex-col items-center gap-2">
+                        <button
+                            onClick={() => setCompanionType(companionType === '3d' ? 'chat' : '3d')}
+                            onTouchEnd={(e) => { e.preventDefault(); setCompanionType(companionType === '3d' ? 'chat' : '3d'); }}
+                            className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 select-none bg-[#7da35e] text-white hover:bg-[#6b8f4f] hover:scale-105 active:scale-95"
+                            title="Toggle Chat"
+                          >
+                            {companionType === '3d' ? (
+                              /* Chat bubble icon when showing 3D avatar */
+                              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                            ) : (
+                              /* Audio waveform icon when showing chat */
+                              <svg className="w-10 h-10" viewBox="0 0 24 24" fill="currentColor">
+                                {/* Sound wave bars */}
+                                <rect x="2" y="9" width="2" height="6" rx="1" />
+                                <rect x="5.5" y="6" width="2" height="12" rx="1" />
+                                <rect x="9" y="4" width="2" height="16" rx="1" />
+                                <rect x="12.5" y="7" width="2" height="10" rx="1" />
+                                <rect x="16" y="5" width="2" height="14" rx="1" />
+                                <rect x="19.5" y="8" width="2" height="8" rx="1" />
+                              </svg>
+                            )}
+                          </button>
+                        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                          {companionType === 'chat' ? 'Listen' : 'Read'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Avocado icon - OUTSIDE carousel to avoid clipping */}
-                  <div className="absolute bottom-[4rem] -left-7 w-14 h-14 rounded-full flex items-center justify-center z-30"
-                    style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
-                  >
-                    <Image
-                      src="/avocado-chat-logo.png"
-                      alt="Avocado"
-                      width={56}
-                      height={56}
-                      className="object-contain"
-                    />
-                  </div>
+                  {/* MOBILE: below the chat */}
+                  {isMobile && (
+                    <div className="absolute -bottom-8 left-4 w-14 h-14 rounded-full flex items-center justify-center z-30"
+                      style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
+                    >
+                      <Image
+                        src="/avocado-chat-logo.png"
+                        alt="Avocado"
+                        width={56}
+                        height={56}
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
+                  {/* WEB/TABLET: original position */}
+                  {!isMobile && (
+                    <div className="absolute bottom-[4rem] -left-7 w-14 h-14 rounded-full flex items-center justify-center z-30"
+                      style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
+                    >
+                      <Image
+                        src="/avocado-chat-logo.png"
+                        alt="Avocado"
+                        width={56}
+                        height={56}
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
 
                   {/* Carousel Container - Avatar Image and Chat */}
                   <div className="relative w-full aspect-[3/4] overflow-hidden">
@@ -815,36 +875,71 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                       </div>
                     </motion.div>
 
-                  {/* Chat View - Slides in from left */}
-                  <motion.div 
-                    className="absolute inset-0 overflow-visible"
-                    initial={{ x: '-100%' }}
-                    animate={{ x: companionType === 'chat' ? 0 : '-100%' }}
-                    transition={{ duration: 0.4, ease: 'easeInOut' }}
-                  >
-                    <div className="h-full flex flex-col p-4">
-                      {/* Single message card with gradient */}
-                      <div className="relative flex-1 rounded-3xl overflow-hidden"
-                        style={{
-                          background: 'linear-gradient(to bottom, #f9f3c8 0%, #e3f0d5 100%)'
-                        }}
-                      >
-                        {/* Message text */}
-                        <div className="text-gray-800 text-sm sm:text-base leading-relaxed space-y-4 overflow-y-auto h-full p-6 pb-20">
-                          {(hasTypingAnimationPlayed ? fullChatText : displayedText).split('\n\n').map((paragraph, index) => (
-                            <p key={index}>{paragraph}</p>
-                          ))}
-                        </div>
-
-                        {/* Gradient fade at bottom */}
-                        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+                  {/* Chat View - MOBILE VERSION */}
+                  {isMobile && (
+                    <motion.div 
+                      className="absolute inset-0 overflow-visible"
+                      initial={{ x: '-100%' }}
+                      animate={{ x: companionType === 'chat' ? 0 : '-100%' }}
+                      transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    >
+                      <div className="h-full flex flex-col p-4">
+                        {/* Single message card with gradient */}
+                        <div className="relative flex-1 rounded-3xl overflow-hidden"
                           style={{
-                            background: 'linear-gradient(to bottom, transparent 0%, rgba(227, 240, 213, 0.9) 50%, #e3f0d5 100%)'
+                            background: 'linear-gradient(to bottom, #f9f3c8 0%, #e3f0d5 100%)'
                           }}
-                        ></div>
+                        >
+                          {/* Message text */}
+                          <div className="text-gray-800 text-sm leading-relaxed space-y-4 overflow-y-auto h-full p-6 pb-20">
+                            {(hasTypingAnimationPlayed ? fullChatText : displayedText).split('\n\n').map((paragraph, index) => (
+                              <p key={index}>{paragraph}</p>
+                            ))}
+                          </div>
+
+                          {/* Gradient fade at bottom */}
+                          <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+                            style={{
+                              background: 'linear-gradient(to bottom, transparent 0%, rgba(227, 240, 213, 0.9) 50%, #e3f0d5 100%)'
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  )}
+
+                  {/* Chat View - WEB/TABLET VERSION */}
+                  {!isMobile && (
+                    <motion.div 
+                      className="absolute inset-0 overflow-visible"
+                      initial={{ x: '-100%' }}
+                      animate={{ x: companionType === 'chat' ? 0 : '-100%' }}
+                      transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    >
+                      <div className="h-full flex flex-col p-4">
+                        {/* Single message card with gradient */}
+                        <div className="relative flex-1 rounded-3xl overflow-hidden"
+                          style={{
+                            background: 'linear-gradient(to bottom, #f9f3c8 0%, #e3f0d5 100%)'
+                          }}
+                        >
+                          {/* Message text */}
+                          <div className="text-gray-800 text-base leading-relaxed space-y-4 overflow-y-auto h-full p-6 pb-20">
+                            {(hasTypingAnimationPlayed ? fullChatText : displayedText).split('\n\n').map((paragraph, index) => (
+                              <p key={index}>{paragraph}</p>
+                            ))}
+                          </div>
+
+                          {/* Gradient fade at bottom */}
+                          <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+                            style={{
+                              background: 'linear-gradient(to bottom, transparent 0%, rgba(227, 240, 213, 0.9) 50%, #e3f0d5 100%)'
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
               </div>
