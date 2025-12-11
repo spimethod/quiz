@@ -195,7 +195,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
     if (typeof window !== 'undefined') {
       localStorage.setItem('companionType', companionType);
     }
-    router.push('/quiz/subscription');
+    router.push('/quiz/paywall');
   };
 
   const companionAvatarImage = avatar === 'girl' 
