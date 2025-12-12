@@ -210,34 +210,13 @@ export default function PaywallPage() {
           </div>
 
           {/* Payment Icons */}
-          <div className="flex items-center justify-center gap-1.5 mt-1">
-              {/* Google Pay */}
-              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[8px] font-bold text-gray-600">G Pay</span>
-              </div>
-              {/* Apple Pay */}
-              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[8px] font-bold text-gray-800"> Pay</span>
-              </div>
-              {/* Visa */}
-              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[8px] font-bold text-[#1A1F71]">VISA</span>
-              </div>
-              {/* Mastercard */}
-              <div className="h-5 w-7 bg-white border border-gray-200 rounded flex items-center justify-center">
-                <div className="flex">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#EB001B] -mr-1"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#F79E1B]"></div>
-                </div>
-              </div>
-              {/* Discover */}
-              <div className="h-5 px-1 bg-white border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[6px] font-bold text-[#FF6000]">DISCOVER</span>
-              </div>
-              {/* Amex */}
-              <div className="h-5 px-1 bg-[#006FCF] border border-gray-200 rounded flex items-center justify-center">
-                <span className="text-[6px] font-bold text-white">AMEX</span>
-              </div>
+          <div className="flex items-center justify-center gap-2 mt-1">
+              <Image src="/gpay.png" alt="Google Pay" width={36} height={20} className="h-5 w-auto object-contain" />
+              <Image src="/applepay.png" alt="Apple Pay" width={36} height={20} className="h-5 w-auto object-contain" />
+              <Image src="/visa.png" alt="Visa" width={36} height={20} className="h-5 w-auto object-contain" />
+              <Image src="/mastercard.png" alt="Mastercard" width={36} height={20} className="h-5 w-auto object-contain" />
+              <Image src="/discover.png" alt="Discover" width={36} height={20} className="h-5 w-auto object-contain" />
+              <Image src="/amex.png" alt="Amex" width={36} height={20} className="h-5 w-auto object-contain" />
           </div>
 
         </div>
