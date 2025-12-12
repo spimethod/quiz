@@ -178,6 +178,11 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* Awards Section */}
+        <div className="w-full max-w-md mx-auto px-4 pb-8 overflow-hidden">
+          <Image src="/awards.png" alt="Awards" width={400} height={150} className="w-full object-contain -mt-4" />
+        </div>
+
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
