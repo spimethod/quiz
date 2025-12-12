@@ -145,65 +145,75 @@ export default function PaywallPage() {
 
       </main>
 
-      {/* Sticky Footer - Payment Options */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50">
-        <div className="max-w-md mx-auto p-4 pb-8">
+      {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
+      <footer className="fixed bottom-0 left-0 right-0 z-50 flex justify-center sm:pb-6 pointer-events-none">
+        <div className="bg-white w-full sm:max-w-[500px] rounded-t-[32px] sm:rounded-[32px] px-4 pt-4 pb-3 sm:pb-6 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto border-t border-gray-100 sm:border-none">
+          <div className="max-w-md mx-auto">
           
-          <div className="space-y-3 mb-4">
-            {/* Annual Plan */}
-            <div 
-              onClick={() => setSelectedPlan('annual')}
-              className={`relative flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all ${selectedPlan === 'annual' ? 'border-[#6B9D47] bg-[#f0f9eb]' : 'border-gray-200 hover:border-gray-300'}`}
-            >
-              <div className="absolute -top-3 right-4 bg-[#6B9D47] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
-                7-DAY FREE TRIAL
-              </div>
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-3 ${selectedPlan === 'annual' ? 'border-[#6B9D47]' : 'border-gray-300'}`}>
-                {selectedPlan === 'annual' && <div className="w-2.5 h-2.5 rounded-full bg-[#6B9D47]" />}
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-[#1a1a1a]">Annual</span>
-                  <span className="font-bold text-[#1a1a1a]">$59.99</span>
-                </div>
-                <div className="text-xs text-gray-500">1 year • $1.15/week</div>
-              </div>
-            </div>
-
+          <div className="space-y-1.5 mb-2">
             {/* Weekly Plan */}
             <div 
               onClick={() => setSelectedPlan('weekly')}
-              className={`flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all ${selectedPlan === 'weekly' ? 'border-[#6B9D47] bg-[#f0f9eb]' : 'border-gray-200 hover:border-gray-300'}`}
+              className={`relative flex items-center p-2 rounded-xl border-[1.5px] cursor-pointer transition-all ${selectedPlan === 'weekly' ? 'border-[#6B9D47] bg-[#f0f9eb]' : 'border-gray-200 hover:border-gray-300'}`}
             >
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-3 ${selectedPlan === 'weekly' ? 'border-[#6B9D47]' : 'border-gray-300'}`}>
-                {selectedPlan === 'weekly' && <div className="w-2.5 h-2.5 rounded-full bg-[#6B9D47]" />}
+              <div className="absolute -top-2.5 right-1/2 translate-x-1/2 bg-[#6B9D47] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                ONE-TIME OFFER
+              </div>
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-2 ${selectedPlan === 'weekly' ? 'border-[#6B9D47]' : 'border-gray-300'}`}>
+                {selectedPlan === 'weekly' && <div className="w-2 h-2 rounded-full bg-[#6B9D47]" />}
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-[#1a1a1a]">Weekly</span>
-                  <span className="font-bold text-[#1a1a1a]">$1.38</span>
+                  <span className="font-bold text-[#1a1a1a] text-sm flex items-center gap-2">
+                    <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
+                    <span className="text-[#6B9D47] font-extrabold uppercase text-xs">First intro</span>
+                  </span>
+                  <div className="flex flex-col items-end">
+                    <span className="font-bold text-[#1a1a1a] text-sm">$0.99</span>
+                    <span className="text-[10px] text-gray-400 line-through">$6.99</span>
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500">1 week • $1.38</div>
+                <div className="text-[10px] text-gray-500">1 week • $6.99</div>
+              </div>
+            </div>
+
+            {/* Annual Plan */}
+            <div 
+              onClick={() => setSelectedPlan('annual')}
+              className={`flex items-center p-2 rounded-xl border-2 cursor-pointer transition-all ${selectedPlan === 'annual' ? 'border-[#6B9D47] bg-[#f0f9eb]' : 'border-gray-200 hover:border-gray-300'}`}
+            >
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center mr-2 ${selectedPlan === 'annual' ? 'border-[#6B9D47]' : 'border-gray-300'}`}>
+                {selectedPlan === 'annual' && <div className="w-2 h-2 rounded-full bg-[#6B9D47]" />}
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-[#1a1a1a] text-sm">Annual</span>
+                  <div className="flex flex-col items-end">
+                    <span className="font-bold text-[#1a1a1a] text-sm">$59.99</span>
+                    <span className="text-[10px] text-gray-400 line-through">$98.99</span>
+                  </div>
+                </div>
+                <div className="text-[10px] text-gray-500">1 year • $1.15/week</div>
               </div>
             </div>
           </div>
 
-          <div className="text-center text-xs text-gray-400 mb-3">Cancel anytime</div>
+          <div className="text-center text-[10px] text-gray-400 mb-2">Cancel anytime</div>
 
           <button 
             onClick={handleContinue}
-            className="w-full py-4 rounded-xl bg-[#6B9D47] text-white font-bold text-lg hover:bg-[#5d8a3d] transition-all hover:scale-[1.02] active:scale-95 shadow-md mb-4"
+            className="w-full py-3 rounded-xl bg-[#6B9D47] text-white font-bold text-base hover:bg-[#5d8a3d] transition-all hover:scale-[1.02] active:scale-95 shadow-md mb-3"
           >
             Continue
           </button>
 
-          <div className="flex justify-center gap-6 text-[10px] text-gray-400 font-medium">
-             <button className="hover:text-gray-600 transition-colors">Restore Purchases</button>
-             <button className="hover:text-gray-600 transition-colors">Terms</button>
-             <button className="hover:text-gray-600 transition-colors">Privacy</button>
+          <div className="flex justify-center gap-6 text-[9px] text-gray-400 font-medium pb-0">
+             <button className="hover:text-gray-600 transition-colors">Terms of Service</button>
+             <button className="hover:text-gray-600 transition-colors">Privacy Policy</button>
           </div>
 
         </div>
+      </div>
       </footer>
     </div>
   );
