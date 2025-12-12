@@ -57,7 +57,7 @@ export default function PaywallPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 pb-[280px]"> {/* Large padding bottom for fixed footer */}
+      <main className="flex-1 flex flex-col items-center px-4 pb-[350px]"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section */}
         <div className="w-full max-w-4xl mx-auto mb-8 relative">
@@ -181,6 +181,41 @@ export default function PaywallPage() {
         {/* Awards Section */}
         <div className="w-full max-w-md mx-auto px-4 pb-8 overflow-hidden">
           <Image src="/awards.png" alt="Awards" width={400} height={150} className="w-full object-contain -mt-4" />
+        </div>
+
+        {/* Transform Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-4 leading-tight">
+            Transform your life in one week
+          </h2>
+          
+          <div className="flex gap-4">
+            {/* Gradient Bar Image */}
+            <div className="flex-shrink-0 bg-[#f5f5f0] rounded-full overflow-hidden h-[270px]">
+              <Image src="/infographic-bar.png" alt="Progress" width={60} height={300} className="h-72 w-auto object-contain object-top mix-blend-multiply" />
+            </div>
+            
+            {/* Text Content */}
+            <div className="flex flex-col justify-between py-2">
+              <div>
+                <p className="text-gray-400 text-sm mb-0.5">Day 1:</p>
+                <h3 className="font-bold text-[#1a1a1a] text-lg mb-1">Start Fresh</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Diagnose and create a long-term therapy plan.</p>
+              </div>
+              
+              <div>
+                <p className="text-gray-400 text-sm mb-0.5">Day 3:</p>
+                <h3 className="font-bold text-[#1a1a1a] text-lg mb-1">Stay Grounded</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Control your progress and adjust therapy</p>
+              </div>
+              
+              <div>
+                <p className="text-gray-400 text-sm mb-0.5">Day 7:</p>
+                <h3 className="font-bold text-[#1a1a1a] text-lg mb-1">Thrive!</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Find balance and make first achievements</p>
+              </div>
+            </div>
+          </div>
         </div>
 
       </main>
