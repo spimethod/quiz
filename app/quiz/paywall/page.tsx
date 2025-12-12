@@ -167,16 +167,16 @@ export default function PaywallPage() {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center h-8">
-                  <span className="font-bold text-[#1a1a1a] text-xs flex items-center gap-1.5">
+                  <span className="font-bold text-[#1a1a1a] text-sm flex items-center gap-1.5">
                     <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
-                    <span className="text-[#1a1a1a] font-extrabold uppercase text-[10px]">YOUR OFFER</span>
+                    <span className="text-[#1a1a1a] font-extrabold uppercase text-xs">YOUR OFFER</span>
                   </span>
                   <div className="flex flex-col items-end leading-tight">
-                    <span className="font-bold text-[#1a1a1a] text-xs">$0.99</span>
-                    <span className="text-gray-400 line-through text-[11px] sm:text-xs">$6.99</span>
+                    <span className="font-bold text-[#1a1a1a] text-sm">$0.99</span>
+                    <span className="text-gray-400 line-through text-xs">$6.99</span>
                   </div>
                 </div>
-                <div className="text-[9px] text-gray-500 mt-0.5"><span className="text-xs font-semibold">1 week</span> • $6.99</div>
+                <div className="text-xs text-gray-500 mt-0.5"><span className="text-sm font-semibold">1 week</span> • $6.99</div>
               </div>
             </div>
 
@@ -190,13 +190,13 @@ export default function PaywallPage() {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center h-8">
-                  <span className="font-bold text-[#1a1a1a] text-xs">Annual</span>
+                  <span className="font-bold text-[#1a1a1a] text-sm">Annual</span>
                   <div className="flex flex-col items-end leading-tight">
-                    <span className="font-bold text-[#1a1a1a] text-xs">$59.99</span>
-                    <span className="text-gray-400 line-through text-[11px] sm:text-xs">$98.99</span>
+                    <span className="font-bold text-[#1a1a1a] text-sm">$79.99</span>
+                    <span className="text-gray-400 line-through text-xs">$98.99</span>
                   </div>
                 </div>
-                <div className="text-[9px] text-gray-500 mt-0.5"><span className="text-xs font-semibold">1 year</span> • $1.15/week</div>
+                <div className="text-xs text-gray-500 mt-0.5"><span className="text-sm font-semibold">1 year</span> • $1.55/week</div>
               </div>
             </div>
           </div>
