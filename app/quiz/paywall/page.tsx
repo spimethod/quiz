@@ -169,7 +169,7 @@ export default function PaywallPage() {
                 <div className="flex justify-between items-center h-8">
                   <span className="font-bold text-[#1a1a1a] text-sm flex items-center gap-1.5">
                     <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
-                    <span className="text-[#1a1a1a] font-extrabold uppercase text-xs">YOUR OFFER</span>
+                    <span className="text-[#1a1a1a] font-bold text-sm">Your Offer</span>
                   </span>
                   <div className="flex flex-col items-end leading-tight">
                     <span className="font-bold text-[#1a1a1a] text-sm">$0.99</span>
