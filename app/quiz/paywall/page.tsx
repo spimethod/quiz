@@ -338,6 +338,42 @@ export default function PaywallPage() {
           />
         </div>
 
+        {/* Evidence-Based Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-3 leading-tight">
+            Built on evidence-based mental health methods
+          </h2>
+          <p className="text-gray-500 text-base text-center mb-8">
+            Your Avocado plan is grounded in clinically tested psychology and years of research.
+          </p>
+          
+          <div className="space-y-4">
+            {/* Harvard */}
+            <div className="bg-white rounded-2xl py-5 px-6 border-2 border-[#6B9D47]">
+              <p className="text-center">
+                <span className="block text-[#1a1a1a] text-2xl font-serif font-bold tracking-wide">HARVARD</span>
+                <span className="block text-gray-400 text-sm tracking-widest">UNIVERSITY</span>
+              </p>
+            </div>
+            
+            {/* Oxford */}
+            <div className="bg-white rounded-2xl py-5 px-6 border-2 border-[#6B9D47]">
+              <p className="text-center">
+                <span className="block text-gray-400 text-xs tracking-widest mb-1">UNIVERSITY OF</span>
+                <span className="block text-[#1a1a1a] text-2xl font-serif font-bold tracking-wide">OXFORD</span>
+              </p>
+            </div>
+            
+            {/* Cambridge */}
+            <div className="bg-white rounded-2xl py-5 px-6 border-2 border-[#6B9D47]">
+              <p className="text-center">
+                <span className="block text-gray-400 text-xs tracking-widest mb-1">UNIVERSITY OF</span>
+                <span className="block text-[#1a1a1a] text-2xl font-serif font-bold tracking-wide">CAMBRIDGE</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
