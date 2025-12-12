@@ -374,6 +374,59 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* FAQ Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight">
+            People often ask
+          </h2>
+          
+          <div className="space-y-6">
+            {/* FAQ 1 */}
+            <div className="flex gap-3">
+              <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-white text-sm font-bold">?</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base mb-2">What if I don't have enough willpower to stick with Avocado?</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Avocado is built for low-energy days. You don't have to "push yourself" — the app gives short, doable check-ins, gentle reminders, and tiny habits you can actually keep. Your 3D Avocado keeps you accountable and celebrates every small win so you stay on track without burning out.</p>
+              </div>
+            </div>
+            
+            {/* FAQ 2 */}
+            <div className="flex gap-3">
+              <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-white text-sm font-bold">?</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base mb-2">What if my life is too chaotic right now?</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Avocado helps you bring order into the chaos. Together with your Avocado you'll set 1–2 clear priorities, get quick grounding tools for stressful moments, and simple routines you can fit into a busy schedule. No hour-long practices — just bite-sized steps that still move you forward.</p>
+              </div>
+            </div>
+            
+            {/* FAQ 3 */}
+            <div className="flex gap-3">
+              <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-white text-sm font-bold">?</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base mb-2">What if I feel overwhelmed and don't know where to start?</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">The app starts with a short check-in and then builds a step-by-step plan for you. Avocado explains what to do today, not "in general": one exercise, one reflection, one breathing practice at a time. You always know the next small step instead of trying to fix everything at once.</p>
+              </div>
+            </div>
+            
+            {/* FAQ 4 */}
+            <div className="flex gap-3">
+              <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-white text-sm font-bold">?</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base mb-2">What if I've tried other apps and nothing really helped?</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Avocado adapts to you instead of giving the same content to everyone. The AI companion remembers your mood, triggers, and progress, adjusts recommendations, and shows you what actually works for you over days and weeks. You're not just consuming content — you're following a personalized self-care plan that learns from your real life.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
