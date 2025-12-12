@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
+import Modal from '../../components/Modal';
+
 export default function PaywallPage() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'weekly'>('annual');
   const [avatar, setAvatar] = useState('boy');
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('avatarPreference');
@@ -163,17 +166,17 @@ export default function PaywallPage() {
                 {selectedPlan === 'weekly' && <div className="w-2 h-2 rounded-full bg-[#6B9D47]" />}
               </div>
               <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-[#1a1a1a] text-sm flex items-center gap-2">
+                <div className="flex justify-between items-center h-8">
+                  <span className="font-bold text-[#1a1a1a] text-xs flex items-center gap-1.5">
                     <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
-                    <span className="text-[#6B9D47] font-extrabold uppercase text-xs">First intro</span>
+                    <span className="text-[#1a1a1a] font-extrabold uppercase text-[10px]">YOUR OFFER</span>
                   </span>
-                  <div className="flex flex-col items-end">
-                    <span className="font-bold text-[#1a1a1a] text-sm">$0.99</span>
-                    <span className="text-[10px] text-gray-400 line-through">$6.99</span>
+                  <div className="flex flex-col items-end leading-tight">
+                    <span className="font-bold text-[#1a1a1a] text-xs">$0.99</span>
+                    <span className="text-gray-400 line-through text-[11px] sm:text-xs">$6.99</span>
                   </div>
                 </div>
-                <div className="text-[10px] text-gray-500">1 week • $6.99</div>
+                <div className="text-[9px] text-gray-500 mt-0.5"><span className="text-xs font-semibold">1 week</span> • $6.99</div>
               </div>
             </div>
 
@@ -186,14 +189,14 @@ export default function PaywallPage() {
                 {selectedPlan === 'annual' && <div className="w-2 h-2 rounded-full bg-[#6B9D47]" />}
               </div>
               <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-[#1a1a1a] text-sm">Annual</span>
-                  <div className="flex flex-col items-end">
-                    <span className="font-bold text-[#1a1a1a] text-sm">$59.99</span>
-                    <span className="text-[10px] text-gray-400 line-through">$98.99</span>
+                <div className="flex justify-between items-center h-8">
+                  <span className="font-bold text-[#1a1a1a] text-xs">Annual</span>
+                  <div className="flex flex-col items-end leading-tight">
+                    <span className="font-bold text-[#1a1a1a] text-xs">$59.99</span>
+                    <span className="text-gray-400 line-through text-[11px] sm:text-xs">$98.99</span>
                   </div>
                 </div>
-                <div className="text-[10px] text-gray-500">1 year • $1.15/week</div>
+                <div className="text-[9px] text-gray-500 mt-0.5"><span className="text-xs font-semibold">1 year</span> • $1.15/week</div>
               </div>
             </div>
           </div>
@@ -208,13 +211,148 @@ export default function PaywallPage() {
           </button>
 
           <div className="flex justify-center gap-6 text-[9px] text-gray-400 font-medium pb-0">
-             <button className="hover:text-gray-600 transition-colors">Terms of Service</button>
-             <button className="hover:text-gray-600 transition-colors">Privacy Policy</button>
+             <button onClick={() => setActiveModal('terms')} className="hover:text-gray-600 transition-colors">Terms of Service</button>
+             <button onClick={() => setActiveModal('privacy')} className="hover:text-gray-600 transition-colors">Privacy Policy</button>
           </div>
 
         </div>
       </div>
       </footer>
+
+      {/* Modals */}
+      <Modal
+        isOpen={activeModal === 'terms'}
+        onClose={() => setActiveModal(null)}
+        title="Terms of Use"
+      >
+        <div className="text-gray-700 space-y-4">
+          <p className="font-semibold">Welcome to Avocado!</p>
+          <p>These Terms of Use ("Terms," "Agreement") govern your access to and use of the website, quiz, and related services operated by <strong>AvocadoAI LLC</strong> ("Avocado," "we," "us," or "our"). By accessing or using the Avocado website (the "Site") or any of our digital products, you agree to be bound by these Terms and our <strong>Privacy Policy</strong>, which is incorporated herein by reference.</p>
+          <p>If you do not agree to these Terms, please do not use the Site or Services.</p>
+          
+          <h3 className="font-bold text-lg mt-6">1. About Avocado</h3>
+          <p>Avocado provides an AI-powered self-care platform designed to help users reflect on their emotional state, track well-being, and receive personalized mental-health insights ("Services").</p>
+          <p>Our online quiz and tools generate recommendations and reports based on user responses. These materials are for <strong>informational and educational purposes only</strong> and are not intended to replace medical advice, diagnosis, or treatment.</p>
+          
+          <h3 className="font-bold text-lg mt-6">2. No Medical Advice</h3>
+          <p>You acknowledge and agree that:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>Avocado is <strong>not a healthcare provider</strong>, and its Services do not constitute therapy, medical advice, diagnosis, or treatment.</li>
+            <li>All content, including AI suggestions, self-assessment results, or follow-up recommendations, is provided <strong>for general informational purposes only</strong>.</li>
+            <li>You should always consult a qualified healthcare professional with any questions about a medical or psychological condition.</li>
+          </ul>
+          <p className="mt-2">If you experience distress, crisis, or emergency, please contact local emergency services or a licensed professional immediately.</p>
+          
+          <h3 className="font-bold text-lg mt-6">3. Use of the Website and Services</h3>
+          <p>You may access and use the Site and Services solely for personal, non-commercial purposes. You agree not to:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>Copy, reproduce, or redistribute any part of the Site or its content;</li>
+            <li>Use the Site for unlawful, misleading, or fraudulent purposes;</li>
+            <li>Interfere with, damage, or impair the Site's operation or security.</li>
+          </ul>
+          <p className="mt-2">Avocado reserves the right to suspend or terminate your access if we believe you are misusing the Services or violating these Terms.</p>
+          
+          <h3 className="font-bold text-lg mt-6">4. Account and Access</h3>
+          <p>Certain features of the Site (including saving results, generating reports, or accessing premium content) may require you to create an account or provide your email address.</p>
+          <p>You agree to provide accurate information and to maintain the confidentiality of your login credentials. You are responsible for all activities that occur under your account.</p>
+          
+          <h3 className="font-bold text-lg mt-6">5. Payments and Subscriptions</h3>
+          <p>Some Services, including personalized AI reports or ongoing wellness programs, are available on a paid basis ("Paid Services").</p>
+          <p>By submitting payment, you authorize Avocado or its payment processor to charge your chosen method for all applicable fees. All prices and payment terms are displayed at the time of purchase and may vary by region.</p>
+          <p>Payments are processed securely by third-party providers; Avocado does not store your payment details.</p>
+          <p>Subscription renewals, free trial terms, and cancellation rules are governed by our <strong>Subscription Policy</strong>.</p>
+          
+          <h3 className="font-bold text-lg mt-6">6. Intellectual Property</h3>
+          <p>All materials, trademarks, designs, AI models, text, and graphics on the Site are owned by or licensed to AvocadoAI LLC and protected by applicable intellectual property laws.</p>
+          <p>You receive a <strong>limited, non-exclusive, non-transferable license</strong> to access and use the Site for personal purposes only.</p>
+          <p>You may not modify, resell, or create derivative works based on Avocado content without our express written consent.</p>
+          
+          <h3 className="font-bold text-lg mt-6">7. Disclaimer of Warranties</h3>
+          <p>The Services are provided "as is" and "as available," without warranties of any kind. Avocado makes no representations or guarantees that:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>The Services will be uninterrupted, secure, or error-free;</li>
+            <li>Any results or recommendations will be accurate, complete, or suitable for your specific situation.</li>
+          </ul>
+          <p className="mt-2">You use the Site at your own discretion and risk.</p>
+          
+          <h3 className="font-bold text-lg mt-6">8. Limitation of Liability</h3>
+          <p>To the fullest extent permitted by law, Avocado and its affiliates, officers, employees, or agents shall not be liable for:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>Any indirect, incidental, or consequential damages arising from your use or inability to use the Site or Services;</li>
+            <li>Loss of data, profits, or goodwill;</li>
+            <li>Any reliance placed on AI-generated recommendations or quiz results.</li>
+          </ul>
+          <p className="mt-2">Total liability shall not exceed the amount you paid (if any) for the Services.</p>
+          
+          <h3 className="font-bold text-lg mt-6">9. User Content</h3>
+          <p>If you voluntarily submit text, audio, or video input through the Site, you grant Avocado a worldwide, non-exclusive, royalty-free license to process and analyze that content for the purpose of improving our Services and generating your personalized insights.</p>
+          <p>We do not share or publish personal submissions in identifiable form without consent.</p>
+          
+          <h3 className="font-bold text-lg mt-6">10. Privacy</h3>
+          <p>Your privacy and data security are governed by our <strong>Privacy Policy</strong>, available on the Site.</p>
+          <p>By using Avocado, you consent to the collection, use, and processing of your data in accordance with that policy.</p>
+          
+          <h3 className="font-bold text-lg mt-6">11. Termination</h3>
+          <p>We may suspend or terminate your access to the Site at any time if you violate these Terms or use the Services in a manner that may cause harm to Avocado or others.</p>
+          <p>Upon termination, all rights granted to you shall immediately cease.</p>
+          
+          <h3 className="font-bold text-lg mt-6">12. Binding Arbitration and Class Action Waiver (U.S. Users)</h3>
+          <p>If you are located in the United States, any dispute arising from or related to these Terms or the Services shall be resolved through <strong>binding arbitration</strong> rather than court.</p>
+          <p>You and Avocado agree to waive the right to participate in class actions or jury trials.</p>
+          <p>Full arbitration details are available upon written request.</p>
+          
+          <h3 className="font-bold text-lg mt-6">13. Changes to These Terms</h3>
+          <p>We may update or modify these Terms from time to time. Updated versions will be posted on this page with a revised "Last Updated" reference.</p>
+          <p>Your continued use of the Site after any modification constitutes your acceptance of the updated Terms.</p>
+          
+          <h3 className="font-bold text-lg mt-6">14. Contact</h3>
+          <p>For questions regarding these Terms or the Services, please contact: <a href="mailto:support@youravocado.app" className="text-blue-600 hover:underline">support@youravocado.app</a></p>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeModal === 'privacy'}
+        onClose={() => setActiveModal(null)}
+        title="Privacy Policy"
+      >
+        <div className="text-gray-700 space-y-4">
+          <p>We at AvocadoAI LLC ("Avocado," "we," "us," or "our") have created this privacy policy (this "Privacy Policy") because we know that you care about how information you provide to us is used and shared. This Privacy Policy relates to the information collection and use practices of Avocado in connection with our App.</p>
+          
+          <p>By clicking "I AGREE," or otherwise manifesting your asset to the Privacy Policy and accompanying Terms of Use, when you sign up to access and use the App, you acknowledge that you have read, understood and agree to be legally bound by the terms of this Privacy Policy and the accompanying Terms of Use.</p>
+          
+          <h3 className="font-bold text-lg mt-6">The Information We Collect and/or Receive</h3>
+          <p>In the course of operating the App, and/or interacting with you, we will collect (and/or receive) the following types of information.</p>
+          
+          <h4 className="font-semibold mt-4">1. Contact Information</h4>
+          <p>If you contact us for support via email or customer support contact form, you will have to provide your email address. The Contact Information is used to provide the requested service or information.</p>
+          
+          <h4 className="font-semibold mt-4">2. Mental Health Related Information</h4>
+          <p>The App allows you to track and monitor your mental health. Your Mental Health Related Information is stored within the App on your device. Your Mental Health Related Information is transmitted to Avocado in an anonymous way to be analyzed by our AI models and send back information to your device. No data is permanently stored or sent to any other person or entity.</p>
+          
+          <h4 className="font-semibold mt-4">3. Other Information</h4>
+          <p>We may collect information automatically when you use the App, including IP addresses, browser type, device information, and usage data. We use cookies and third-party analytics services like Google Firebase.</p>
+          
+          <h3 className="font-bold text-lg mt-6">How We Use and Share the Information</h3>
+          <p>We use your Information to provide you the App, solicit your feedback, inform you about our products and services, and to improve our App. We may share information with service providers, in aggregated form, during business transfers, or when required by law.</p>
+          
+          <h3 className="font-bold text-lg mt-6">How We Protect the Information</h3>
+          <p>We take commercially reasonable steps to protect your Information from loss, misuse, and unauthorized access. However, no security system is impenetrable, and we cannot guarantee absolute security.</p>
+          
+          <h3 className="font-bold text-lg mt-6">Children's Information</h3>
+          <p>We do not knowingly collect personal information from children under the age of 18 through the App. If you are under 18, please do not give us any personal information.</p>
+          
+          <h3 className="font-bold text-lg mt-6">Important Notice to Non-U.S. Residents</h3>
+          <p>The App and its servers are operated in the United States. If you are located outside of the United States, your information may be transferred to, processed, and maintained in the United States.</p>
+          
+          <h3 className="font-bold text-lg mt-6">Changes to This Privacy Policy</h3>
+          <p>We may change this Privacy Policy from time to time. Any such changes will be posted on the App. By continuing to use the App after changes are posted, you accept such changes.</p>
+          
+          <h3 className="font-bold text-lg mt-6">How to Contact Us</h3>
+          <p>If you have questions about this Privacy Policy, please contact us:</p>
+          <p>Email: <a href="mailto:support@youravocado.app" className="text-blue-600 hover:underline">support@youravocado.app</a></p>
+          <p className="text-sm">AvocadoAI LLC<br/>605 Geddes Street<br/>Wilmington, Delaware 19805<br/>County of New Castle, USA</p>
+        </div>
+      </Modal>
     </div>
   );
 }
