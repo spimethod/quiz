@@ -131,6 +131,53 @@ export default function PaywallPage() {
           />
         </div>
 
+        {/* Make Avo your own Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 leading-tight">
+            Make Avo your own — fully match it to your vibe
+          </h2>
+          
+          <p className="text-gray-400 text-center text-base font-medium mb-6">What's included</p>
+          
+          <div className="space-y-5">
+            {/* Live 3D Avo Companion */}
+            <div className="flex items-start gap-3">
+              <Image src="/icon-avocado.png" alt="Avocado" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" />
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base">Live 3D Avo Companion</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Customize your Avo's look, voice, music, and space to feel supported and grounded anytime.</p>
+              </div>
+            </div>
+            
+            {/* Voice chat with memory */}
+            <div className="flex items-start gap-3">
+              <Image src="/icon-chat.png" alt="Chat" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" />
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base">Voice chat with memory</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Talk or type — Avocado remembers, adapts, and offers guidance across 9 expert modes.</p>
+              </div>
+            </div>
+            
+            {/* Self Care Tools */}
+            <div className="flex items-start gap-3">
+              <Image src="/icon-heart.png" alt="Heart" width={56} height={56} className="w-14 h-14 object-contain flex-shrink-0 -ml-3 -mt-2 -mr-3" />
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base">Self Care Tools</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Breathing, meditations, calming sounds, Mood Journal, progress tracking, and affirmations to help you relax and reset.</p>
+              </div>
+            </div>
+            
+            {/* Full Privacy */}
+            <div className="flex items-start gap-3">
+              <Image src="/icon-lock.png" alt="Lock" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" />
+              <div>
+                <h3 className="font-bold text-[#1a1a1a] text-base">Full Privacy</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Your data stays fully private with a dedicated, isolated provider and locked access.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
