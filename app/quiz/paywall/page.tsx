@@ -427,6 +427,43 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* Money-Back Guarantee Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-8">
+          <div className="relative bg-white rounded-2xl border-2 border-[#6B9D47] pt-16 pb-8 px-6">
+            {/* Guarantee Badge - Top Center */}
+            <div className="absolute -top-16 left-1/2 -translate-x-1/2">
+              <Image 
+                src="/guarantee-badge.png" 
+                alt="14 Days Money Back Guarantee" 
+                width={150} 
+                height={150} 
+                className="w-32 h-32 object-contain"
+              />
+            </div>
+            
+            <p className="text-gray-600 text-base text-center mb-4 leading-relaxed">
+              Our plan is backed by a money-back guarantee. If you reach out within 14 days of purchase, we'll give you a full refund.
+            </p>
+            <button 
+              onClick={() => setActiveModal('refund')}
+              className="block mx-auto text-[#1a1a1a] font-semibold underline underline-offset-2 hover:text-[#6B9D47] transition-colors"
+            >
+              Learn more
+            </button>
+            
+            {/* Avocado Seal - Bottom Right */}
+            <div className="absolute -bottom-10 -right-6">
+              <Image 
+                src="/seal-avocado.png" 
+                alt="Avocado Seal" 
+                width={130} 
+                height={130} 
+                className="w-28 h-28 object-contain"
+              />
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
@@ -651,6 +688,59 @@ export default function PaywallPage() {
           <p>If you have questions about this Privacy Policy, please contact us:</p>
           <p>Email: <a href="mailto:support@youravocado.app" className="text-blue-600 hover:underline">support@youravocado.app</a></p>
           <p className="text-sm">AvocadoAI LLC<br/>605 Geddes Street<br/>Wilmington, Delaware 19805<br/>County of New Castle, USA</p>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeModal === 'refund'}
+        onClose={() => setActiveModal(null)}
+        title="Avocado – Refund Policy"
+      >
+        <div className="text-gray-700 space-y-4">
+          <p className="text-sm text-gray-500 italic">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          <p>Thank you for using <strong>Avocado</strong>. If you are not satisfied with your purchase, please review the refund rules below.</p>
+          
+          <h3 className="font-bold text-lg mt-6">1. General</h3>
+          <p>This Refund Policy applies to all paid subscriptions for the Avocado app purchased directly through our website or in-app payment providers, unless otherwise stated by applicable local law.</p>
+          <p>If your local consumer law grants you additional rights, those rights remain in force.</p>
+          
+          <h3 className="font-bold text-lg mt-6">2. 14-Day Refund Window</h3>
+          <p>You may request a refund <strong>within 14 days from the initial subscription purchase date</strong>, subject to the following conditions:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>the request is submitted within 14 calendar days after you are charged;</li>
+            <li>the payment relates to a <strong>first purchase or renewal period</strong> (not to previous, already-refunded periods);</li>
+            <li>you have not used Avocado in a way that clearly abuses this policy (for example, repeated refunds after extensive use of content).</li>
+          </ul>
+          <p>We may ask for additional information to verify your account and payment.</p>
+          
+          <h3 className="font-bold text-lg mt-6">3. How to Request a Refund</h3>
+          <p>To request a refund, contact us at:</p>
+          <p>📧 <a href="mailto:support@youravocado.app" className="text-blue-600 hover:underline">support@youravocado.app</a></p>
+          <p>Please include:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>the email address linked to your Avocado account;</li>
+            <li>the payment receipt or transaction ID;</li>
+            <li>the platform of purchase (website, iOS, Android);</li>
+            <li>a brief explanation of the reason for your request.</li>
+          </ul>
+          
+          <h3 className="font-bold text-lg mt-6">4. Processing Time</h3>
+          <p>If your refund is approved:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>we will issue the refund to the original payment method;</li>
+            <li>processing times may vary depending on your bank or card issuer, but usually take up to <strong>10 business days</strong> after approval.</li>
+          </ul>
+          
+          <h3 className="font-bold text-lg mt-6">5. Non-Refundable Cases</h3>
+          <p>We may decline a refund request if:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>it is submitted <strong>later than 14 days</strong> after payment;</li>
+            <li>you have already received a refund for the same subscription period;</li>
+            <li>there is clear evidence of misuse or fraud.</li>
+          </ul>
+          
+          <h3 className="font-bold text-lg mt-6">6. Changes to This Policy</h3>
+          <p>We may update this Refund Policy from time to time. The current version will always be available in the app or on our website. Continued use of Avocado after changes take effect means you accept the updated policy.</p>
         </div>
       </Modal>
     </div>
