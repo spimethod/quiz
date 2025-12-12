@@ -100,26 +100,28 @@ export default function PaywallPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center px-4 pb-[350px]"> {/* Large padding bottom for fixed footer */}
         
-        {/* Before / After Section */}
-        <div className="w-full max-w-4xl mx-auto mb-8 relative">
-          <div className="flex justify-center items-start relative min-h-[280px] sm:min-h-[320px]">
-             {/* Left Column - Before */}
-             <div className="absolute left-[12%] sm:left-[15%] top-1/2 -translate-y-1/2 w-[25%] sm:w-[22%] flex flex-col gap-5 sm:gap-7 z-10">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">Before</h2>
-                {beforeItems.map((item, index) => (
-                  <div key={index} className="flex items-start gap-2 sm:gap-3 text-xs sm:text-base text-gray-700">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] sm:text-xs mt-0.5">
-                      ✕
+        {/* Before / After Section - Grid Layout */}
+        <div className="w-full max-w-3xl mx-auto mb-8 px-2">
+          <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 md:gap-6 items-center">
+             {/* Left Column - Before (aligned to right/center) */}
+             <div className="flex justify-end mr-[-4px] sm:mr-[-6px] md:mr-[-8px]">
+                <div className="flex flex-col gap-2 sm:gap-4 md:gap-5">
+                  <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-900 text-center">Before</h2>
+                  {beforeItems.map((item, index) => (
+                    <div key={index} className="flex items-start gap-1.5 sm:gap-2 md:gap-3 text-[10px] sm:text-sm md:text-base text-gray-700">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white font-bold text-[8px] sm:text-[10px] md:text-xs mt-0.5">
+                        ✕
+                      </div>
+                      <span className="leading-tight">
+                        {item[0]}<br />{item[1]}
+                      </span>
                     </div>
-                    <span className="leading-tight">
-                      {item[0]}<br />{item[1]}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
              </div>
 
-             {/* Center Image - Overlapping */}
-             <div className="w-[50%] sm:w-[45%] max-w-[300px] z-0">
+             {/* Center Image */}
+             <div className="w-[140px] sm:w-[200px] md:w-[280px]">
                <div className="relative w-full aspect-square">
                 <Image 
                   src={avatar === 'girl' ? "/before-after-avocado-girl.png" : "/before-after-avocado.png"}
@@ -131,21 +133,23 @@ export default function PaywallPage() {
                </div>
              </div>
 
-             {/* Right Column - After */}
-             <div className="absolute right-[5%] sm:right-[10%] top-1/2 -translate-y-1/2 w-[25%] sm:w-[22%] flex flex-col gap-5 sm:gap-7 z-10">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">After</h2>
-                {afterItems.map((item, index) => (
-                  <div key={index} className="flex items-start gap-2 sm:gap-3 text-xs sm:text-base text-gray-700">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#22C55E] flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5">
-                      <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
+             {/* Right Column - After (aligned to left/start) */}
+             <div className="flex justify-start">
+                <div className="flex flex-col gap-2 sm:gap-4 md:gap-5">
+                  <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-900 text-center">After</h2>
+                  {afterItems.map((item, index) => (
+                    <div key={index} className="flex items-start gap-1.5 sm:gap-2 md:gap-3 text-[10px] sm:text-sm md:text-base text-gray-700">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full bg-[#22C55E] flex items-center justify-center flex-shrink-0 text-white font-bold text-[8px] sm:text-[10px] mt-0.5">
+                        <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="leading-tight">
+                        {item[0]}<br />{item[1]}
+                      </span>
                     </div>
-                    <span className="leading-tight">
-                      {item[0]}<br />{item[1]}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
              </div>
           </div>
         </div>
