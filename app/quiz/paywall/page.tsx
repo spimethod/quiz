@@ -110,7 +110,7 @@ export default function PaywallPage() {
         </div>
 
         {/* Headline */}
-        <div className="text-center max-w-lg mx-auto mb-4 mt-8">
+        <div className="text-center max-w-lg mx-auto mb-4 mt-4">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 leading-tight px-4">
             Get full access to your personal mental-wellbeing journey with Avocado AI Therapist
           </h1>
@@ -135,7 +135,7 @@ export default function PaywallPage() {
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
       <footer className="fixed bottom-0 left-0 right-0 z-50 flex justify-center sm:pb-6 pointer-events-none">
-        <div className="bg-white w-full sm:max-w-[500px] rounded-t-[32px] sm:rounded-[32px] px-4 pt-4 pb-3 sm:pb-6 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto border-t border-gray-100 sm:border-none">
+        <div className="bg-white w-full sm:max-w-[500px] rounded-t-[32px] sm:rounded-[32px] px-4 pt-4 pb-2 sm:pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto border-t border-gray-100 sm:border-none">
           <div className="max-w-md mx-auto">
           
           <div className="space-y-1.5 mb-2">
@@ -195,9 +195,49 @@ export default function PaywallPage() {
             Continue
           </button>
 
-          <div className="flex justify-center gap-6 text-[9px] text-gray-400 font-medium pb-0">
-             <button onClick={() => setActiveModal('terms')} className="hover:text-gray-600 transition-colors">Terms of Service</button>
-             <button onClick={() => setActiveModal('privacy')} className="hover:text-gray-600 transition-colors">Privacy Policy</button>
+          {/* Terms, Pay Safe, Privacy - одна строка */}
+          <div className="flex justify-center items-center gap-2 text-[9px] text-gray-400 font-medium">
+            <button onClick={() => setActiveModal('terms')} className="hover:text-gray-600 transition-colors">Terms of Service</button>
+            <span className="text-gray-300">•</span>
+            <div className="flex items-center gap-0.5 text-[#6B9D47]">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-[9px] font-semibold">Pay Safe & Secure</span>
+            </div>
+            <span className="text-gray-300">•</span>
+            <button onClick={() => setActiveModal('privacy')} className="hover:text-gray-600 transition-colors">Privacy Policy</button>
+          </div>
+
+          {/* Payment Icons */}
+          <div className="flex items-center justify-center gap-1.5 mt-1">
+              {/* Google Pay */}
+              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
+                <span className="text-[8px] font-bold text-gray-600">G Pay</span>
+              </div>
+              {/* Apple Pay */}
+              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
+                <span className="text-[8px] font-bold text-gray-800"> Pay</span>
+              </div>
+              {/* Visa */}
+              <div className="h-5 px-1.5 bg-white border border-gray-200 rounded flex items-center justify-center">
+                <span className="text-[8px] font-bold text-[#1A1F71]">VISA</span>
+              </div>
+              {/* Mastercard */}
+              <div className="h-5 w-7 bg-white border border-gray-200 rounded flex items-center justify-center">
+                <div className="flex">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#EB001B] -mr-1"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#F79E1B]"></div>
+                </div>
+              </div>
+              {/* Discover */}
+              <div className="h-5 px-1 bg-white border border-gray-200 rounded flex items-center justify-center">
+                <span className="text-[6px] font-bold text-[#FF6000]">DISCOVER</span>
+              </div>
+              {/* Amex */}
+              <div className="h-5 px-1 bg-[#006FCF] border border-gray-200 rounded flex items-center justify-center">
+                <span className="text-[6px] font-bold text-white">AMEX</span>
+              </div>
           </div>
 
         </div>
