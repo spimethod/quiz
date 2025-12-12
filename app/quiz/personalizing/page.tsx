@@ -708,7 +708,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                 </div>
 
                 {/* Container with Chat Button and Carousel */}
-                <div className="relative w-full max-w-[440px] sm:max-w-[500px]">
+                <div className="relative w-full max-w-[380px] sm:max-w-[420px]">
                   {/* Vertical Switcher - MOBILE: bottom position */}
                   {isMobile && (
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-36 z-30">
@@ -746,7 +746,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
 
                   {/* Vertical Switcher - WEB/TABLET: left side position */}
                   {!isMobile && (
-                    <div className="absolute left-[-55px] top-1/2 -translate-y-1/2 z-30">
+                    <div className="absolute left-[-85px] top-1/2 -translate-y-1/2 z-30">
                       <div className="flex flex-col items-center gap-2">
                         <button
                             onClick={() => setCompanionType(companionType === '3d' ? 'chat' : '3d')}
@@ -780,9 +780,9 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                   )}
 
                   {/* Avocado icon - OUTSIDE carousel to avoid clipping */}
-                  {/* MOBILE: below the chat */}
+                  {/* MOBILE: left side position */}
                   {isMobile && (
-                    <div className="absolute -bottom-8 left-4 w-14 h-14 rounded-full flex items-center justify-center z-30"
+                    <div className="absolute bottom-0 left-[-20px] w-14 h-14 rounded-full flex items-center justify-center z-30"
                       style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
                     >
                       <Image
@@ -794,9 +794,9 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                       />
                     </div>
                   )}
-                  {/* WEB/TABLET: original position */}
+                  {/* WEB/TABLET: left side position */}
                   {!isMobile && (
-                    <div className="absolute bottom-[4rem] -left-7 w-14 h-14 rounded-full flex items-center justify-center z-30"
+                    <div className="absolute bottom-0 left-[-45px] w-14 h-14 rounded-full flex items-center justify-center z-30"
                       style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
                     >
                       <Image

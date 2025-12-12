@@ -11,11 +11,52 @@ export default function PaywallPage() {
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'weekly'>('annual');
   const [avatar, setAvatar] = useState('boy');
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  
+  // User data from quiz
+  const [userFeelings, setUserFeelings] = useState<string[]>([]);
+  const [mainGoal, setMainGoal] = useState<string>('');
+  const [weeklyGoals, setWeeklyGoals] = useState<string[]>([]);
+  const [timeCommitment, setTimeCommitment] = useState<number>(0);
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('avatarPreference');
     if (savedAvatar) {
       setAvatar(savedAvatar);
+    }
+    
+    // Load user feelings
+    const feelings = localStorage.getItem('userFeelings');
+    if (feelings) {
+      setUserFeelings(JSON.parse(feelings));
+    }
+    
+    // Load main goal
+    const goal = localStorage.getItem('mainGoal');
+    if (goal) {
+      const parsed = JSON.parse(goal);
+      const goalLabels: Record<string, string> = {
+        'stress': 'Reduce daily stress',
+        'emotion': 'Feel emotionally stable',
+        'sleep': 'Sleep better',
+        'relationships': 'Improve relationships',
+        'wellness': 'Feel better overall'
+      };
+      setMainGoal(parsed.type === 'custom' ? parsed.value : (goalLabels[parsed.type] || parsed.value));
+    }
+    
+    // Load weekly goals
+    const goals = localStorage.getItem('goals');
+    if (goals) {
+      const parsed = JSON.parse(goals);
+      const allGoals = [...(parsed.selected || [])];
+      if (parsed.custom) allGoals.push(parsed.custom);
+      setWeeklyGoals(allGoals);
+    }
+    
+    // Load time commitment
+    const time = localStorage.getItem('timeCommitment');
+    if (time) {
+      setTimeCommitment(parseInt(time));
     }
   }, []);
 
@@ -216,6 +257,85 @@ export default function PaywallPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Our Goals Section */}
+        <div className="w-full max-w-md mx-auto px-4 py-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight">
+            Our goals
+          </h2>
+          
+          <div className="space-y-4">
+            {/* Goal 1: Help you get rid of... */}
+            {userFeelings.length > 0 && (
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  Help you get rid of {userFeelings.join(', ').toLowerCase()}
+                </p>
+              </div>
+            )}
+            
+            {/* Goal 2: Achieve your main goal... */}
+            {mainGoal && (
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  Achieve your main goal — {mainGoal.toLowerCase()}
+                </p>
+              </div>
+            )}
+            
+            {/* Goal 3: We'll focus on... */}
+            {weeklyGoals.length > 0 && (
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  We'll focus on {weeklyGoals.join(', ').toLowerCase()}
+                </p>
+              </div>
+            )}
+            
+            {/* Goal 4: Recommended daily time... */}
+            {timeCommitment > 0 && (
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  Recommended daily time — {timeCommitment} minutes
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Reviews Cloud Section */}
+        <div className="w-full max-w-2xl mx-auto my-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight px-4">
+            Join the new era of psychotherapy
+          </h2>
+          <Image
+            src="/reviews-cloud.png"
+            alt="Customer Reviews"
+            width={800}
+            height={600}
+            className="w-full h-auto object-contain"
+          />
         </div>
 
       </main>

@@ -55,7 +55,11 @@ export default function FeelingsPage() {
 
   const handleContinue = () => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('userFeelings', JSON.stringify(selectedOptions));
+      // Include custom value if entered but not yet added
+      const allFeelings = customValue.trim() 
+        ? [...selectedOptions, customValue.trim()]
+        : selectedOptions;
+      localStorage.setItem('userFeelings', JSON.stringify(allFeelings));
     }
     router.push('/quiz/pace');
   };

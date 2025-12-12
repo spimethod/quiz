@@ -29,10 +29,10 @@ export default function QuizLayout({
       {/* Header */}
       <header className="flex-shrink-0 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 relative z-10">
         {!hideBackButton && (
-          <BackButton 
-            onClick={onBack}
-            className="absolute left-8 sm:left-20 md:left-40 lg:left-52 top-3 sm:top-5 z-10"
-          />
+        <BackButton 
+          onClick={onBack}
+          className="absolute left-8 sm:left-20 md:left-40 lg:left-52 top-3 sm:top-5 z-10"
+        />
         )}
         
         <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>

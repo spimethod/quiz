@@ -26,7 +26,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
       // Wait for animation to complete before hiding
       const timer = setTimeout(() => {
         setIsAnimating(false);
-        document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset';
       }, 300);
       return () => clearTimeout(timer);
     }
