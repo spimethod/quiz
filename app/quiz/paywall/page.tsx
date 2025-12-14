@@ -371,6 +371,35 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* As Featured In Section */}
+        <div className="w-full max-w-2xl mx-auto my-8 px-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight">
+              As Featured In
+            </h2>
+            <div className="grid grid-cols-3 gap-6 sm:gap-8">
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-1.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-3.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-5.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-2.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-4.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+              <div className="flex items-center justify-center h-10">
+                <Image src="/magazine-6.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Reviews Cloud Section */}
         <div className="w-full max-w-2xl mx-auto my-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight px-4">
