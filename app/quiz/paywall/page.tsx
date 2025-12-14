@@ -98,7 +98,7 @@ export default function PaywallPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 pb-[350px]"> {/* Large padding bottom for fixed footer */}
+      <main className="flex-1 flex flex-col items-center px-4 pb-[420px]"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
         <div className="w-full max-w-3xl mx-auto mb-8 px-2">
@@ -341,7 +341,7 @@ export default function PaywallPage() {
               </div>
             )}
             
-            {/* Goal 3: We'll focus on... */}
+            {/* Goal 3: We'll start by working on... */}
             {weeklyGoals.length > 0 && (
               <div className="flex items-start gap-3">
                 <div className="w-6 h-6 rounded-full bg-[#6B9D47] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -350,7 +350,7 @@ export default function PaywallPage() {
                   </svg>
                 </div>
                 <p className="text-gray-700 text-base leading-relaxed">
-                  We'll focus on {weeklyGoals.join(', ').toLowerCase()}
+                  We'll start by working on {weeklyGoals.join(', ').toLowerCase()}
                 </p>
               </div>
             )}
@@ -501,9 +501,12 @@ export default function PaywallPage() {
 
         {/* Reviews Cloud Section */}
         <div className="w-full max-w-2xl mx-auto my-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 leading-tight px-4">
             Join the new era of psychotherapy
           </h2>
+          <p className="text-gray-500 text-base sm:text-lg text-center mb-6 px-4">
+            Users love us and talk about Avocado
+          </p>
           <Image
             src="/reviews-cloud.png"
             alt="Customer Reviews"
