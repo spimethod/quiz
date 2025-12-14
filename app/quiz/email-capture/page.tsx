@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import QuizLayout from '../../components/QuizLayout';
 
 const CURRENT_STEP = 30;
@@ -14,11 +15,18 @@ export default function EmailCapturePage() {
   const [emailError, setEmailError] = useState('');
   const [avatar, setAvatar] = useState('girl'); // Default to girl
   const [isLoading, setIsLoading] = useState(false);
+  const [showEmailSavedModal, setShowEmailSavedModal] = useState(false);
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('avatarPreference');
     if (savedAvatar) {
       setAvatar(savedAvatar);
+    }
+    
+    // Check if email already exists
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+      setShowEmailSavedModal(true);
     }
   }, []);
 
@@ -207,6 +215,47 @@ export default function EmailCapturePage() {
           </ul>
         </div>
       </div>
+
+      {/* Email Already Saved Modal */}
+      <AnimatePresence>
+        {showEmailSavedModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className="absolute inset-0 bg-white/60 backdrop-blur-sm" 
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-3xl p-6 sm:p-8 w-full max-w-sm mx-auto shadow-xl border-2 border-[#6B9D47]"
+            >
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-4 text-center">Your email is already saved</h3>
+              <p className="text-gray-600 mb-6 text-justify leading-relaxed">
+                We've already received and saved your email. You can continue right where you left off — no need to enter it again.
+              </p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setShowEmailSavedModal(false)}
+                  onTouchEnd={(e) => { e.preventDefault(); setShowEmailSavedModal(false); }}
+                  className="flex-1 py-3 rounded-xl border-2 border-[#6B9D47] text-[#6B9D47] font-semibold hover:bg-[#6B9D47]/10 transition-all hover:scale-105 active:scale-95 select-none"
+                >
+                  Change Email
+                </button>
+                <button 
+                  onClick={() => router.push('/quiz/personalizing')}
+                  onTouchEnd={(e) => { e.preventDefault(); router.push('/quiz/personalizing'); }}
+                  className="flex-1 py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md select-none"
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </QuizLayout>
   );
 }
