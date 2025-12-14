@@ -400,6 +400,54 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* Stats Section */}
+        <div className="w-full max-w-2xl mx-auto my-8 px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center leading-tight">
+            People just like you are feeling better with Avocado's
+          </h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#6B9D47] text-center mb-4 leading-tight">
+            personalized plan!
+          </h2>
+          
+          {/* Chart Image */}
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/stats-chart.png"
+              alt="Statistics Chart"
+              width={400}
+              height={250}
+              className="w-full max-w-sm h-auto object-contain"
+            />
+          </div>
+          
+          {/* Stats */}
+          <div className="space-y-6 text-center">
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#6B9D47] mb-2">91%</p>
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                of Avocado users reported feeling <strong>calmer, more balanced, and more emotionally stable</strong> in just 4 weeks
+              </p>
+            </div>
+            
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#6B9D47] mb-2">72%</p>
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                of users started with <strong>similar energy levels and motivation struggles</strong> — and noticed steady improvements
+              </p>
+            </div>
+            
+            <div>
+              <p className="text-3xl sm:text-4xl font-bold text-[#6B9D47] mb-2">55%</p>
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                of users face <strong>the same emotional challenges</strong> as you, and Avocado helped them build healthier habits step by step
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Spacer */}
+        <div className="h-8"></div>
+
         {/* Reviews Cloud Section */}
         <div className="w-full max-w-2xl mx-auto my-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-6 leading-tight px-4">
