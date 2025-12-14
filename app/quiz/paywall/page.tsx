@@ -445,8 +445,59 @@ export default function PaywallPage() {
           </div>
         </div>
 
-        {/* Spacer */}
-        <div className="h-8"></div>
+        {/* Life With/Without Avocado Section */}
+        <div className="w-full max-w-2xl mx-auto my-8 px-4 space-y-6">
+          {/* Without Avocado */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h3 className="text-lg sm:text-xl font-bold text-[#1a1a1a] mb-4">When you don't have Avocado in your life</h3>
+            <div className="space-y-3">
+              {[
+                "Sleep is shallow: hard to fall asleep and easy to wake up tired",
+                "Stress = doom-scrolling and checking every notification",
+                "The whole day passes in a rush, without a single mindful pause",
+                "No energy left for yourself after work, study or family tasks",
+                "Free time feels empty, lonely or uncomfortable",
+                "Emotions pile up until you feel overwhelmed and stuck",
+                "You feel bad for resting instead of constantly \"being productive\"",
+                "Hard to switch off your brain in the evening and actually relax",
+                "And other mental health issues that feel hard to handle on your own"
+              ].map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white text-xs font-bold mt-0.5">
+                    ✕
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* With Avocado */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h3 className="text-lg sm:text-xl font-bold text-[#1a1a1a] mb-4">How Avocado can change your everyday life</h3>
+            <div className="space-y-3">
+              {[
+                "Reduces screen overload with quick, guided check-ins instead of scrolling",
+                "Helps you stay calmer and more focused on what really matters",
+                "Turns self-care into small, repeatable routines you can maintain",
+                "Builds a simple evening wind-down so you fall asleep easier",
+                "Shows your progress over weeks so you feel in control, not lost",
+                "Teaches you to rest without guilt and protect your boundaries",
+                "Gives tools to handle anxiety, mood swings and tense days",
+                "Supports steady daytime energy instead of constant ups and downs"
+              ].map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-[#22C55E] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* Reviews Cloud Section */}
         <div className="w-full max-w-2xl mx-auto my-8">
