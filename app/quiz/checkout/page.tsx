@@ -12,6 +12,7 @@ export default function CheckoutPage() {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [showCvvTooltip, setShowCvvTooltip] = useState(false);
+  const [showDiscountModal, setShowDiscountModal] = useState(false);
 
   useEffect(() => {
     // Get selected plan from localStorage
@@ -19,13 +20,40 @@ export default function CheckoutPage() {
     if (plan === 'annual' || plan === 'weekly') {
       setSelectedPlan(plan);
     }
+
+    // Push a dummy state to handle back button
+    window.history.pushState({ checkout: true }, '');
+
+    // Handle back button
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      // Push state again to prevent actual navigation
+      window.history.pushState({ checkout: true }, '');
+      setShowDiscountModal(true);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
-  const price = selectedPlan === 'weekly' ? '0.99' : '79.99';
+  const price = selectedPlan === 'weekly' ? '0.59' : '69.99';
   const currency = 'USD';
 
   const handleClose = () => {
-    router.back();
+    setShowDiscountModal(true);
+  };
+
+  const handleGotIt = () => {
+    // Save that user saw discount offer
+    localStorage.setItem('sawDiscountOffer', 'true');
+    router.push('/quiz/paywall');
+  };
+
+  const handleRemindLater = () => {
+    router.push('/quiz/paywall');
   };
 
   const handlePay = () => {
@@ -39,6 +67,65 @@ export default function CheckoutPage() {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gray-100 flex items-center justify-center p-4"
     >
+      {/* Discount Modal */}
+      {showDiscountModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
+          
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="relative bg-white rounded-3xl p-8 sm:p-10 w-full max-w-md mx-auto shadow-2xl border border-gray-100 overflow-hidden"
+          >
+            {/* Title */}
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] text-center mb-5">
+              Did you know?
+            </h2>
+            
+            {/* Description */}
+            <p className="text-gray-600 text-center text-lg sm:text-xl leading-relaxed mb-8">
+              Many Avocado members who log their progress report a noticeable boost in well-being within the first month
+            </p>
+            
+            {/* Well-being level */}
+            <p className="text-center font-bold text-lg text-[#1a1a1a] mb-5">Well-being level</p>
+            
+            {/* Graph Image */}
+            <div className="flex justify-center mb-5">
+              <Image
+                src="/discount-graph.png"
+                alt="Well-being graph"
+                width={500}
+                height={375}
+                className="w-full max-w-[340px] h-auto object-contain"
+              />
+            </div>
+            
+            {/* Disclaimer */}
+            <p className="text-gray-400 text-sm text-center italic mb-8">
+              Based on self-reported check-ins of users who track progress in the app.
+            </p>
+            
+            {/* Discount message */}
+            <div className="bg-[#f5f5f0] rounded-xl p-4 mb-6">
+              <p className="text-center text-[#1a1a1a]">
+                We want you to succeed — here's an additional discount on your{' '}
+                <span className="text-[#6B9D47] font-semibold">Avocado Plan</span>
+              </p>
+            </div>
+            
+            {/* Got it button */}
+            <button
+              onClick={handleGotIt}
+              className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center text-white font-bold text-lg hover:scale-105 active:scale-95"
+            >
+              Got it
+            </button>
+          </motion.div>
+        </div>
+      )}
       {/* Modal Container */}
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         {/* Header with close button */}
