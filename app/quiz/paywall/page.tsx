@@ -8,7 +8,7 @@ import Modal from '../../components/Modal';
 
 export default function PaywallPage() {
   const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState<'annual' | 'weekly'>('annual');
+  const [selectedPlan, setSelectedPlan] = useState<'annual' | 'weekly'>('weekly');
   const [avatar, setAvatar] = useState('boy');
   const [activeModal, setActiveModal] = useState<string | null>(null);
   
@@ -491,7 +491,7 @@ export default function PaywallPage() {
                 <div className="flex justify-between items-center h-8">
                   <span className="font-bold text-[#1a1a1a] text-sm flex items-center gap-1.5">
                     <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
-                    <span className="text-[#1a1a1a] font-bold text-sm">Your Offer</span>
+                    <span className="text-[#1a1a1a] font-bold text-sm">Your 3-days Offer*</span>
                   </span>
                   <div className="flex flex-col items-end leading-tight">
                     <span className="font-bold text-[#1a1a1a] text-sm">$0.99</span>
@@ -523,7 +523,9 @@ export default function PaywallPage() {
             </div>
           </div>
 
-          <div className="text-center text-[10px] text-gray-400 mb-2">Cancel anytime</div>
+          <div className="text-center text-[9px] text-gray-400 mb-2 px-2 leading-relaxed">
+            Cancel anytime. *By clicking "Continue", you agree to automatic subscription renewal. After the first 3 days, your weekly plan will be $6.99 per week (prices include VAT).
+          </div>
 
           <button 
             onClick={handleContinue}
@@ -554,6 +556,11 @@ export default function PaywallPage() {
               <Image src="/mastercard.png" alt="Mastercard" width={36} height={20} className="h-5 w-auto object-contain" />
               <Image src="/discover.png" alt="Discover" width={36} height={20} className="h-5 w-auto object-contain" />
               <Image src="/amex.png" alt="Amex" width={36} height={20} className="h-5 w-auto object-contain" />
+          </div>
+
+          {/* Legal Address */}
+          <div className="text-center text-[9px] text-gray-400 mt-1">
+            AvocadoAI LLC · 605 Geddes Street, Wilmington, Delaware 19805 · County of New Castle, USA
           </div>
 
         </div>
