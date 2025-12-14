@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuizLayout from '../../components/QuizLayout';
 
-const CURRENT_STEP = 30;
+const CURRENT_STEP = 31;
 const TOTAL_STEPS = 32;
 
 export default function EmailCapturePage() {

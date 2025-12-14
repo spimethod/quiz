@@ -151,6 +151,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
             'sleep': 'Sleep better',
             'understanding': 'Understand myself better',
             'support': 'Find support',
+            'wellness': 'Feel better overall',
           };
           setMainGoal(parsed.type === 'custom' ? capitalizeFirst(parsed.value) : (labels[parsed.type] || parsed.value));
         } catch {
@@ -158,14 +159,14 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         }
       }
 
-      const savedGoals = localStorage.getItem('userGoals');
+      const savedGoals = localStorage.getItem('goals');
       if (savedGoals) {
         try {
           const goalsData = JSON.parse(savedGoals);
           const items: string[] = [];
           if (goalsData.custom?.trim()) items.push(goalsData.custom.trim());
           if (goalsData.selected?.length) items.push(...goalsData.selected);
-          if (items.length) setFocusGoal(capitalizeFirst(items.join('; ')));
+          if (items.length) setFocusGoal(items.map((item, i) => i === 0 ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item.toLowerCase()).join(', '));
         } catch {}
       }
     }
@@ -605,7 +606,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                                <Image src="/icon-focus.png" alt="Focus" width={32} height={32} className="w-8 h-8 object-contain" />
               </div>
                              <div className="min-w-0 flex-1 overflow-hidden">
-                               <p className="text-xs text-gray-500 font-medium">Focus:</p>
+                               <p className="text-xs text-gray-500 font-medium">We'll start by working on:</p>
                                <div className="overflow-x-auto scrollbar-thin pb-2">
                                  <p className="text-lg font-medium text-[#1a1a1a] leading-tight whitespace-nowrap pr-4">{focusGoal}</p>
               </div>

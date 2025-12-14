@@ -13,7 +13,7 @@ export default function BeforeStartPage() {
 
   const handleContinue = () => {
     // Navigate to name page
-    router.push('/quiz/name');
+    router.push('/quiz/personal-plan');
   };
 
   const footerContent = (

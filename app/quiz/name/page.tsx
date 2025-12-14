@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import QuizLayout from '../../components/QuizLayout';
 
 // Total steps before email capture
-const TOTAL_STEPS = 12;
-const CURRENT_STEP = 4;
+const TOTAL_STEPS = 32;
+const CURRENT_STEP = 30;
 
 export default function NamePage() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function NamePage() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('userName', name.trim());
       }
-      router.push('/quiz/personal-plan');
+      router.push('/quiz/email-capture');
     }
   };
 
@@ -117,8 +117,8 @@ export default function NamePage() {
                   Change Name
                 </button>
                 <button 
-                  onClick={() => router.push('/quiz/personal-plan')}
-                  onTouchEnd={(e) => { e.preventDefault(); router.push('/quiz/personal-plan'); }}
+                  onClick={() => router.push('/quiz/email-capture')}
+                  onTouchEnd={(e) => { e.preventDefault(); router.push('/quiz/email-capture'); }}
                   className="flex-1 py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md select-none"
                 >
                   Continue

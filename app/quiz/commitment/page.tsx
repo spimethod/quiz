@@ -53,7 +53,7 @@ export default function CommitmentPage() {
     if (holdProgress >= 95) {
       // Save commitment flag
       localStorage.setItem('commitmentSigned', 'true');
-      router.push('/quiz/email-capture');
+      router.push('/quiz/name');
     }
   }, [holdProgress, router]);
 
@@ -63,7 +63,7 @@ export default function CommitmentPage() {
   const handleTouchEnd = () => setIsHolding(false);
 
   const handleContinue = () => {
-    router.push('/quiz/email-capture');
+    router.push('/quiz/name');
   };
 
   return (
@@ -100,7 +100,7 @@ export default function CommitmentPage() {
           
             {/* Forward Button - Mobile (Top Right) / Desktop (Right Side) */}
           <button
-            onClick={() => router.push('/quiz/email-capture')}
+            onClick={() => router.push('/quiz/name')}
               className="absolute right-4 -top-16 lg:right-[-80px] lg:top-1/2 lg:-translate-y-1/2 z-50 p-2 hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110"
             aria-label="Go forward"
           >

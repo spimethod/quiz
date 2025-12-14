@@ -58,9 +58,13 @@ export default function GoalsPage() {
   const handleContinue = () => {
     if (selectedOptions.length > 0 || customValue.trim()) {
       if (typeof window !== 'undefined') {
+        // Add custom value to selected if not already added
+        const finalSelected = customValue.trim() && !selectedOptions.includes(customValue.trim())
+          ? [...selectedOptions, customValue.trim()]
+          : selectedOptions;
         localStorage.setItem('goals', JSON.stringify({
-          selected: selectedOptions,
-          custom: customValue.trim()
+          selected: finalSelected,
+          custom: ''
         }));
       }
       router.push('/quiz/community');

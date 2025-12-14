@@ -155,22 +155,22 @@ export default function PaywallPage() {
         </div>
 
         {/* Main Issues & Goal Block */}
-        <div className="w-full max-w-xl mx-auto mb-4 px-4">
+        <div className="w-full max-w-lg mx-auto mb-4 px-4">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] text-center mb-4">Your personalized plan is ready!</h2>
             <div className="flex items-stretch">
               {/* Main Issue(s) */}
-              <div className="flex-1 flex items-start gap-2 pr-4">
+              <div className="flex-1 flex justify-end pr-4">
                 {userFeelings.length > 0 && (
-                  <>
+                  <div className="flex items-start gap-2">
                     <div className="w-6 h-6 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white font-bold text-xs mt-0.5">
                       ✕
                     </div>
-                    <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Main {userFeelings.length === 1 ? 'Issue' : 'Issues'}</p>
-                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{userFeelings.join(', ')}</p>
+                    <div className="text-left">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your current {userFeelings.length === 1 ? 'issue' : 'issues'}</p>
+                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{userFeelings.map((f, i) => i === 0 ? f.charAt(0).toUpperCase() + f.slice(1).toLowerCase() : f.toLowerCase()).join(', ')}</p>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
               
@@ -187,7 +187,7 @@ export default function PaywallPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Main Goal</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Goal</p>
                       <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{mainGoal}</p>
                     </div>
                   </>
