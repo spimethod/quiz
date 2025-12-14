@@ -13,6 +13,7 @@ export default function PaywallPage() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   
   // User data from quiz
+  const [userName, setUserName] = useState<string>('');
   const [userFeelings, setUserFeelings] = useState<string[]>([]);
   const [mainGoal, setMainGoal] = useState<string>('');
   const [weeklyGoals, setWeeklyGoals] = useState<string[]>([]);
@@ -24,6 +25,13 @@ export default function PaywallPage() {
       setAvatar(savedAvatar);
     }
     
+    // Load user name
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+      // Capitalize first letter
+      setUserName(savedName.charAt(0).toUpperCase() + savedName.slice(1));
+    }
+
     // Load user feelings
     const feelings = localStorage.getItem('userFeelings');
     if (feelings) {
@@ -156,18 +164,27 @@ export default function PaywallPage() {
         {/* Main Issues & Goal Block */}
         <div className="w-full max-w-lg mx-auto mb-4 px-4">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] text-center mb-4">Your personalized plan is ready!</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] text-center mb-4 px-2">
+              {userName ? (
+                <>
+                  <span className="text-[#6B9D47] inline-block max-w-[60%] truncate align-bottom">{userName}</span>
+                  <span>, your personalized plan is ready!</span>
+                </>
+              ) : (
+                'Your personalized plan is ready!'
+              )}
+            </h2>
             <div className="flex items-stretch">
               {/* Main Issue(s) */}
-              <div className="flex-1 flex justify-end pr-4">
+              <div className="flex-1 flex justify-end pr-4 min-w-0">
                 {userFeelings.length > 0 && (
-                  <div className="flex items-start gap-2">
+                  <div className="flex items-start gap-2 min-w-0">
                     <div className="w-6 h-6 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white font-bold text-xs mt-0.5">
                       ✕
                     </div>
-                    <div className="text-left">
+                    <div className="text-left min-w-0 flex-1">
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your current {userFeelings.length === 1 ? 'issue' : 'issues'}</p>
-                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{userFeelings.map((f, i) => i === 0 ? f.charAt(0).toUpperCase() + f.slice(1).toLowerCase() : f.toLowerCase()).join(', ')}</p>
+                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight break-words">{userFeelings.map((f, i) => i === 0 ? f.charAt(0).toUpperCase() + f.slice(1).toLowerCase() : f.toLowerCase()).join(', ')}</p>
                     </div>
                   </div>
                 )}
@@ -177,7 +194,7 @@ export default function PaywallPage() {
               <div className="w-px bg-gray-200 self-stretch"></div>
               
               {/* Main Goal */}
-              <div className="flex-1 flex items-start gap-2 pl-4">
+              <div className="flex-1 flex items-start gap-2 pl-4 min-w-0">
                 {mainGoal && (
                   <>
                     <div className="w-6 h-6 rounded-full bg-[#22C55E] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -185,9 +202,9 @@ export default function PaywallPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Goal</p>
-                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{mainGoal}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Main Goal</p>
+                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight break-words">{mainGoal}</p>
                     </div>
                   </>
                 )}
