@@ -61,10 +61,9 @@ export default function PaywallPage() {
   }, []);
 
   const handleContinue = () => {
-    // Navigate to next step (checkout or similar)
-    // For now, just log or maybe go to a success page?
-    console.log('Selected plan:', selectedPlan);
-    // router.push('/quiz/checkout'); 
+    // Save selected plan and navigate to checkout
+    localStorage.setItem('selectedPlan', selectedPlan);
+    router.push('/quiz/checkout');
   };
 
   const beforeItems = [
