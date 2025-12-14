@@ -810,7 +810,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                   )}
 
                   {/* Carousel Container - Avatar Image and Chat */}
-                  <div className="relative w-full aspect-[3/4] overflow-hidden">
+                  <div className="relative w-full aspect-[2/3] overflow-hidden">
                     {/* 3D Avatar with Audio Controls - Slides right when chat is active */}
                     <motion.div 
                       className="absolute inset-0 flex flex-col"
@@ -829,7 +829,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                       </div>
 
                       {/* Audio Controls - Move with avatar */}
-                      <div className="flex justify-center gap-12 py-4">
+                      <div className="flex justify-center gap-12 py-6 sm:py-8 mt-2">
                         {/* Replay Button */}
                         <div className="flex flex-col items-center gap-2">
                           <button
