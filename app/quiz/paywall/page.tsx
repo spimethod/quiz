@@ -527,12 +527,26 @@ export default function PaywallPage() {
             Cancel anytime. *By clicking "Continue", you agree to automatic subscription renewal. After the first 3 days, your weekly plan will be $6.99 per week (prices include VAT).
           </div>
 
-          <button 
-            onClick={handleContinue}
-            className="w-full py-3 rounded-xl bg-[#6B9D47] text-white font-bold text-base hover:bg-[#5d8a3d] transition-all hover:scale-[1.02] active:scale-95 shadow-md mb-3"
-          >
-            Continue
-          </button>
+          <div className="relative mb-3">
+            <div 
+              className="absolute -inset-1 rounded-xl bg-[#6B9D47] opacity-30"
+              style={{
+                animation: 'ripple-wave 2s ease-out infinite'
+              }}
+            ></div>
+            <button 
+              onClick={handleContinue}
+              className="relative w-full py-3 rounded-xl bg-[#6B9D47] text-white font-bold text-base hover:bg-[#5d8a3d] transition-all hover:scale-[1.02] active:scale-95 shadow-md"
+            >
+              Continue
+            </button>
+            <style jsx>{`
+              @keyframes ripple-wave {
+                0% { transform: scale(1); opacity: 0.35; }
+                100% { transform: scale(1.07, 1.17); opacity: 0; }
+              }
+            `}</style>
+          </div>
 
           {/* Terms, Pay Safe, Privacy - одна строка */}
           <div className="flex justify-center items-center gap-2 text-[9px] text-gray-400 font-medium">
