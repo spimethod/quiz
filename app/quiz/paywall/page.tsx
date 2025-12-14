@@ -154,9 +154,52 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* Main Issues & Goal Block */}
+        <div className="w-full max-w-xl mx-auto mb-4 px-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] text-center mb-4">Your personalized plan is ready!</h2>
+            <div className="flex items-stretch">
+              {/* Main Issue(s) */}
+              <div className="flex-1 flex items-start gap-2 pr-4">
+                {userFeelings.length > 0 && (
+                  <>
+                    <div className="w-6 h-6 rounded-full bg-[#FF4B4B] flex items-center justify-center flex-shrink-0 text-white font-bold text-xs mt-0.5">
+                      ✕
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Main {userFeelings.length === 1 ? 'Issue' : 'Issues'}</p>
+                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{userFeelings.join(', ')}</p>
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              {/* Divider */}
+              <div className="w-px bg-gray-200 self-stretch"></div>
+              
+              {/* Main Goal */}
+              <div className="flex-1 flex items-start gap-2 pl-4">
+                {mainGoal && (
+                  <>
+                    <div className="w-6 h-6 rounded-full bg-[#22C55E] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Your Main Goal</p>
+                      <p className="text-sm font-semibold text-[#1a1a1a] leading-tight">{mainGoal}</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Headline */}
-        <div className="text-center max-w-lg mx-auto mb-4 mt-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 leading-tight px-4">
+        <div className="text-center max-w-lg mx-auto mt-8 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-4 leading-tight px-4">
             Get full access to your personal mental-wellbeing journey with Avocado AI Therapist
           </h1>
           <p className="text-gray-500 text-base sm:text-lg px-4 mt-8">
