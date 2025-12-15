@@ -73,13 +73,15 @@ export default function PaywallPage() {
     }
   }, []);
 
-  // Auto-scroll to just below description on all devices
+  // Auto-scroll to show description at bottom of screen (Hero image not visible)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const timer = setTimeout(() => {
         const anchor = document.getElementById('scroll-anchor');
         if (anchor) {
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const rect = anchor.getBoundingClientRect();
+          const scrollTop = window.scrollY + rect.top - window.innerHeight + 50;
+          window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
         }
       }, 500);
       return () => clearTimeout(timer);
@@ -803,10 +805,10 @@ export default function PaywallPage() {
                     <span className="line-through decoration-gray-400 text-gray-400">Weekly</span>
                     <span className="text-[#1a1a1a] font-bold text-sm">Your 3-days Offer*</span>
                   </span>
-                  <div className="flex flex-col items-end leading-tight">
+                  <div className="flex flex-col items-end leading-tight mt-4">
                     <span className="font-bold text-[#1a1a1a] text-sm">$0.39</span>
-                    <span className="text-gray-400 line-through text-[10px]">$6.99</span>
-                    <span className="text-gray-400 line-through text-[10px]">$0.99</span>
+                    <span className="text-gray-400 line-through text-xs">$0.99</span>
+                    <span className="text-gray-400 line-through text-xs">$6.99</span>
                   </div>
                 </div>
                 <div className="text-xs text-gray-500 mt-0.5"><span className="text-sm font-semibold">1 week</span> • $6.99</div>
@@ -824,10 +826,10 @@ export default function PaywallPage() {
               <div className="flex-1">
                 <div className="flex justify-between items-center h-8">
                   <span className="font-bold text-[#1a1a1a] text-sm">Annual</span>
-                  <div className="flex flex-col items-end leading-tight">
+                  <div className="flex flex-col items-end leading-tight mt-4">
                     <span className="font-bold text-[#1a1a1a] text-sm">$59.99</span>
-                    <span className="text-gray-400 line-through text-[10px]">$98.99</span>
-                    <span className="text-gray-400 line-through text-[10px]">$79.99</span>
+                    <span className="text-gray-400 line-through text-xs">$79.99</span>
+                    <span className="text-gray-400 line-through text-xs">$98.99</span>
                   </div>
                 </div>
                 <div className="text-xs text-gray-500 mt-0.5"><span className="text-sm font-semibold">1 year</span> • $1.55/week</div>
