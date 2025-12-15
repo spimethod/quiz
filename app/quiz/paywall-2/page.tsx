@@ -93,11 +93,22 @@ export default function PaywallPage() {
     }
   }, []);
 
-  // Initialize timer from localStorage
+  // Initialize timer from localStorage (reset if name changed)
   useEffect(() => {
     const savedTimer = localStorage.getItem('paywall2Timer');
+    const currentName = localStorage.getItem('userName') || '';
+    
     if (savedTimer) {
-      const { minutes, seconds, timestamp } = JSON.parse(savedTimer);
+      const { minutes, seconds, timestamp, savedName } = JSON.parse(savedTimer);
+      
+      // If name changed, reset timer (new promo code)
+      if (savedName !== currentName) {
+        setTimerMinutes(9);
+        setTimerSeconds(59);
+        setTimerInitialized(true);
+        return;
+      }
+      
       const elapsed = Math.floor((Date.now() - timestamp) / 1000);
       const totalSeconds = minutes * 60 + seconds - elapsed;
       
@@ -120,14 +131,20 @@ export default function PaywallPage() {
   useEffect(() => {
     if (!timerInitialized || timerMinutes === null || timerSeconds === null) return;
     
-    // Save to localStorage
+    // Save to localStorage (with current name for reset detection)
+    const currentName = localStorage.getItem('userName') || '';
     localStorage.setItem('paywall2Timer', JSON.stringify({
       minutes: timerMinutes,
       seconds: timerSeconds,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      savedName: currentName
     }));
     
-    if (timerMinutes === 0 && timerSeconds === 0) return;
+    // Redirect to paywall-1 when timer reaches 00:00
+    if (timerMinutes === 0 && timerSeconds === 0) {
+      router.push('/quiz/paywall');
+      return;
+    }
     
     const interval = setInterval(() => {
       setTimerSeconds(prev => {
@@ -150,9 +167,9 @@ export default function PaywallPage() {
   }, [timerInitialized, timerMinutes, timerSeconds]);
 
   const handleContinue = () => {
-    // Save selected plan and navigate to checkout
+    // Save selected plan and navigate to checkout-2
     localStorage.setItem('selectedPlan', selectedPlan);
-    router.push('/quiz/checkout');
+    router.push('/quiz/checkout-2');
   };
 
   const beforeItems = [

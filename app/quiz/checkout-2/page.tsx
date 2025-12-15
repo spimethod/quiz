@@ -15,21 +15,29 @@ export default function CheckoutPage() {
   const [showDiscountModal, setShowDiscountModal] = useState(false);
 
   useEffect(() => {
+    // Check if paywall-2 timer expired - redirect to checkout (first)
+    const savedTimer = localStorage.getItem('paywall2Timer');
+    if (savedTimer) {
+      const { minutes, seconds, timestamp } = JSON.parse(savedTimer);
+      const elapsed = Math.floor((Date.now() - timestamp) / 1000);
+      const totalSeconds = minutes * 60 + seconds - elapsed;
+      
+      if (totalSeconds <= 0) {
+        // Timer expired - redirect to checkout (first)
+        router.push('/quiz/checkout');
+        return;
+      }
+    }
+
     // Get selected plan from localStorage
     const plan = localStorage.getItem('selectedPlan');
     if (plan === 'annual' || plan === 'weekly') {
       setSelectedPlan(plan);
     }
 
-    // Push a dummy state to handle back button
-    window.history.pushState({ checkout: true }, '');
-
-    // Handle back button
-    const handlePopState = (e: PopStateEvent) => {
-      e.preventDefault();
-      // Push state again to prevent actual navigation
-      window.history.pushState({ checkout: true }, '');
-      setShowDiscountModal(true);
+    // Handle back button - go directly to paywall-2 (no modal)
+    const handlePopState = () => {
+      router.push('/quiz/paywall-2');
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -37,13 +45,14 @@ export default function CheckoutPage() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, []);
+  }, [router]);
 
-  const price = selectedPlan === 'weekly' ? '0.59' : '69.99';
+  const price = selectedPlan === 'weekly' ? '0.39' : '59.99';
   const currency = 'USD';
 
   const handleClose = () => {
-    setShowDiscountModal(true);
+    // Go directly to paywall-2 (no modal)
+    router.push('/quiz/paywall-2');
   };
 
   const handleGotIt = () => {
@@ -53,7 +62,7 @@ export default function CheckoutPage() {
   };
 
   const handleRemindLater = () => {
-    router.push('/quiz/paywall');
+    router.push('/quiz/paywall-2');
   };
 
   const handlePay = () => {
