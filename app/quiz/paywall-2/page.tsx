@@ -73,17 +73,22 @@ export default function PaywallPage() {
     }
   }, []);
 
-  // Auto-scroll to show description at bottom of screen (Hero image not visible)
+  // Auto-scroll to show description just above the fixed footer
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const timer = setTimeout(() => {
         const anchor = document.getElementById('scroll-anchor');
-        if (anchor) {
-          const rect = anchor.getBoundingClientRect();
-          const scrollTop = window.scrollY + rect.top - window.innerHeight + 50;
-          window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' });
+        const footer = document.querySelector('[data-footer]');
+        if (anchor && footer) {
+          const anchorRect = anchor.getBoundingClientRect();
+          const footerHeight = footer.getBoundingClientRect().height;
+          // Scroll so anchor is just above the footer
+          const targetScroll = window.scrollY + anchorRect.top - (window.innerHeight - footerHeight - 20);
+          if (targetScroll > 0) {
+            window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+          }
         }
-      }, 500);
+      }, 600);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -739,7 +744,7 @@ export default function PaywallPage() {
       </main>
 
       {/* Sticky Footer - Payment Options (Ultra Compact Style) */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 flex justify-center sm:pb-6 pointer-events-none">
+      <footer data-footer className="fixed bottom-0 left-0 right-0 z-50 flex justify-center sm:pb-6 pointer-events-none">
         <div className="bg-white w-full sm:max-w-[500px] rounded-t-[32px] sm:rounded-[32px] px-4 pt-4 pb-2 sm:pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto border-t border-gray-100 sm:border-none">
           <div className="max-w-md mx-auto">
           
