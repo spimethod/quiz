@@ -136,7 +136,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         setPhase('loading');
         setShowFinalContent(false);
         setShowReview(false);
-      }
+    }
 
       const savedMainGoal = localStorage.getItem('mainGoal');
       if (savedMainGoal) {
@@ -267,7 +267,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
           setShowModal(true);
           setActiveModalId(currentBar);
           shownModalsRef.current.push(currentBar);
-        }
+    }
 
         // Reviews for bars 2 and 3 (Bar 1 handled by timeout)
         if (currentBar > 1 && newProgress > 15 && !showReview && !showFinalContent) {
@@ -471,7 +471,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                       <motion.div 
                         className="h-full bg-[#6B9D47]" 
                         style={{ width: `${i === 1 ? progress1 : i === 2 ? progress2 : progress3}%` }} 
-                      />
+                />
                     </div>
                   </div>
                 ))}
@@ -993,7 +993,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                     onClick={handleCompanionContinue}
                     onTouchEnd={(e) => { e.preventDefault(); handleCompanionContinue(); }}
                     className="w-full font-semibold text-lg sm:text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
-                  >
+          >
                     Continue my journey
           </button>
         </div>
