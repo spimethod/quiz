@@ -75,7 +75,7 @@ export default function TimePage() {
     const endY = todayY - (maxRange * endRatio);
     
     const endPoint = { x: width, y: endY };
-    
+
     // Middle point that curve must pass through at t=0.5
     const midPoint = { x: width * 0.5, y: midY };
 

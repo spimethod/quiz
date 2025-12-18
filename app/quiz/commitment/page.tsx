@@ -283,14 +283,16 @@ export default function CommitmentPage() {
             </>
           ) : (
             /* Girl Version - Universal (Mobile/Tablet/Web) - Using Aspect Ratio Container */
-            <div className="relative mx-auto w-72 sm:w-80 md:w-96 max-w-[70vw] aspect-[4876/5396]">
-              <Image
-                src="/commitment-avocado-girl.png"
-                alt="Commitment Avocado Girl"
-                fill
-                className="object-contain"
-                priority
-              />
+            <div className="relative mx-auto w-80 sm:w-96 md:w-[28rem] max-w-[80vw] aspect-[4876/5396]">
+              <div className="absolute inset-0 scale-110 -translate-x-[10.3%] -translate-y-[1.4%]">
+                <Image
+                  src="/commitment-avocado-girl.png"
+                  alt="Commitment Avocado Girl"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
 
               {/* Soft pulsing glow around button - Girl Version */}
               <div className="absolute left-[42.3%] top-[66.8%] -translate-x-1/2 -translate-y-1/2 w-[55%] aspect-square pointer-events-none z-5">
@@ -362,7 +364,7 @@ export default function CommitmentPage() {
         {/* Instruction with Animated Arrow */}
         <div className="relative">
           {/* Animated Green Arrow pointing up */}
-          <div className={`absolute bottom-full ${avatar === 'girl' ? 'left-[45.3%]' : 'left-1/2'} transform -translate-x-1/2 mb-1 sm:mb-2`}>
+          <div className={`absolute bottom-full ${avatar === 'girl' ? 'left-[44%]' : 'left-1/2'} transform -translate-x-1/2 mb-1 sm:mb-2`}>
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ 
