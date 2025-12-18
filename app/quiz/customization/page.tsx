@@ -15,8 +15,8 @@ export default function CustomizationPage() {
   const [direction, setDirection] = useState(0);
 
   const slides = [
-    { id: 'girl', src: '/custom-avocado-girl.png', alt: 'Avocado Girl', className: 'translate-y-[11px]' },
-    { id: 'boy', src: '/custom-avocado-boy.png', alt: 'Avocado Boy', className: 'scale-105 origin-bottom' },
+    { id: 'girl', src: '/custom-avocado-girl.png', alt: 'Avocado Girl', className: 'scale-95 translate-y-6' },
+    { id: 'boy', src: '/custom-avocado-boy.png', alt: 'Avocado Boy', className: 'scale-100' },
   ];
 
   // Читаем выбор пола с первого шага и устанавливаем начальный слайд
@@ -55,7 +55,7 @@ export default function CustomizationPage() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('avatarPreference', slides[currentSlide].id);
     }
-    router.push('/quiz/before-after');
+    router.push('/quiz/time');
   };
 
   const variants = {
@@ -129,7 +129,7 @@ export default function CustomizationPage() {
             </button>
 
             {/* Slide Image Container */}
-            <div className="relative w-full max-w-[400px] sm:max-w-[450px] h-[350px] sm:h-[450px] overflow-hidden">
+            <div className="relative w-full max-w-[350px] sm:max-w-[400px] h-[350px] sm:h-[400px] overflow-hidden">
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                   key={currentSlide}

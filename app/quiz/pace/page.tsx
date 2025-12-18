@@ -36,10 +36,10 @@ export default function PacePage() {
       clearTimeout(timerRef.current);
     }
 
-    // Запускаем новый таймер на 2 секунды
+    // Запускаем новый таймер на 0.1 секунды
     timerRef.current = setTimeout(() => {
       handleContinue(id);
-    }, 2000);
+    }, 100);
   };
 
   const handleContinue = (paceId?: string) => {
@@ -52,27 +52,10 @@ export default function PacePage() {
     }
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={() => handleContinue()}
-        disabled={!selectedPace}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 ${
-          selectedPace
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-      >
-        Continue
-      </button>
-    </div>
-  );
-
   return (
     <QuizLayout
       currentStep={CURRENT_STEP}
       totalSteps={TOTAL_STEPS}
-      footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
       <div className="max-w-md w-full mx-auto pt-2 sm:pt-4">

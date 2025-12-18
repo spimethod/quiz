@@ -11,7 +11,7 @@ const CURRENT_STEP = 2;
 
 export default function AgePage() {
   const router = useRouter();
-  const [age, setAge] = useState(40);
+  const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
   const getAgeComment = (age: number) => {

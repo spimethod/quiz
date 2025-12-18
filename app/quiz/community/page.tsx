@@ -10,7 +10,7 @@ export default function CommunityPage() {
   const TOTAL_STEPS = 32;
 
   const handleContinue = () => {
-    router.push('/quiz/customization');
+    router.push('/quiz/name');
   };
 
   const footerContent = (

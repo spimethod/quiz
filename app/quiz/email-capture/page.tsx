@@ -61,7 +61,7 @@ export default function EmailCapturePage() {
       setIsLoading(true);
       setTimeout(() => {
       router.push('/quiz/personalizing');
-      }, 1500);
+      }, 500);
     } else {
       setEmailError(error || 'Please enter a valid email address');
     }

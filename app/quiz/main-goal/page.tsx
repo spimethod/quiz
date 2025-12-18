@@ -28,7 +28,7 @@ export default function MainGoalPage() {
 
   const handleSelect = (id: string) => {
     setSelectedGoal(id);
-    setCustomValue(''); // Сброс кастомного текста при выборе опции
+    // Текст в кастомном поле сохраняется, но не используется при выборе другой опции
     setIsExpanded(false); // Закрыть кастомное поле
     setIsRecording(false);
     setShouldAutoFocus(false);
@@ -197,8 +197,8 @@ export default function MainGoalPage() {
             >
               <input
                 type="text"
-                value={customValue}
-                onChange={(e) => setCustomValue(e.target.value)}
+                value=""
+                readOnly
                 onFocus={() => handleCustomSelect({ autoFocus: true, startRecording: false })}
                 onClick={() => handleCustomSelect({ autoFocus: true, startRecording: false })}
                 placeholder="+ Add Your Own"

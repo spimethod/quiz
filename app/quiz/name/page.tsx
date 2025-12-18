@@ -28,7 +28,7 @@ export default function NamePage() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('userName', name.trim());
       }
-      router.push('/quiz/email-capture');
+      router.push('/quiz/customization');
     }
   };
 
@@ -118,7 +118,7 @@ export default function NamePage() {
                 </button>
                 <button 
                   onClick={() => router.push('/quiz/email-capture')}
-                  onTouchEnd={(e) => { e.preventDefault(); router.push('/quiz/email-capture'); }}
+                  onTouchEnd={(e) => { e.preventDefault(); router.push('/quiz/customization'); }}
                   className="flex-1 py-3 rounded-xl bg-[#6B9D47] text-white font-semibold hover:bg-[#5d8a3d] transition-all hover:scale-105 active:scale-95 shadow-md select-none"
                 >
                   Continue

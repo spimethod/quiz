@@ -10,7 +10,7 @@ export default function TimePage() {
   const CURRENT_STEP = 27;
   const TOTAL_STEPS = 32;
 
-  const [selectedTime, setSelectedTime] = useState(5);
+  const [selectedTime, setSelectedTime] = useState<number | null>(null);
 
   const timeOptions = [5, 10, 15, 30, 40, 60];
 
@@ -23,6 +23,7 @@ export default function TimePage() {
   };
 
   const handleContinue = () => {
+    if (selectedTime === null) return;
     if (typeof window !== 'undefined') {
       localStorage.setItem('timeCommitment', selectedTime.toString());
     }
@@ -32,83 +33,89 @@ export default function TimePage() {
   // Constants for SVG
   const width = 300;
   const height = 150;
-  const startPoint = { x: 0, y: 120 };
+  const startPoint = { x: 0, y: 142 }; // Today at the bottom
 
-  // Helper to find t for a given X on a Quadratic Bezier curve
-  // Solves: a*t^2 + b*t + c = 0
-  const getTforX = (targetX: number, p0x: number, p1x: number, p2x: number) => {
-    const a = p0x - 2 * p1x + p2x;
-    const b = 2 * (p1x - p0x);
-    const c = p0x - targetX;
-
-    if (Math.abs(a) < 1e-6) {
-      // Linear case
-      return -c / b;
-    }
-
-    const sqrtVal = Math.sqrt(Math.pow(b, 2) - 4 * a * c);
-    const t1 = (-b + sqrtVal) / (2 * a);
-    const t2 = (-b - sqrtVal) / (2 * a);
-
-    // Return valid t in [0, 1]
-    if (t1 >= 0 && t1 <= 1) return t1;
-    return t2;
-  };
-
-  // Calculate curve points based on selected time
+  // Calculate curve based on selected time
   const curveData = useMemo(() => {
-    // Create equal visual spacing between all time options
-    const getEndY = (time: number) => {
+    // Today is always at the bottom
+    const todayY = startPoint.y; // 142
+    const minY = 10; // Top boundary (leave some padding)
+    const maxRange = todayY - minY; // Available vertical space (132px)
+    
+    // If no time selected, draw a flat horizontal line
+    if (selectedTime === null) {
+      const flatY = todayY;
+      const endPoint = { x: width, y: flatY };
+      const midPoint = { x: width * 0.5, y: flatY };
+      const controlPoint = { x: width * 0.5, y: flatY };
+      
+      const pathD = `M ${startPoint.x} ${startPoint.y} L ${endPoint.x} ${endPoint.y}`;
+      const areaD = `${pathD} L ${width} ${height} L 0 ${height} Z`;
+      
+      return { pathD, areaD, p0: startPoint, p1: controlPoint, p2: endPoint, midPoint };
+    }
+    
+    // Fixed proportional values for each timeframe that fit within bounds
+    // 60 min uses full range, others are proportionally smaller
+    const getPositions = (time: number) => {
       switch (time) {
-        case 5:  return 110; // Lowest point
-        case 10: return 90;  // +20px visual difference
-        case 15: return 70;  // +20px visual difference  
-        case 30: return 50;  // +20px visual difference
-        case 40: return 30;  // +20px visual difference
-        case 60: return 10;  // +20px visual difference (highest)
-        default: return 70;
+        case 5:  return { midRatio: 0.12, endRatio: 0.22 };  // Small progress
+        case 10: return { midRatio: 0.18, endRatio: 0.32 };  // +50% from 5min
+        case 15: return { midRatio: 0.25, endRatio: 0.42 };  // +39% from 10min
+        case 30: return { midRatio: 0.38, endRatio: 0.58 };  // +52% from 15min
+        case 40: return { midRatio: 0.48, endRatio: 0.72 };  // +26% from 30min
+        case 60: return { midRatio: 0.60, endRatio: 0.92 };  // +50% from 40min (almost full)
+        default: return { midRatio: 0.25, endRatio: 0.42 };
       }
     };
     
-    const endY = getEndY(selectedTime);
+    const { midRatio, endRatio } = getPositions(selectedTime);
+    
+    const midY = todayY - (maxRange * midRatio);
+    const endY = todayY - (maxRange * endRatio);
+    
     const endPoint = { x: width, y: endY };
+    
+    // Middle point that curve must pass through at t=0.5
+    const midPoint = { x: width * 0.5, y: midY };
 
-    // Make control point dynamic to affect middle section visibility
-    // Higher time values pull the control point up slightly
-    const timeRatio = (selectedTime - 5) / (60 - 5); // 0 to 1
+    // Calculate control point so curve passes through midPoint at t=0.5
+    // Formula: P1 = 2*M - 0.5*P0 - 0.5*P2 (derived from Bezier formula at t=0.5)
     const controlPoint = { 
-      x: width * 0.7, 
-      y: height - 5 - (timeRatio * 20) // Control point rises with time, affecting middle curve
+      x: 2 * midPoint.x - 0.5 * startPoint.x - 0.5 * endPoint.x,
+      y: 2 * midPoint.y - 0.5 * startPoint.y - 0.5 * endPoint.y
     };
 
     const pathD = `M ${startPoint.x} ${startPoint.y} Q ${controlPoint.x} ${controlPoint.y} ${endPoint.x} ${endPoint.y}`;
     
     const areaD = `${pathD} L ${width} ${height} L 0 ${height} Z`;
 
-    return { pathD, areaD, p0: startPoint, p1: controlPoint, p2: endPoint };
+    return { pathD, areaD, p0: startPoint, p1: controlPoint, p2: endPoint, midPoint };
   }, [selectedTime]);
 
-  // Helper to get Y for a given t (we already found t for specific X)
+  // Helper to get Y on quadratic Bezier for given t
   const getBezierY = (t: number, p0y: number, p1y: number, p2y: number) => {
     return Math.pow(1-t, 2) * p0y + 2 * (1-t) * t * p1y + Math.pow(t, 2) * p2y;
   };
 
-  // Calculate markers
-  // Targets: 2% (Today), 50% (In 2 weeks), 97% (In 1 month)
-  const targetPercents = [0.02, 0.5, 0.97];
-  const points = targetPercents.map(pct => {
-    const targetX = width * pct;
-    const t = getTforX(targetX, curveData.p0.x, curveData.p1.x, curveData.p2.x);
-    const y = getBezierY(t, curveData.p0.y, curveData.p1.y, curveData.p2.y);
-    return { x: targetX, y };
-  });
+  // Fixed marker points: Today, In 2 weeks (on curve), In 1 month
+  const points = [
+    { x: width * 0.02, y: startPoint.y },            // Today - at start
+    { x: width * 0.5, y: curveData.midPoint.y },     // In 2 weeks - exactly on curve
+    { x: width * 0.97, y: curveData.p2.y }           // In 1 month - at end
+  ];
 
   const footerContent = (
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
         onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer transition-all duration-300 select-none"
+        disabled={selectedTime === null}
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl transition-all duration-300 select-none ${
+          selectedTime !== null
+            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
       >
         Continue
       </button>
@@ -131,7 +138,11 @@ export default function TimePage() {
 
         {/* Description */}
         <p className="text-center text-gray-600 text-base sm:text-lg mb-8 px-4">
-          Even <span className="font-bold text-[#6B9D47]">{selectedTime} minutes</span> a day with your 3D Avocado companion can make a difference
+          {selectedTime !== null ? (
+            <>Even <span className="font-bold text-[#6B9D47]">{selectedTime} minutes</span> a day with your 3D Avocado companion can make a difference</>
+          ) : (
+            <>Select how much time you want to dedicate to your mental health</>
+          )}
         </p>
 
         {/* Graph Container */}
@@ -174,7 +185,7 @@ export default function TimePage() {
               />
 
               {/* Faint dashed guide lines above */}
-              {[15, 30].map((offset, i) => {
+              {[20, 40].map((offset, i) => {
                  const guideP0 = { ...curveData.p0, y: curveData.p0.y - offset };
                  const guideP1 = { ...curveData.p1, y: curveData.p1.y - offset };
                  const guideP2 = { ...curveData.p2, y: curveData.p2.y - offset };

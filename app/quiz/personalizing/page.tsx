@@ -299,7 +299,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         }
       };
       
-      const timeout = Math.random() * 100 + 50;
+      const timeout = Math.random() * 75 + 37;
       interval = setInterval(updateProgress, timeout);
     }
     return () => clearInterval(interval);
@@ -335,45 +335,55 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
   const avatarImage = avatar === 'girl' ? '/personalizing-avocado-girl.png' : '/personalizing-avocado-boy.png';
   const hoursPerMonth = parseFloat((timeCommitment * 30 / 60).toFixed(1).replace(/\.0$/, ''));
 
-  // Graph Logic from TimePage
+  // Graph Logic - Exact copy from TimePage
   const width = 300;
-  const height = 150; // Match TimePage height
+  const height = 150;
+  const startPoint = { x: 0, y: 142 }; // Today at the bottom
+  
   const curveData = useMemo(() => {
-    const getEndY = (time: number) => {
+    const todayY = startPoint.y; // 142
+    const minY = 10; // Top boundary
+    const maxRange = todayY - minY; // Available vertical space (132px)
+    
+    // Fixed proportional values for each timeframe that fit within bounds
+    const getPositions = (time: number) => {
       switch (time) {
-        case 5:  return 110;
-        case 10: return 90;
-        case 15: return 70;
-        case 30: return 50;
-        case 40: return 30;
-        case 60: return 10;
-        default: return 70;
+        case 5:  return { midRatio: 0.12, endRatio: 0.22 };
+        case 10: return { midRatio: 0.18, endRatio: 0.32 };
+        case 15: return { midRatio: 0.25, endRatio: 0.42 };
+        case 30: return { midRatio: 0.38, endRatio: 0.58 };
+        case 40: return { midRatio: 0.48, endRatio: 0.72 };
+        case 60: return { midRatio: 0.60, endRatio: 0.92 };
+        default: return { midRatio: 0.25, endRatio: 0.42 };
       }
     };
     
-    const endY = getEndY(timeCommitment);
-    const startPoint = { x: 0, y: 120 };
+    const { midRatio, endRatio } = getPositions(timeCommitment);
+    
+    const midY = todayY - (maxRange * midRatio);
+    const endY = todayY - (maxRange * endRatio);
+    
     const endPoint = { x: width, y: endY };
-
-    const timeRatio = (timeCommitment - 5) / (60 - 5);
+    const midPoint = { x: width * 0.5, y: midY };
+    
+    // Calculate control point so curve passes through midPoint at t=0.5
     const controlPoint = { 
-      x: width * 0.7, 
-      y: height - 5 - (timeRatio * 20)
+      x: 2 * midPoint.x - 0.5 * startPoint.x - 0.5 * endPoint.x,
+      y: 2 * midPoint.y - 0.5 * startPoint.y - 0.5 * endPoint.y
     };
 
     const pathD = `M ${startPoint.x} ${startPoint.y} Q ${controlPoint.x} ${controlPoint.y} ${endPoint.x} ${endPoint.y}`;
     const areaD = `${pathD} L ${width} ${height} L 0 ${height} Z`;
 
-    return { pathD, areaD, p0: startPoint, p1: controlPoint, p2: endPoint };
+    return { pathD, areaD, p0: startPoint, p1: controlPoint, p2: endPoint, midPoint };
   }, [timeCommitment]);
 
-  const targetPercents = [0.02, 0.5, 0.97];
-  const graphPoints = targetPercents.map(pct => {
-    const targetX = width * pct;
-    const t = getTforX(targetX, curveData.p0.x, curveData.p1.x, curveData.p2.x);
-    const y = getBezierY(t, curveData.p0.y, curveData.p1.y, curveData.p2.y);
-    return { x: targetX, y };
-  });
+  // Fixed marker points matching TimePage
+  const graphPoints = [
+    { x: width * 0.02, y: startPoint.y },           // Today - at start
+    { x: width * 0.5, y: curveData.midPoint.y },    // In 2 weeks - exactly on curve
+    { x: width * 0.97, y: curveData.p2.y }          // In 1 month - at end
+  ];
 
   return (
     <div className={`min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden ${phase === 'insights' ? 'fixed inset-0' : ''}`}>
@@ -538,9 +548,16 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="relative w-full aspect-[4/3] border-2 border-[#6B9D47] rounded-2xl overflow-hidden bg-white shadow-sm"
+                    className="inline-block border-2 border-[#6B9D47] rounded-2xl overflow-hidden bg-white shadow-sm"
                   >
-                    <Image src={activeReviewImage} alt="User Review" fill className="object-contain p-2" priority />
+                    <Image 
+                      src={activeReviewImage} 
+                      alt="User Review" 
+                      width={400} 
+                      height={200} 
+                      className="w-full h-auto" 
+                      priority 
+                    />
                   </motion.div>
                 )
               ) : (
@@ -628,7 +645,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                              <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
                                <path d={curveData.areaD} fill="#C8E6C9" fillOpacity="0.6" />
                                {/* Guide lines */}
-                               {[15, 30].map((offset, i) => {
+                               {[20, 40].map((offset, i) => {
                                  const guideP0 = { ...curveData.p0, y: curveData.p0.y - offset };
                                  const guideP1 = { ...curveData.p1, y: curveData.p1.y - offset };
                                  const guideP2 = { ...curveData.p2, y: curveData.p2.y - offset };

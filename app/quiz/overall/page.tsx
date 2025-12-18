@@ -59,7 +59,7 @@ const feelingOptions = [
 
 export default function OverallPage() {
   const router = useRouter();
-  const [selectedValue, setSelectedValue] = useState(6);
+  const [selectedValue, setSelectedValue] = useState(5);
 
   const handleSelect = (value: number) => {
     setSelectedValue(value);
