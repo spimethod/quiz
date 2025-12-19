@@ -232,7 +232,7 @@ export default function PaywallPage() {
                   src={avatar === 'girl' ? "/before-after-avocado-girl.png" : "/before-after-avocado.png"}
                   alt="Before and After Avocado"
                   fill
-                  className="object-contain scale-125"
+                  className={`object-contain ${avatar === 'girl' ? 'scale-100' : 'scale-125'}`}
                   priority
                 />
                </div>
