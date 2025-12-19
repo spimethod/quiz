@@ -56,15 +56,14 @@ export default function AgePage() {
       <div className="max-w-2xl w-full mx-auto">
         {/* Avocado Characters Image */}
         <div className="flex justify-center mb-1 sm:mb-2 mt-2 sm:mt-0">
-          <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 max-w-[35vh] max-h-[35vh] avocado-zoom-fix">
-            <Image
-              src="/age-avocados.png"
-              alt="Avocado Characters"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
+          <Image
+            src="/age-avocados.png"
+            alt="Avocado Characters"
+            width={400}
+            height={400}
+            className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 max-w-[35vh] max-h-[35vh] object-contain avocado-zoom-fix"
+            priority
+          />
         </div>
 
         {/* Title and Subtitle */}
