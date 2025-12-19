@@ -154,7 +154,7 @@ export default function PsychiatricConditionsPage() {
         {/* Custom Input Field - Shows when Yes is clicked */}
         {showInput && (
           <div ref={customInputRef} className="w-full max-w-md mx-auto mb-6">
-            <div className="relative border-2 border-[#6B9D47] rounded-3xl p-4 bg-white">
+            <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white`}>
               <textarea
                 value={customValue}
                 onChange={(e) => {
