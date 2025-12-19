@@ -224,7 +224,7 @@ export default function PaywallPage() {
           </p>
           
           {/* Animated Down Arrow */}
-          <div className="flex justify-center mt-2 mb-2">
+          <div className="flex justify-center mt-1 mb-2">
             <motion.div
               animate={{
                 y: [0, 8, 0],
