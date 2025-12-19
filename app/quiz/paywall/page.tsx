@@ -224,7 +224,7 @@ export default function PaywallPage() {
           </p>
           
           {/* Animated Down Arrow */}
-          <div className="flex justify-center mt-6 mb-2">
+          <div className="flex justify-center mt-2 mb-2">
             <motion.div
               animate={{
                 y: [0, 8, 0],
@@ -237,11 +237,11 @@ export default function PaywallPage() {
               className="flex items-center justify-center"
             >
               <svg 
-                className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" 
+                className="w-6 h-6 sm:w-7 sm:h-7 text-[#1a1a1a]" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
-                strokeWidth={3}
+                strokeWidth={1.5}
               >
                 <path 
                   strokeLinecap="round" 
