@@ -29,6 +29,7 @@ export default function FeelingsPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
+  const continueBtnRef = useRef<HTMLButtonElement>(null);
 
   const toggleOption = (option: string) => {
     if (selectedOptions.includes(option)) {
@@ -42,7 +43,6 @@ export default function FeelingsPage() {
     if (customValue.trim()) {
       setSelectedOptions([...selectedOptions, customValue.trim()]);
       setCustomValue('');
-      setIsExpanded(false);
       setIsRecording(false);
       setShouldAutoFocus(false);
     }
@@ -61,13 +61,17 @@ export default function FeelingsPage() {
         : selectedOptions;
       localStorage.setItem('userFeelings', JSON.stringify(allFeelings));
     }
+    // Do not collapse custom input on submit; keep current expanded state
     router.push('/quiz/pace');
   };
 
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (customInputRef.current && !customInputRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const clickedInsideInput = customInputRef.current?.contains(target);
+      const clickedContinue = continueBtnRef.current?.contains(target);
+      if (!clickedInsideInput && !clickedContinue) {
         setIsExpanded(false);
         setIsRecording(false);
         setShouldAutoFocus(false);
@@ -97,6 +101,7 @@ export default function FeelingsPage() {
         onClick={handleContinue}
         onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
         disabled={selectedOptions.length === 0 && !customValue.trim()}
+        ref={continueBtnRef}
         className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
           selectedOptions.length === 0 && !customValue.trim()
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -167,7 +172,7 @@ export default function FeelingsPage() {
             {!isExpanded ? (
               /* Collapsed: Input + Button in one line */
             <div 
-              className="flex items-center gap-2 border-2 border-[#6B9D47] rounded-full px-4 py-2.5 bg-white cursor-text"
+              className={`flex items-center gap-2 border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-full px-4 py-2.5 bg-white cursor-text`}
             >
                 <input
                   type="text"
@@ -199,7 +204,7 @@ export default function FeelingsPage() {
               </div>
             ) : (
               /* Expanded: Textarea + Mic button */
-              <div className="relative border-2 border-[#6B9D47] rounded-3xl p-4 bg-white">
+              <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white`}>
                 <textarea
                   value={customValue}
                   onChange={(e) => {

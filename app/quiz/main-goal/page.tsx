@@ -49,8 +49,7 @@ export default function MainGoalPage() {
 
   const handleAddCustom = () => {
     if (customValue.trim()) {
-      // Кастомное значение уже выбрано, просто закрываем поле
-      setIsExpanded(false);
+      // Оставляем поле открытым, выбор уже на custom
       setIsRecording(false);
       setShouldAutoFocus(false);
     }
@@ -75,23 +74,8 @@ export default function MainGoalPage() {
 
   // Click outside handler
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (customInputRef.current && !customInputRef.current.contains(event.target as Node)) {
-        if (selectedGoal === 'custom' && !customValue.trim()) {
-          setSelectedGoal(null); // Снять выбор если кастомное поле пустое
-        }
-        setIsExpanded(false);
-        setIsRecording(false);
-        setShouldAutoFocus(false);
-      }
-    };
-
-    if (isExpanded) {
-      document.addEventListener('click', handleClickOutside);
-      return () => {
-        document.removeEventListener('click', handleClickOutside);
-      };
-    }
+    // Не закрываем кастомное поле кликом вне, т.к. выбор взаимоисключающий,
+    // закрытие происходит только при выборе другой опции.
   }, [isExpanded, selectedGoal, customValue]);
 
   // Scroll into view when expanded
@@ -191,9 +175,11 @@ export default function MainGoalPage() {
           {!isExpanded ? (
             /* Collapsed: Input + Button in one line */
             <div 
-              className={`flex items-center gap-2 border-2 rounded-full px-4 py-2.5 bg-white cursor-text transition-all duration-200 ${
-                selectedGoal === 'custom' ? 'border-[#6B9D47] bg-[#f0fdf4]' : 'border-[#6B9D47]'
-              }`}
+            className={`flex items-center gap-2 border-2 rounded-full px-4 py-2.5 bg-white cursor-text transition-all duration-200 ${
+              selectedGoal === 'custom'
+                ? (customValue.trim() ? 'border-[#6B9D47] bg-[#f0fdf4]' : 'border-gray-300')
+                : 'border-gray-300'
+            }`}
             >
               <input
                 type="text"
@@ -213,7 +199,7 @@ export default function MainGoalPage() {
             </div>
           ) : (
             /* Expanded: Textarea + Mic button */
-            <div className="relative border-2 border-[#6B9D47] rounded-3xl p-4 bg-white">
+          <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white`}>
               <textarea
                 value={customValue}
                 onChange={(e) => {

@@ -42,12 +42,12 @@ export default function MedicationsPage() {
     router.push('/quiz/therapy-history');
   };
 
-  // Click outside handler
+  // Click outside handler (except Continue button)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const isOutsideInput = customInputRef.current && !customInputRef.current.contains(target);
-      const isOutsideFooter = footerRef.current && !footerRef.current.contains(target);
+      const isOutsideFooter = footerRef.current && !footerRef.current.contains(target); // footer contains Continue
       
       if (isOutsideInput && isOutsideFooter) {
         setShowInput(false);
@@ -152,7 +152,7 @@ export default function MedicationsPage() {
         {/* Custom Input Field - Shows when Yes is clicked */}
         {showInput && (
           <div ref={customInputRef} className="w-full max-w-md mx-auto mb-6">
-            <div className="relative border-2 border-[#6B9D47] rounded-3xl p-4 bg-white">
+            <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white`}>
               <textarea
                 value={customValue}
                 onChange={(e) => {

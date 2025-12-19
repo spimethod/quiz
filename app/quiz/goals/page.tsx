@@ -170,11 +170,15 @@ export default function GoalsPage() {
           ))}
         </div>
 
-        {/* Custom Input - Collapsed/Expanded */}
+        {/* Custom Input - Collapsed/Expanded (same behavior as feelings step) */}
         <div ref={customInputRef} className="w-full max-w-md mx-auto">
           {!isExpanded ? (
             /* Collapsed: Input + Button in one line */
-            <div className="flex items-center gap-2 border-2 border-[#6B9D47] rounded-full px-4 py-2.5 bg-white cursor-text">
+            <div
+              className={`flex items-center gap-2 border-2 rounded-full px-4 py-2.5 bg-white cursor-text transition-all duration-200 ${
+                customValue.trim() ? 'border-[#6B9D47] bg-[#f0fdf4]' : 'border-gray-300'
+              }`}
+            >
               <input
                 type="text"
                 value={customValue}
@@ -205,7 +209,7 @@ export default function GoalsPage() {
             </div>
           ) : (
             /* Expanded: Textarea + Mic button */
-            <div className="relative border-2 border-[#6B9D47] rounded-3xl p-4 bg-white">
+            <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white transition-colors duration-200`}>
               <textarea
                 value={customValue}
                 onChange={(e) => {
