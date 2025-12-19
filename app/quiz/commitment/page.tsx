@@ -66,6 +66,8 @@ export default function CommitmentPage() {
     router.push('/quiz/email-capture');
   };
 
+  const hideInstructions = avatar === 'boy' && holdProgress > 0;
+
   return (
     <QuizLayout
       currentStep={CURRENT_STEP}
@@ -127,7 +129,7 @@ export default function CommitmentPage() {
         </div>
       )}
 
-      <div className="max-w-[600px] w-full mx-auto text-center pt-6 sm:pt-10">
+      <div className="max-w-[600px] w-full mx-auto text-center pt-4 sm:pt-6">
         
         {/* Title */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
@@ -135,27 +137,27 @@ export default function CommitmentPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-gray-600 text-base sm:text-lg mb-12 sm:mb-16 max-w-md mx-auto">
+        <p className="text-gray-600 text-base sm:text-lg mb-8 sm:mb-10 max-w-md mx-auto">
           And build balance and calm with my<br />Avocado companion
         </p>
 
         {/* Avocado Images - Based on Avatar Selection */}
-        <div className="flex justify-center mb-16 sm:mb-20">
+        <div className="flex justify-center mb-10 sm:mb-12">
           {avatar === 'boy' ? (
             <>
               {/* Boy Version - Mobile & Tablet (< 1024px) */}
-              <div className="relative block lg:hidden">
+              <div className="relative block lg:hidden -translate-y-[2px]">
                 <Image
                   src="/commitment-avocado.png"
                   alt="Commitment Avocado"
-                  width={400}
-                  height={500}
-                  className="w-72 h-auto max-w-[70vw] object-contain"
+                  width={360}
+                  height={460}
+                  className="w-68 h-auto max-w-[68vw] object-contain"
                   priority
                 />
 
                 {/* Soft pulsing glow around button */}
-                <div className="absolute left-1/2 top-[calc(58%+13px)] min-[300px]:top-[calc(58%+18px)] min-[390px]:top-[calc(58%+23px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
+                <div className="absolute left-1/2 top-[calc(58%+11px)] min-[300px]:top-[calc(58%+16px)] min-[390px]:top-[calc(58%+21px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
                   <motion.div
                     animate={{
                       scale: [1, 1.28, 1]
@@ -179,7 +181,7 @@ export default function CommitmentPage() {
                   onMouseLeave={handleMouseUp}
                   onTouchStart={handleTouchStart}
                   onTouchEnd={handleTouchEnd}
-                  className="absolute left-1/2 top-[calc(58%+13px)] min-[300px]:top-[calc(58%+18px)] min-[390px]:top-[calc(58%+23px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
+                  className="absolute left-1/2 top-[calc(58%+11px)] min-[300px]:top-[calc(58%+16px)] min-[390px]:top-[calc(58%+21px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
                   aria-label="Hold to commit"
                 >
                   <Image
@@ -192,7 +194,7 @@ export default function CommitmentPage() {
                 </button>
 
                 {/* Animated Stamp Overlay */}
-                <div className="absolute left-1/2 top-[calc(58%+13px)] min-[300px]:top-[calc(58%+18px)] min-[390px]:top-[calc(58%+23px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-20">
+                <div className="absolute left-1/2 top-[calc(58%+11px)] min-[300px]:top-[calc(58%+16px)] min-[390px]:top-[calc(58%+21px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-20">
                   <motion.div
                     animate={{
                       scale: 1 + (holdProgress / 100) * 7,
@@ -213,18 +215,18 @@ export default function CommitmentPage() {
               </div>
               
               {/* Boy Version - Web (>= 1024px) */}
-              <div className="relative hidden lg:block">
+              <div className="relative hidden lg:block -translate-y-[5px]">
                 <Image
                   src="/commitment-avocado-web.png"
                   alt="Commitment Avocado Web"
-                  width={400}
-                  height={500}
-                  className="w-80 h-auto md:w-96 object-contain"
+                  width={360}
+                  height={460}
+                  className="w-72 h-auto md:w-[22rem] object-contain"
                   priority
                 />
 
                 {/* Soft pulsing glow around button - Desktop */}
-                <div className="absolute left-1/2 top-[calc(58%+31px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
+                <div className="absolute left-1/2 top-[calc(58%+26px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square pointer-events-none z-5">
                   <motion.div
                     animate={{
                       scale: [1, 1.28, 1]
@@ -248,7 +250,7 @@ export default function CommitmentPage() {
                   onMouseLeave={handleMouseUp}
                   onTouchStart={handleTouchStart}
                   onTouchEnd={handleTouchEnd}
-                  className="absolute left-1/2 top-[calc(58%+31px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
+                  className="absolute left-1/2 top-[calc(58%+26px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
                   aria-label="Hold to commit"
                 >
                   <Image
@@ -283,8 +285,8 @@ export default function CommitmentPage() {
             </>
           ) : (
             /* Girl Version - Universal (Mobile/Tablet/Web) - Using Aspect Ratio Container */
-            <div className="relative mx-auto w-80 sm:w-96 md:w-[28rem] max-w-[80vw] aspect-[4876/5396]">
-              <div className="absolute inset-0 scale-110 -translate-x-[10.3%] -translate-y-[1.4%]">
+            <div className="relative mx-auto w-72 sm:w-84 md:w-[26rem] max-w-[78vw] aspect-[4876/5396]">
+              <div className="absolute inset-0 scale-108 -translate-x-[10.3%] -translate-y-[1.4%]">
                 <Image
                   src="/commitment-avocado-girl.png"
                   alt="Commitment Avocado Girl"
@@ -362,9 +364,9 @@ export default function CommitmentPage() {
         </div>
 
         {/* Instruction with Animated Arrow */}
-        <div className="relative">
+        <div className={`relative flex flex-col items-center ${avatar === 'girl' ? 'ml-[-9%]' : ''} ${hideInstructions ? 'opacity-0' : 'opacity-100'} transition-opacity duration-150`}>
           {/* Animated Green Arrow pointing up */}
-          <div className={`absolute bottom-full ${avatar === 'girl' ? 'left-[44%]' : 'left-1/2'} transform -translate-x-1/2 mb-1 sm:mb-2`}>
+          <div className="mb-1 sm:mb-2">
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ 
@@ -380,12 +382,12 @@ export default function CommitmentPage() {
           </div>
           
           {/* Mobile & Tablet Text (< 1024px) */}
-          <p className="text-[#6B9D47] text-base sm:text-lg font-semibold block lg:hidden">
+          <p className="text-[#6B9D47] text-base sm:text-lg font-semibold block lg:hidden text-center">
             Tap and hold the Avocado pit to commit
           </p>
           
           {/* Web Text (>= 1024px) */}
-          <p className="text-[#6B9D47] text-base sm:text-lg font-semibold hidden lg:block">
+          <p className="text-[#6B9D47] text-base sm:text-lg font-semibold hidden lg:block text-center">
             Click and hold the Avocado pit to commit
           </p>
         </div>

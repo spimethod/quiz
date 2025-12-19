@@ -365,7 +365,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
     
     const endPoint = { x: width, y: endY };
     const midPoint = { x: width * 0.5, y: midY };
-    
+
     // Calculate control point so curve passes through midPoint at t=0.5
     const controlPoint = { 
       x: 2 * midPoint.x - 0.5 * startPoint.x - 0.5 * endPoint.x,
