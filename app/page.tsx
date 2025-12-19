@@ -7,8 +7,6 @@ import Modal from './components/Modal';
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const [rotationDegrees, setRotationDegrees] = useState(0);
   const router = useRouter();
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
@@ -16,15 +14,6 @@ export default function Home() {
       localStorage.setItem('selectedGender', gender);
     }
     router.push('/quiz/reviews');
-  };
-
-  const handleMuteToggle = () => {
-    setIsMuted(!isMuted);
-  };
-
-  const handleReplay = () => {
-    setIsMuted(false); // Unmute on replay
-    setRotationDegrees(prev => prev - 180); // Вычитаем 180° для вращения против часовой стрелки
   };
 
   return (
@@ -131,54 +120,6 @@ export default function Home() {
             and{' '}
             <button onClick={() => setActiveModal('cookie')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('cookie'); }} className="text-blue-500 hover:underline select-none">Cookie Policy</button>.
           </p>
-        </div>
-
-        {/* Audio Controls - ADDED HERE */}
-        <div className="flex justify-center gap-12 mt-auto pb-8">
-          {/* Replay Button */}
-          <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={handleReplay}
-              onTouchEnd={(e) => { e.preventDefault(); handleReplay(); }}
-              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer select-none"
-            >
-              <svg 
-                className="w-7 h-7 transition-transform duration-500"
-                style={{ transform: `rotate(${rotationDegrees}deg)` }}
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
-            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Replay</span>
-          </div>
-
-          {/* Mute Button */}
-          <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={handleMuteToggle}
-              onTouchEnd={(e) => { e.preventDefault(); handleMuteToggle(); }}
-              className="w-14 h-14 rounded-full bg-[#7da35e] hover:bg-[#6b8f4f] flex items-center justify-center text-white transition-all duration-200 shadow-md active:scale-95 cursor-pointer relative select-none"
-            >
-              {isMuted ? (
-                /* Muted Icon (Crossed out) */
-                <div className="relative">
-                  <svg className="w-7 h-7 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  </svg>
-                  <div className="absolute top-1/2 left-[-20%] w-[140%] h-0.5 bg-white rotate-45 transform -translate-y-1/2 shadow-sm"></div>
-                </div>
-              ) : (
-                /* Unmuted Icon */
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-              )}
-            </button>
-            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Mute</span>
-          </div>
         </div>
 
       </main>
