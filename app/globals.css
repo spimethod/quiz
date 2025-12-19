@@ -76,3 +76,22 @@ a,
   background-color: #d1d5db;
   border-radius: 2px;
 }
+
+/* Hide Vercel preview badges and deployment indicators */
+[data-vercel-badge],
+[data-vercel-analytics],
+iframe[src*="vercel"],
+iframe[src*="speed-insights"],
+div[style*="position: fixed"][style*="top"][style*="right"]:has(iframe[src*="vercel"]),
+div[style*="position: fixed"][style*="top"][style*="right"]:has(iframe[src*="speed-insights"]),
+/* Hide any fixed position elements in top-right corner that might be Vercel badges */
+body > div[style*="position: fixed"][style*="top: 0"][style*="right: 0"],
+body > div[style*="position: fixed"][style*="top: 0"][style*="right: 0"] > *,
+/* Hide Vercel Speed Insights */
+script[src*="speed-insights"],
+script[src*="vercel"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
