@@ -224,7 +224,8 @@ export default function PaywallPage() {
           </p>
           
           {/* Animated Down Arrow */}
-          <div className="flex justify-center mt-1 mb-2">
+          <div className="flex items-center justify-center gap-2 mt-1 mb-2">
+            <span className="text-xs sm:text-sm text-gray-400 opacity-60">Scroll</span>
             <motion.div
               animate={{
                 y: [0, 8, 0],
@@ -250,6 +251,7 @@ export default function PaywallPage() {
                 />
               </svg>
             </motion.div>
+            <span className="text-xs sm:text-sm text-gray-400 opacity-60">down</span>
           </div>
         </div>
 
