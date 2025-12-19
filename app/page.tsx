@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden">
       {/* Header with Logo */}
-      <header className="flex-shrink-0 pt-6 pb-2 flex justify-center">
+      <header className="sticky top-0 z-30 flex-shrink-0 pt-6 pb-2 flex justify-center bg-[#f5f5f0]">
         <div className="flex justify-center">
           <Image
             src="/avocado-logo.png"

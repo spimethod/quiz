@@ -14,7 +14,7 @@ export default function ResultsFinalPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="relative pt-4 sm:pt-6 pb-2">
+      <header className="sticky top-0 z-30 pt-4 sm:pt-6 pb-2 bg-[#f5f5f0]">
         <div className="flex justify-center items-center">
           <div className="flex items-center space-x-2" style={{ marginLeft: '-30px' }}>
             <Image

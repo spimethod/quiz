@@ -18,7 +18,7 @@ export default function RatingPage() {
   return (
     <div className="bg-[#f5f5f0] flex flex-col overflow-hidden sm:min-h-screen">
       {/* Header */}
-      <header className="flex-shrink-0 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 relative">
+      <header className="sticky top-0 z-30 flex-shrink-0 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0]">
         {/* Back Arrow */}
         <button
           onClick={() => router.back()}
