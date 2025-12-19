@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 import Modal from '../../components/Modal';
 
@@ -221,6 +222,35 @@ export default function PaywallPage() {
           <p className="text-gray-500 text-base sm:text-lg px-4 mt-8">
             200× cheaper than a traditional therapist<br />with everyday check-ins
           </p>
+          
+          {/* Animated Down Arrow */}
+          <div className="flex justify-center mt-6 mb-2">
+            <motion.div
+              animate={{
+                y: [0, 8, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="flex items-center justify-center"
+            >
+              <svg 
+                className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                strokeWidth={3}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M19 9l-7 7-7-7" 
+                />
+              </svg>
+            </motion.div>
+          </div>
         </div>
 
         {/* Second Screen - Hero Image */}
