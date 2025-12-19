@@ -63,7 +63,6 @@ export default function AgePage() {
             height={400}
             className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 max-w-[35vh] max-h-[35vh] object-contain avocado-zoom-fix"
             priority
-            unoptimized
           />
         </div>
 
