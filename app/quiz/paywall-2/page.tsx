@@ -769,12 +769,14 @@ export default function PaywallPage() {
           <div className="bg-[#E8F5E0] rounded-2xl p-3 mb-3 overflow-visible">
             {/* Header */}
             <div className="flex items-center justify-center gap-2 mb-2 relative h-6">
-              <div className="absolute left-1/2 -translate-x-[calc(50%+135px)] top-1/2 -translate-y-1/2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="absolute left-1/2 -translate-x-[calc(50%+135px)] top-1/2 -translate-y-1/2 h-[100px] w-auto">
+                <Image
                   src="/promo-tag.png"
                   alt="Promo"
-                  style={{ height: '100px', width: 'auto' }}
+                  width={200}
+                  height={100}
+                  className="h-[100px] w-auto object-contain"
+                  priority
                 />
               </div>
               <span className="text-[#1a1a1a] font-semibold">Your promo code applied!</span>
