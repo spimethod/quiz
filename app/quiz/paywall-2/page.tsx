@@ -186,8 +186,8 @@ export default function PaywallPage() {
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] flex flex-col font-sans animate-fadeIn">
-      {/* Header */}
-      <header className="sticky top-0 pt-6 sm:pt-8 pb-2 bg-[#f5f5f0] z-30">
+      {/* Header - Fixed */}
+      <header className="fixed top-0 left-0 right-0 pt-6 sm:pt-8 pb-2 bg-[#f5f5f0] z-50 safe-area-top">
         <div className="flex justify-center items-center">
           <div className="h-12 sm:h-14 md:h-16 w-auto relative">
             <Image
@@ -203,7 +203,7 @@ export default function PaywallPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 pb-[420px]"> {/* Large padding bottom for fixed footer */}
+      <main className="flex-1 flex flex-col items-center px-4 pb-[420px] pt-24 sm:pt-28"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
         <div className="w-full max-w-3xl mx-auto mb-8 px-2">

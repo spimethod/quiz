@@ -77,8 +77,8 @@ export default function AICompanionPage() {
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden">
-      {/* Header with Logo - Static */}
-      <header className="flex-shrink-0 pt-4 pb-2 px-4 flex items-center justify-center sticky top-0 bg-[#f5f5f0] z-30">
+      {/* Header with Logo - Fixed */}
+      <header className="fixed top-0 left-0 right-0 pt-4 pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
         <div className="h-12 sm:h-14 md:h-16 w-auto relative">
           <Image
             src="/avocado-logo.png"
@@ -93,7 +93,7 @@ export default function AICompanionPage() {
 
       {/* Main Content - Animated from bottom */}
       <motion.main 
-        className="flex-1 flex flex-col items-center px-4 overflow-y-auto"
+        className="flex-1 flex flex-col items-center px-4 overflow-y-auto pt-16 sm:pt-20"
         initial={{ y: '100vh', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}

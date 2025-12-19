@@ -387,8 +387,8 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
 
   return (
     <div className={`min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden ${phase === 'insights' ? 'fixed inset-0' : ''}`}>
-      {/* Sticky Header with Logo - Exact match to QuizLayout */}
-      <header className="flex-shrink-0 pt-4 pb-2 px-4 flex items-center justify-center sticky top-0 bg-[#f5f5f0] z-30">
+      {/* Fixed Header with Logo - Exact match to QuizLayout */}
+      <header className="fixed top-0 left-0 right-0 pt-4 pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
         <div className="flex flex-col items-center">
           <div className="h-12 sm:h-14 md:h-16 w-auto relative">
             <Image
@@ -412,7 +412,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
       </header>
 
       {/* Main Content */}
-      <div className={`flex-1 relative overflow-x-hidden ${phase === 'insights' ? 'overflow-hidden flex flex-col justify-start' : 'overflow-y-auto'}`}>
+      <div className={`flex-1 relative overflow-x-hidden pt-16 sm:pt-20 ${phase === 'insights' ? 'overflow-hidden flex flex-col justify-start' : 'overflow-y-auto'}`}>
         
         {/* Loading Phase Content - DESKTOP VERSION */}
         {isDesktop && (

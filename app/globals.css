@@ -43,6 +43,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Safe area support for iOS devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
 * {
   box-sizing: border-box;
 }

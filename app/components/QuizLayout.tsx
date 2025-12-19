@@ -26,8 +26,8 @@ export default function QuizLayout({
 }: QuizLayoutProps) {
   return (
     <div className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden relative">
-      {/* Header */}
-      <header className="sticky top-0 z-30 flex-shrink-0 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0]">
+      {/* Header - Fixed */}
+      <header className="fixed top-0 left-0 right-0 z-50 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0] safe-area-top">
         {!hideBackButton && (
         <BackButton 
           onClick={onBack}
@@ -57,7 +57,7 @@ export default function QuizLayout({
       </header>
 
       {/* Main Content */}
-      <main className={`flex-1 overflow-y-auto overflow-x-hidden px-4 pb-32 sm:px-6 md:px-8 lg:px-10 ${className}`}>
+      <main className={`flex-1 overflow-y-auto overflow-x-hidden px-4 pb-32 sm:px-6 md:px-8 lg:px-10 pt-16 sm:pt-20 ${className}`}>
         {children}
       </main>
 

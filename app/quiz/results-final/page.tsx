@@ -13,8 +13,8 @@ export default function ResultsFinalPage() {
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden">
-      {/* Header */}
-      <header className="sticky top-0 z-30 pt-4 sm:pt-6 pb-2 bg-[#f5f5f0]">
+      {/* Header - Fixed */}
+      <header className="fixed top-0 left-0 right-0 z-50 pt-4 sm:pt-6 pb-2 bg-[#f5f5f0] safe-area-top">
         <div className="flex justify-center items-center">
           <div className="flex items-center space-x-2" style={{ marginLeft: '-30px' }}>
             <Image
@@ -30,7 +30,7 @@ export default function ResultsFinalPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow-0 px-7 sm:px-9 md:px-11 lg:px-13 lg:pb-24">
+      <main className="flex-grow-0 px-7 sm:px-9 md:px-11 lg:px-13 lg:pb-24 pt-16 sm:pt-20">
         <div className="max-w-[480px] w-full mx-auto">
           {/* Title */}
           <div className="mb-6 sm:mb-8 text-center">
