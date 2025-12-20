@@ -18,39 +18,38 @@ export default function Home() {
     router.push('/quiz/reviews');
   };
 
-  // Prevent overscroll and add spring effect
+  // Prevent overscroll and force content to return to position
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    let startY = 0;
-    let isOverscrolling = false;
+    let lastScrollTop = 0;
+    let animationFrameId: number | null = null;
+    let touchStartY = 0;
+    let isTouching = false;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY;
-      isOverscrolling = false;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!container) return;
-      
-      const currentY = e.touches[0].clientY;
+    const forceScrollToTop = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // If trying to scroll up when already at top
-      if (scrollTop <= 0 && currentY > startY) {
-        isOverscrolling = true;
-        // Allow some overscroll but with resistance
-        e.preventDefault();
+      if (scrollTop < 0) {
+        // Immediately reset scroll position
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
       }
+      
+      lastScrollTop = Math.max(0, scrollTop);
     };
 
-    const handleScroll = () => {
-      if (!container || isScrollingRef.current) return;
-      
+    const continuousCheck = () => {
+      if (isScrollingRef.current) {
+        animationFrameId = requestAnimationFrame(continuousCheck);
+        return;
+      }
+
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // If scrolled above the top, spring back
+      // If scrolled above top, force return
       if (scrollTop < 0) {
         isScrollingRef.current = true;
         window.scrollTo({
@@ -58,38 +57,88 @@ export default function Home() {
           behavior: 'smooth'
         });
         
+        // Also force immediate reset as backup
         setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
           isScrollingRef.current = false;
-        }, 300);
+        }, 100);
+      }
+      
+      lastScrollTop = scrollTop;
+      animationFrameId = requestAnimationFrame(continuousCheck);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      isTouching = true;
+      lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - touchStartY;
+      
+      // Prevent scrolling up when at top
+      if (scrollTop <= 0 && deltaY > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
       }
     };
 
     const handleTouchEnd = () => {
-      if (!container) return;
+      isTouching = false;
+      
+      // Force return to top if overscrolled
+      setTimeout(() => {
+        forceScrollToTop();
+      }, 50);
+    };
+
+    const handleScroll = () => {
+      if (isScrollingRef.current) return;
       
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Spring back if overscrolled
-      if (scrollTop < 0 || isOverscrolling) {
+      // If scrolled above top, immediately return
+      if (scrollTop < 0) {
         isScrollingRef.current = true;
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
         
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 300);
+        // Immediate reset
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Smooth return as well
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          setTimeout(() => {
+            isScrollingRef.current = false;
+          }, 200);
+        });
       }
     };
+
+    // Start continuous monitoring
+    animationFrameId = requestAnimationFrame(continuousCheck);
 
     // Add event listeners
     container.addEventListener('touchstart', handleTouchStart, { passive: true });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: false });
 
     return () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
@@ -101,7 +150,12 @@ export default function Home() {
     <div 
       ref={containerRef}
       className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
-      style={{ overscrollBehaviorY: 'none', touchAction: 'pan-y' }}
+      style={{ 
+        overscrollBehaviorY: 'none', 
+        overscrollBehavior: 'none',
+        touchAction: 'pan-y',
+        WebkitOverflowScrolling: 'touch'
+      }}
     >
       {/* Header with Logo - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
