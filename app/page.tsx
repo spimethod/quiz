@@ -102,8 +102,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content - Top aligned with 50px offset from logo */}
-      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain', paddingTop: '50px' }}>
+      {/* Main Content - Top aligned with 100px offset from logo */}
+      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain', paddingTop: '100px' }}>
         {/* Main Title */}
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1a1a1a] leading-tight mb-4 mt-2 uppercase tracking-tight">
           GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
