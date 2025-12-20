@@ -72,7 +72,7 @@ export default function AgePage() {
             What's your age?
           </h1>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-1 sm:mb-2 px-2">
-            Used only to tailor your AI report and step-by-step plan
+            Used only to tailor your AI report<br className="sm:hidden" /> and step-by-step plan
           </p>
         </div>
 
