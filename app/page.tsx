@@ -22,63 +22,63 @@ export default function Home() {
     const container = containerRef.current;
     if (!container) return;
 
-    let startY = 0;
-    let isDragging = false;
+    let isScrolling = false;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY;
-      isDragging = true;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging) return;
+    const springBack = () => {
+      if (isScrolling) return;
       
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const currentY = e.touches[0].clientY;
-      const deltaY = currentY - startY;
       
-      // Prevent scrolling up when at top
-      if (scrollTop <= 0 && deltaY > 0) {
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      isDragging = false;
-      
-      // Spring back if overscrolled
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       if (scrollTop < 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
+        isScrolling = true;
+        
+        // Use requestAnimationFrame for smooth animation
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Force reset after animation
+          setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            isScrolling = false;
+          }, 300);
         });
       }
     };
 
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Spring back smoothly if scrolled above top
-      if (scrollTop < 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      }
+      springBack();
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    const handleTouchEnd = () => {
+      // Small delay to allow scroll event to fire first
+      setTimeout(() => {
+        springBack();
+      }, 10);
+    };
+
+    // Check on scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Also check on touch end
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    // Periodic check as backup
+    const checkInterval = setInterval(() => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop < 0) {
+        springBack();
+      }
+    }, 100);
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
+      clearInterval(checkInterval);
       window.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
@@ -86,7 +86,10 @@ export default function Home() {
     <div 
       ref={containerRef}
       className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
-      style={{ overscrollBehaviorY: 'contain' }}
+      style={{ 
+        overscrollBehaviorY: 'none',
+        WebkitOverflowScrolling: 'touch'
+      }}
     >
       {/* Header with Logo - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
