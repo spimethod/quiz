@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import BackButton from './BackButton';
 import { getProgressPercentage } from '../utils/progress';
 
@@ -24,8 +24,88 @@ export default function QuizLayout({
   className = '',
   hideBackButton = false
 }: QuizLayoutProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Spring scroll effect - bounce back when overscrolled
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const container = containerRef.current;
+    if (!container) return;
+
+    let lastScrollTop = 0;
+    let rafId: number | null = null;
+
+    const checkAndSpringBack = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      
+      // If scrolled above top, spring back
+      if (scrollTop < 0) {
+        // Cancel any pending animation
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        
+        // Smooth scroll back
+        rafId = requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Force immediate reset as well
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          
+          rafId = null;
+        });
+      }
+      
+      lastScrollTop = scrollTop;
+    };
+
+    // Listen to scroll events
+    const handleScroll = () => {
+      checkAndSpringBack();
+    };
+
+    // Listen to touch end for immediate response
+    const handleTouchEnd = () => {
+      setTimeout(() => {
+        checkAndSpringBack();
+      }, 50);
+    };
+
+    // Continuous monitoring
+    const monitorInterval = setInterval(() => {
+      checkAndSpringBack();
+    }, 500);
+
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
+
+    return () => {
+      clearInterval(monitorInterval);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchmove', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden relative">
+    <div 
+      ref={containerRef}
+      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden relative"
+      style={{ 
+        overscrollBehaviorY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative'
+      }}
+    >
       {/* Header - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0] safe-area-top">
         {!hideBackButton && (

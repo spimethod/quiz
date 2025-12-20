@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import Modal from '../../components/Modal';
 
 export default function PaywallPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'weekly'>('weekly');
   const [avatar, setAvatar] = useState('boy');
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -19,6 +20,76 @@ export default function PaywallPage() {
   const [mainGoal, setMainGoal] = useState<string>('');
   const [weeklyGoals, setWeeklyGoals] = useState<string[]>([]);
   const [timeCommitment, setTimeCommitment] = useState<number>(0);
+
+  // Spring scroll effect - bounce back when overscrolled
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const container = containerRef.current;
+    if (!container) return;
+
+    let lastScrollTop = 0;
+    let rafId: number | null = null;
+
+    const checkAndSpringBack = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      
+      // If scrolled above top, spring back
+      if (scrollTop < 0) {
+        // Cancel any pending animation
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        
+        // Smooth scroll back
+        rafId = requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Force immediate reset as well
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          
+          rafId = null;
+        });
+      }
+      
+      lastScrollTop = scrollTop;
+    };
+
+    // Listen to scroll events
+    const handleScroll = () => {
+      checkAndSpringBack();
+    };
+
+    // Listen to touch end for immediate response
+    const handleTouchEnd = () => {
+      setTimeout(() => {
+        checkAndSpringBack();
+      }, 50);
+    };
+
+    // Continuous monitoring
+    const monitorInterval = setInterval(() => {
+      checkAndSpringBack();
+    }, 500);
+
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
+
+    return () => {
+      clearInterval(monitorInterval);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchmove', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('avatarPreference');
@@ -88,7 +159,15 @@ export default function PaywallPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f5f5f0] flex flex-col font-sans animate-fadeIn">
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-[#f5f5f0] flex flex-col font-sans animate-fadeIn"
+      style={{ 
+        overscrollBehaviorY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative'
+      }}
+    >
       {/* Header - Fixed */}
       <header className="fixed top-0 left-0 right-0 pt-4 sm:pt-6 pb-2 bg-[#f5f5f0] z-50 safe-area-top">
         <div className="flex justify-center items-center">

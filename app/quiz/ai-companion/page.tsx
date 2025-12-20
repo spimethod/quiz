@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 
 export default function AICompanionPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [avatar, setAvatar] = useState<'girl' | 'boy'>('girl');
   const [companionType, setCompanionType] = useState<'3d' | 'chat'>('3d');
   const [isMuted, setIsMuted] = useState(false);
@@ -75,8 +76,86 @@ export default function AICompanionPage() {
     ? '/ai-companion-girl.png' 
     : '/ai-companion-boy.png';
 
+  // Spring scroll effect - bounce back when overscrolled
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const container = containerRef.current;
+    if (!container) return;
+
+    let lastScrollTop = 0;
+    let rafId: number | null = null;
+
+    const checkAndSpringBack = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      
+      // If scrolled above top, spring back
+      if (scrollTop < 0) {
+        // Cancel any pending animation
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        
+        // Smooth scroll back
+        rafId = requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Force immediate reset as well
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          
+          rafId = null;
+        });
+      }
+      
+      lastScrollTop = scrollTop;
+    };
+
+    // Listen to scroll events
+    const handleScroll = () => {
+      checkAndSpringBack();
+    };
+
+    // Listen to touch end for immediate response
+    const handleTouchEnd = () => {
+      setTimeout(() => {
+        checkAndSpringBack();
+      }, 50);
+    };
+
+    // Continuous monitoring
+    const monitorInterval = setInterval(() => {
+      checkAndSpringBack();
+    }, 500);
+
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
+
+    return () => {
+      clearInterval(monitorInterval);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchmove', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden">
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-[#f5f5f0] flex flex-col overflow-hidden"
+      style={{ 
+        overscrollBehaviorY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative'
+      }}
+    >
       {/* Header with Logo - Fixed */}
       <header className="fixed top-0 left-0 right-0 pt-4 pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
         <div className="h-12 sm:h-14 md:h-16 w-auto relative">
