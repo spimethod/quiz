@@ -776,7 +776,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                    {phase === 'ready' ? "Let's see your results" : "Continue"}
                  </button>
                </div>
-             </motion.div>
+             </div>
           ) : null}
         </AnimatePresence>
 
