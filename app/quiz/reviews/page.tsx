@@ -46,7 +46,7 @@ export default function ReviewsPage() {
 
         {/* Review Card Image */}
         {/* Используем review-card.png как запрошено */}
-        <div className="relative w-full aspect-[4/5] sm:aspect-square max-w-md mb-6 px-2 sm:px-0">
+        <div className="relative w-full aspect-[4/5] sm:aspect-square max-w-[85%] sm:max-w-md mb-4 sm:mb-6 px-2 sm:px-0">
           <Image
             src="/review-card.png"
             alt="User Review"
