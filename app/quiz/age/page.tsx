@@ -40,7 +40,7 @@ export default function AgePage() {
     <button
       onClick={handleContinue}
       onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-      className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-2 sm:py-2.5 md:py-3 px-8 sm:px-10 md:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer w-full max-w-md select-none"
+      className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 px-8 sm:px-10 md:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer w-full max-w-md select-none"
     >
       Continue
     </button>
@@ -108,7 +108,7 @@ export default function AgePage() {
           {/* Age Comment */}
           <div className="text-center mt-0.5 sm:mt-1 min-h-[35px] sm:min-h-[45px]">
             {!preferNotToSay && (
-              <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-600 italic px-2 sm:px-4">
+              <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 italic px-2 sm:px-4 whitespace-nowrap">
                 {getAgeComment(age)}
               </p>
             )}

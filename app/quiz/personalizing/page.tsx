@@ -750,12 +750,9 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         {/* Footer Button - Insights Phase */}
         <AnimatePresence>
           {((showFinalContent && phase === 'ready') || phase === 'insights') ? (
-             <motion.div
+             <div
                className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8 z-20"
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               exit={{ opacity: 0, y: 100 }}
-               transition={{ duration: 0.4 }}
+               style={{ opacity: 1, transform: 'translateY(0)' }}
              >
                <div className="max-w-md mx-auto">
                  <button
@@ -774,7 +771,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                        setPhase('companion');
                      }
                    }}
-                   className="w-full font-semibold text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+                   className="w-full font-semibold text-xl py-3 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
                  >
                    {phase === 'ready' ? "Let's see your results" : "Continue"}
                  </button>

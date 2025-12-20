@@ -161,7 +161,7 @@ export default function PaywallPage() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen bg-[#f5f5f0] flex flex-col font-sans animate-fadeIn"
+      className="min-h-screen bg-[#f5f5f0] flex flex-col font-sans"
       style={{ 
         overscrollBehaviorY: 'auto',
         WebkitOverflowScrolling: 'touch',

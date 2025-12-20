@@ -40,7 +40,7 @@ export default function ReviewsPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-center text-gray-600 text-sm sm:text-base mb-6 sm:mb-8 px-4 leading-relaxed">
+        <p className="text-center text-gray-600 text-sm sm:text-base mb-4 sm:mb-8 px-4 leading-relaxed">
           Over 100,000 users practice daily toward inner balance with an AI companion
         </p>
 

@@ -102,7 +102,7 @@ export default function FeelingsPage() {
         onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
         disabled={selectedOptions.length === 0 && !customValue.trim()}
         ref={continueBtnRef}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-2.5 sm:py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
+        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
           selectedOptions.length === 0 && !customValue.trim()
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'

@@ -179,7 +179,7 @@ export default function RatingPage() {
           <button
             onClick={handleRate}
             onTouchEnd={(e) => { e.preventDefault(); handleRate(); }}
-            className="w-full bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 sm:py-4 px-8 sm:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+            className="w-full bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 px-8 sm:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
           >
             Yes, I'll rate
           </button>

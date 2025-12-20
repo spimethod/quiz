@@ -284,22 +284,20 @@ export default function AICompanionPage() {
       </motion.main>
 
       {/* Footer Button - Also animated */}
-      <motion.footer 
+      <footer 
         className="flex-shrink-0 p-4 bg-gradient-to-t from-[#f5f5f0] via-[#f5f5f0] to-transparent pt-8"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+        style={{ opacity: 1, transform: 'translateY(0)' }}
       >
         <div className="max-w-md mx-auto">
           <button
             onClick={handleContinue}
             onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-            className="w-full font-semibold text-lg sm:text-xl py-4 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+            className="w-full font-semibold text-lg sm:text-xl py-3 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
           >
             Continue my journey
           </button>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   );
 }

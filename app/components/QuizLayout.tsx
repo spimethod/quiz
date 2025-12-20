@@ -143,7 +143,7 @@ export default function QuizLayout({
 
       {/* Footer (Optional) */}
       {footer && (
-        <footer className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-6 pt-4 bg-[#f5f5f0]">
+        <footer className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-6 pt-4 bg-[#f5f5f0]" style={{ opacity: 1, transform: 'translateY(0)' }}>
           <div className="max-w-2xl mx-auto w-full flex justify-center">
             {footer}
           </div>
