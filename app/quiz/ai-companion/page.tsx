@@ -179,7 +179,7 @@ export default function AICompanionPage() {
       >
         <div className="max-w-md w-full mx-auto flex flex-col items-center">
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 mt-4">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] text-center mb-2 mt-4">
             Your personalized insights are ready!
           </h1>
 

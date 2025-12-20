@@ -35,7 +35,7 @@ export default function DoingAmazingPage() {
       <div className="max-w-[660px] w-full mx-auto flex flex-col items-center">
         {/* Title */}
         <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight">
             You're doing amazing!
           </h1>
         </div>

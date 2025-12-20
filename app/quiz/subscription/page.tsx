@@ -52,7 +52,7 @@ export default function SubscriptionPage() {
 
           {/* Title and Description */}
           <div className="text-center mb-4 max-w-lg mx-auto">
-            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight mb-2">
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight mb-2">
               Your Step-by-Step Mental Health Plan
             </h1>
             <p className="text-gray-600 text-xs sm:text-sm md:text-base">

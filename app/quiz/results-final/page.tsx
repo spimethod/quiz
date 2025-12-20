@@ -114,7 +114,7 @@ export default function ResultsFinalPage() {
         <div className="max-w-[480px] w-full mx-auto">
           {/* Title */}
           <div className="mb-6 sm:mb-8 text-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               Your personalized insights are ready!
             </h1>
             <p className="text-gray-600 text-base sm:text-lg md:text-xl mt-3">

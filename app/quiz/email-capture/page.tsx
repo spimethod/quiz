@@ -79,7 +79,7 @@ export default function EmailCapturePage() {
       <div className="max-w-md mx-auto text-center pt-6 sm:pt-10">
         {/* Title */}
         <div className="mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
             Get Your Personal{' '}<span className="whitespace-nowrap sm:whitespace-normal">Wellness Plan</span>
           </h1>
         </div>

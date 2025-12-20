@@ -50,7 +50,7 @@ export default function BeforeAfterPage() {
       <div className="max-w-[660px] w-full mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-10 text-center pt-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
             Before and After<br />using Avocado
           </h1>
         </div>

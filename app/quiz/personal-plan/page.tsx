@@ -41,7 +41,7 @@ export default function PersonalPlanPage() {
         <div className="absolute bottom-0 left-0 right-0 flex justify-center sm:pb-6 pointer-events-none z-10">
           <div className="bg-white w-full sm:max-w-[500px] rounded-t-[40px] sm:rounded-[40px] px-6 pt-10 pb-8 sm:pb-10 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto">
             <div className="max-w-md mx-auto text-center">
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+              <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
                 Avocado builds a personal mental-health plan just for you
               </h1>
               

@@ -59,7 +59,7 @@ export default function NamePage() {
       <div className="max-w-md w-full mx-auto flex flex-col items-center pt-4 sm:pt-8 h-full">
         
         {/* Title */}
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-[#1a1a1a] leading-tight mb-6 sm:mb-8 px-4">
+        <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] leading-tight mb-6 sm:mb-8 px-4">
           What name should Avo<br />call you?
         </h1>
 

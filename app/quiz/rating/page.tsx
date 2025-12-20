@@ -135,7 +135,7 @@ export default function RatingPage() {
         <div className="max-w-md mx-auto text-center">
           {/* Title */}
           <div className="mb-4 sm:mb-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               One rating can bring peace to someone's day
             </h1>
           </div>

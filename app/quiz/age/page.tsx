@@ -68,7 +68,7 @@ export default function AgePage() {
 
         {/* Title and Subtitle */}
         <div className="text-center mb-2 sm:mb-3">
-          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-1.5">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-1.5">
             What's your age?
           </h1>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-1 sm:mb-2 px-2">

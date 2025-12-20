@@ -37,7 +37,7 @@ export default function ProgressTestimonialPage() {
       <div className="max-w-md w-full mx-auto flex flex-col items-center pt-2 sm:pt-4">
         
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl font-bold text-center text-[#1a1a1a] leading-tight mb-3 sm:mb-4 px-2">
+        <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] leading-tight mb-3 sm:mb-4 px-2">
           Feel real mental health progress in 2 weeks
         </h1>
 

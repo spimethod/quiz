@@ -100,7 +100,7 @@ export default function CustomizationPage() {
       <div className="max-w-[600px] w-full mx-auto text-center pt-4 sm:pt-6 flex flex-col h-full">
         
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
+        <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
           You can customize your 3D Avocado companion
         </h1>
 

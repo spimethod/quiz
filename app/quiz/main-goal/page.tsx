@@ -115,7 +115,7 @@ export default function MainGoalPage() {
         
         {/* Title */}
         <div className="text-center mb-2 sm:mb-3">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1a1a1a] leading-tight">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] leading-tight">
             What's your main goal for improving your mental health?
           </h1>
         </div>

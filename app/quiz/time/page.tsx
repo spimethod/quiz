@@ -132,7 +132,7 @@ export default function TimePage() {
       <div className="max-w-[600px] w-full mx-auto pt-4 sm:pt-6">
         
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] mb-2 leading-tight">
+        <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] mb-2 leading-tight">
           How much time do you want to spend on your mental health daily?
         </h1>
 

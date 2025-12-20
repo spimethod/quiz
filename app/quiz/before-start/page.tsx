@@ -61,7 +61,7 @@ export default function BeforeStartPage() {
 
         {/* Title - ПОСЛЕ Meet Avocado */}
         <div className="text-center mb-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+          <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             Before we start
           </h1>
         </div>
