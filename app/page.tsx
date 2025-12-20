@@ -24,35 +24,10 @@ export default function Home() {
 
     let startY = 0;
     let isDragging = false;
-    let lastScrollTop = 0;
-    let springTimeout: NodeJS.Timeout | null = null;
-
-    const springBack = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop < 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        // Also force immediate reset as backup
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 50);
-      }
-    };
 
     const handleTouchStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
       isDragging = true;
-      lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Clear any pending spring back
-      if (springTimeout) {
-        clearTimeout(springTimeout);
-        springTimeout = null;
-      }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -65,7 +40,6 @@ export default function Home() {
       // Prevent scrolling up when at top
       if (scrollTop <= 0 && deltaY > 0) {
         e.preventDefault();
-        e.stopPropagation();
         return false;
       }
     };
@@ -73,44 +47,34 @@ export default function Home() {
     const handleTouchEnd = () => {
       isDragging = false;
       
-      // Spring back immediately
-      springBack();
-      
-      // Also check after a short delay
-      springTimeout = setTimeout(() => {
-        springBack();
-      }, 100);
+      // Spring back if overscrolled
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop < 0) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
     };
 
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Spring back immediately if scrolled above top
+      // Spring back smoothly if scrolled above top
       if (scrollTop < 0) {
-        springBack();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
-      
-      lastScrollTop = scrollTop;
     };
-
-    // Continuous check for overscroll
-    const checkInterval = setInterval(() => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop < 0) {
-        springBack();
-      }
-    }, 50);
 
     container.addEventListener('touchstart', handleTouchStart, { passive: true });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: false });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      clearInterval(checkInterval);
-      if (springTimeout) {
-        clearTimeout(springTimeout);
-      }
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
