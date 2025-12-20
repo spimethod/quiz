@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Modal from './components/Modal';
@@ -8,6 +8,8 @@ import Modal from './components/Modal';
 export default function Home() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
     if (typeof window !== 'undefined') {
@@ -16,8 +18,91 @@ export default function Home() {
     router.push('/quiz/reviews');
   };
 
+  // Prevent overscroll and add spring effect
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let startY = 0;
+    let isOverscrolling = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+      isOverscrolling = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!container) return;
+      
+      const currentY = e.touches[0].clientY;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // If trying to scroll up when already at top
+      if (scrollTop <= 0 && currentY > startY) {
+        isOverscrolling = true;
+        // Allow some overscroll but with resistance
+        e.preventDefault();
+      }
+    };
+
+    const handleScroll = () => {
+      if (!container || isScrollingRef.current) return;
+      
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // If scrolled above the top, spring back
+      if (scrollTop < 0) {
+        isScrollingRef.current = true;
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 300);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (!container) return;
+      
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Spring back if overscrolled
+      if (scrollTop < 0 || isOverscrolling) {
+        isScrollingRef.current = true;
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 300);
+      }
+    };
+
+    // Add event listeners
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" style={{ overscrollBehaviorY: 'contain', touchAction: 'pan-y' }}>
+    <div 
+      ref={containerRef}
+      className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
+      style={{ overscrollBehaviorY: 'none', touchAction: 'pan-y' }}
+    >
       {/* Header with Logo - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
         <div className="flex justify-center">
