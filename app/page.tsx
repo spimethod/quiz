@@ -9,7 +9,6 @@ export default function Home() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
     if (typeof window !== 'undefined') {
@@ -18,127 +17,64 @@ export default function Home() {
     router.push('/quiz/reviews');
   };
 
-  // Prevent overscroll and force content to return to position
+  // Spring scroll effect - smooth return when overscrolled
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    let lastScrollTop = 0;
-    let animationFrameId: number | null = null;
-    let touchStartY = 0;
-    let isTouching = false;
-
-    const forceScrollToTop = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (scrollTop < 0) {
-        // Immediately reset scroll position
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      }
-      
-      lastScrollTop = Math.max(0, scrollTop);
-    };
-
-    const continuousCheck = () => {
-      if (isScrollingRef.current) {
-        animationFrameId = requestAnimationFrame(continuousCheck);
-        return;
-      }
-
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // If scrolled above top, force return
-      if (scrollTop < 0) {
-        isScrollingRef.current = true;
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        
-        // Also force immediate reset as backup
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-          isScrollingRef.current = false;
-        }, 100);
-      }
-      
-      lastScrollTop = scrollTop;
-      animationFrameId = requestAnimationFrame(continuousCheck);
-    };
+    let startY = 0;
+    let isDragging = false;
 
     const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      isTouching = true;
-      lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      startY = e.touches[0].clientY;
+      isDragging = true;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+      
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const currentY = e.touches[0].clientY;
-      const deltaY = currentY - touchStartY;
+      const deltaY = currentY - startY;
       
       // Prevent scrolling up when at top
       if (scrollTop <= 0 && deltaY > 0) {
         e.preventDefault();
-        e.stopPropagation();
         return false;
       }
     };
 
     const handleTouchEnd = () => {
-      isTouching = false;
+      isDragging = false;
       
-      // Force return to top if overscrolled
-      setTimeout(() => {
-        forceScrollToTop();
-      }, 50);
-    };
-
-    const handleScroll = () => {
-      if (isScrollingRef.current) return;
-      
+      // Spring back if overscrolled
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // If scrolled above top, immediately return
       if (scrollTop < 0) {
-        isScrollingRef.current = true;
-        
-        // Immediate reset
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-        
-        // Smooth return as well
-        requestAnimationFrame(() => {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-          
-          setTimeout(() => {
-            isScrollingRef.current = false;
-          }, 200);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
         });
       }
     };
 
-    // Start continuous monitoring
-    animationFrameId = requestAnimationFrame(continuousCheck);
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Spring back smoothly if scrolled above top
+      if (scrollTop < 0) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    };
 
-    // Add event listeners
     container.addEventListener('touchstart', handleTouchStart, { passive: true });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: false });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      if (animationFrameId !== null) {
-        cancelAnimationFrame(animationFrameId);
-      }
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
@@ -150,12 +86,7 @@ export default function Home() {
     <div 
       ref={containerRef}
       className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
-      style={{ 
-        overscrollBehaviorY: 'none', 
-        overscrollBehavior: 'none',
-        touchAction: 'pan-y',
-        WebkitOverflowScrolling: 'touch'
-      }}
+      style={{ overscrollBehaviorY: 'contain' }}
     >
       {/* Header with Logo - Fixed */}
       <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
