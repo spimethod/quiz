@@ -17,17 +17,19 @@ export default function Home() {
     router.push('/quiz/reviews');
   };
 
-  // Spring scroll effect - smooth return when overscrolled
+  // Spring scroll effect - bounce back when overscrolled
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let startY = 0;
     let isDragging = false;
+    let overscrollAmount = 0;
 
     const handleTouchStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
       isDragging = true;
+      overscrollAmount = 0;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -37,23 +39,24 @@ export default function Home() {
       const currentY = e.touches[0].clientY;
       const deltaY = currentY - startY;
       
-      // Prevent scrolling up when at top
+      // Allow slight overscroll for visual feedback, but with resistance
       if (scrollTop <= 0 && deltaY > 0) {
-        e.preventDefault();
-        return false;
+        // Don't prevent default completely - allow small movement
+        overscrollAmount = deltaY * 0.3; // Resistance factor
       }
     };
 
     const handleTouchEnd = () => {
       isDragging = false;
       
-      // Spring back if overscrolled
+      // Always spring back to top
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop < 0) {
+      if (scrollTop < 0 || overscrollAmount > 0) {
         window.scrollTo({
           top: 0,
           behavior: 'smooth'
         });
+        overscrollAmount = 0;
       }
     };
 
@@ -70,7 +73,7 @@ export default function Home() {
     };
 
     container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -102,8 +105,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content - Top aligned with 100px offset from logo */}
-      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain', paddingTop: '100px' }}>
+      {/* Main Content - Top aligned with 75px offset from logo */}
+      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain', paddingTop: '75px' }}>
         {/* Main Title */}
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1a1a1a] leading-tight mb-4 mt-2 uppercase tracking-tight">
           GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
