@@ -85,11 +85,11 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
+      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
       style={{ overscrollBehaviorY: 'contain' }}
     >
-      {/* Header with Logo - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
+      {/* Header with Logo */}
+      <header className="flex-shrink-0 pt-6 pb-2 flex justify-center safe-area-top">
         <div className="flex justify-center">
           <Image
             src="/avocado-logo.png"
@@ -102,8 +102,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8 pt-20 md:pt-24" style={{ overscrollBehaviorY: 'contain' }}>
+      {/* Main Content - Pushed to bottom */}
+      <main className="flex-1 flex flex-col items-center justify-end px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain' }}>
         {/* Main Title */}
         <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1a1a1a] leading-tight mb-4 mt-2 uppercase tracking-tight">
           GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
