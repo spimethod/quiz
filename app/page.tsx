@@ -70,7 +70,7 @@ export default function Home() {
     // Continuous monitoring
     const monitorInterval = setInterval(() => {
       checkAndSpringBack();
-    }, 100);
+    }, 500);
 
     window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
