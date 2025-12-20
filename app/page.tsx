@@ -19,66 +19,71 @@ export default function Home() {
 
   // Spring scroll effect - bounce back when overscrolled
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const container = containerRef.current;
     if (!container) return;
 
-    let isScrolling = false;
+    let lastScrollTop = 0;
+    let rafId: number | null = null;
 
-    const springBack = () => {
-      if (isScrolling) return;
+    const checkAndSpringBack = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
       
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
+      // If scrolled above top, spring back
       if (scrollTop < 0) {
-        isScrolling = true;
+        // Cancel any pending animation
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
         
-        // Use requestAnimationFrame for smooth animation
-        requestAnimationFrame(() => {
+        // Smooth scroll back
+        rafId = requestAnimationFrame(() => {
           window.scrollTo({
             top: 0,
             behavior: 'smooth'
           });
           
-          // Force reset after animation
-          setTimeout(() => {
-            window.scrollTo(0, 0);
-            document.documentElement.scrollTop = 0;
-            document.body.scrollTop = 0;
-            isScrolling = false;
-          }, 300);
+          // Force immediate reset as well
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+          
+          rafId = null;
         });
       }
+      
+      lastScrollTop = scrollTop;
     };
 
+    // Listen to scroll events
     const handleScroll = () => {
-      springBack();
+      checkAndSpringBack();
     };
 
+    // Listen to touch end for immediate response
     const handleTouchEnd = () => {
-      // Small delay to allow scroll event to fire first
       setTimeout(() => {
-        springBack();
-      }, 10);
+        checkAndSpringBack();
+      }, 50);
     };
 
-    // Check on scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Also check on touch end
-    container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    
-    // Periodic check as backup
-    const checkInterval = setInterval(() => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop < 0) {
-        springBack();
-      }
+    // Continuous monitoring
+    const monitorInterval = setInterval(() => {
+      checkAndSpringBack();
     }, 100);
 
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
+
     return () => {
-      clearInterval(checkInterval);
-      window.removeEventListener('scroll', handleScroll);
+      clearInterval(monitorInterval);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll, { capture: true });
       container.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchmove', handleScroll);
     };
   }, []);
 
@@ -87,8 +92,9 @@ export default function Home() {
       ref={containerRef}
       className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
       style={{ 
-        overscrollBehaviorY: 'none',
-        WebkitOverflowScrolling: 'touch'
+        overscrollBehaviorY: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        position: 'relative'
       }}
     >
       {/* Header with Logo - Fixed */}
