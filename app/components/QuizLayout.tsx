@@ -99,7 +99,7 @@ export default function QuizLayout({
   return (
     <div 
       ref={containerRef}
-      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden relative"
+      className="h-screen flex flex-col bg-[#f5f5f0] overflow-hidden relative"
       style={{ 
         overscrollBehaviorY: 'auto',
         WebkitOverflowScrolling: 'touch',
