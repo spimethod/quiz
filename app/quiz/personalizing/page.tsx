@@ -491,7 +491,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
       </header>
 
       {/* Main Content */}
-      <div className={`flex-1 relative overflow-x-hidden pt-16 sm:pt-20 ${phase === 'insights' ? 'overflow-hidden flex flex-col justify-start' : 'overflow-y-auto'}`}>
+      <div className={`flex-1 relative overflow-x-hidden pt-16 sm:pt-20 ${phase === 'insights' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
         
         {/* Loading Phase Content - DESKTOP VERSION */}
         {isDesktop && (
