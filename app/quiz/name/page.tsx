@@ -32,28 +32,11 @@ export default function NamePage() {
     }
   };
 
-  const footerContent = (
-    <div className="w-full max-w-md mx-auto">
-      <button
-        onClick={handleContinue}
-        onTouchEnd={(e) => { if (name.trim()) { e.preventDefault(); handleContinue(); } }}
-        disabled={!name.trim()}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 rounded-xl transition-all duration-300 select-none ${
-          name.trim()
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-      >
-        Continue
-      </button>
-    </div>
-  );
-
   return (
     <QuizLayout
       currentStep={CURRENT_STEP}
       totalSteps={TOTAL_STEPS}
-      footer={footerContent}
+      footer={null}
       className="px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col items-center"
     >
       <div className="max-w-md w-full mx-auto flex flex-col items-center pt-[30px] h-full">
@@ -64,7 +47,7 @@ export default function NamePage() {
         </h1>
 
         {/* Input */}
-        <div className="w-full px-4 mb-6 sm:mb-8">
+        <div className="w-full px-4 mb-4">
           <input
             type="text"
             value={name}
@@ -72,7 +55,23 @@ export default function NamePage() {
             placeholder="Enter your name"
             className="w-full px-4 py-3 sm:py-4 rounded-xl border-2 border-[#6B9D47] bg-white text-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6B9D47] focus:border-transparent transition-all text-center sm:text-left text-gray-900"
             autoFocus
+            style={{ fontSize: '16px' }}
           />
+        </div>
+
+        {/* Continue Button - under the input field */}
+        <div className="w-full px-4 mb-6 sm:mb-8">
+          <button
+            onClick={handleContinue}
+            disabled={!name.trim()}
+            className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 rounded-xl transition-all duration-300 select-none ${
+              name.trim()
+                ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            Continue
+          </button>
         </div>
 
         {/* Avocado Image - Increased size and moved closer to input */}
