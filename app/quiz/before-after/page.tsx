@@ -47,7 +47,7 @@ export default function BeforeAfterPage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[660px] w-full mx-auto">
+      <div className="max-w-[660px] w-full mx-auto pt-[30px]">
         {/* Title */}
         <div className="mb-8 sm:mb-10 text-center pt-4">
           <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">

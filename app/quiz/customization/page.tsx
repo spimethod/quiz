@@ -97,7 +97,7 @@ export default function CustomizationPage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[600px] w-full mx-auto text-center pt-4 sm:pt-6 flex flex-col h-full">
+      <div className="max-w-[600px] w-full mx-auto text-center pt-[30px] flex flex-col h-full">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">

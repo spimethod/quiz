@@ -32,7 +32,7 @@ export default function ReviewsPage() {
       footer={footerContent}
       className="flex flex-col items-center"
     >
-      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-2 sm:pt-4">
+      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-[30px]">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] leading-tight mb-4 px-2">

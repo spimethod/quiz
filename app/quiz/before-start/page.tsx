@@ -33,7 +33,7 @@ export default function BeforeStartPage() {
       footer={footerContent}
       className="px-8 sm:px-10 md:px-12 lg:px-6 pb-6"
     >
-      <div className="max-w-2xl w-full mx-auto">
+      <div className="max-w-2xl w-full mx-auto pt-[30px]">
         {/* Hero Image - Avocado */}
         <div className="flex justify-center mb-2 sm:mb-3 mt-4 sm:mt-6">
           <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64">

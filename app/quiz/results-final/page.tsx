@@ -111,7 +111,7 @@ export default function ResultsFinalPage() {
 
       {/* Main Content */}
       <main className="flex-grow-0 px-7 sm:px-9 md:px-11 lg:px-13 lg:pb-24 pt-16 sm:pt-20">
-        <div className="max-w-[480px] w-full mx-auto">
+        <div className="max-w-[480px] w-full mx-auto pt-[30px]">
           {/* Title */}
           <div className="mb-6 sm:mb-8 text-center">
             <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">

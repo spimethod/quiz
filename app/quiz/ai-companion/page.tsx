@@ -177,7 +177,7 @@ export default function AICompanionPage() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center pt-[30px]">
           {/* Title */}
           <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] text-center mb-2 mt-4">
             Your personalized insights are ready!

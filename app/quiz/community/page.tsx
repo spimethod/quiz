@@ -32,7 +32,7 @@ export default function CommunityPage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[600px] w-full mx-auto pt-16 sm:pt-24">
+      <div className="max-w-[600px] w-full mx-auto pt-[30px]">
         <div className="flex justify-center w-full">
           <Image
             src="/community-reviews.png"

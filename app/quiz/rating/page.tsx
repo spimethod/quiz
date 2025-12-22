@@ -132,7 +132,7 @@ export default function RatingPage() {
 
       {/* Main Content */}
       <main className="px-4 sm:px-6 pt-16 sm:pt-20 sm:flex-1">
-        <div className="max-w-md mx-auto text-center">
+        <div className="max-w-md mx-auto text-center pt-[30px]">
           {/* Title */}
           <div className="mb-4 sm:mb-6">
             <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">

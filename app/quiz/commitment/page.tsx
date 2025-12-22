@@ -129,7 +129,7 @@ export default function CommitmentPage() {
         </div>
       )}
 
-      <div className="max-w-[600px] w-full mx-auto text-center pt-4 sm:pt-6">
+      <div className="max-w-[600px] w-full mx-auto text-center pt-[30px]">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">

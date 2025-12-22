@@ -53,7 +53,7 @@ export default function AgePage() {
       footer={footerContent}
       className="px-8 sm:px-10 md:px-12 lg:px-6 pb-2 sm:pb-4"
     >
-      <div className="max-w-2xl w-full mx-auto">
+      <div className="max-w-2xl w-full mx-auto pt-[30px]">
         {/* Avocado Characters Image */}
         <div className="flex justify-center mb-1 sm:mb-2 mt-2 sm:mt-0">
           <Image

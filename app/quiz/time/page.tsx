@@ -129,7 +129,7 @@ export default function TimePage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[600px] w-full mx-auto pt-4 sm:pt-6">
+      <div className="max-w-[600px] w-full mx-auto pt-[30px]">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] mb-2 leading-tight">

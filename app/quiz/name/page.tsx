@@ -56,7 +56,7 @@ export default function NamePage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col items-center"
     >
-      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-4 sm:pt-8 h-full">
+      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-[30px] h-full">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] leading-tight mb-6 sm:mb-8 px-4">

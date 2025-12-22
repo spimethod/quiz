@@ -76,7 +76,7 @@ export default function EmailCapturePage() {
       totalSteps={TOTAL_STEPS}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-md mx-auto text-center pt-6 sm:pt-10">
+      <div className="max-w-md mx-auto text-center pt-[30px]">
         {/* Title */}
         <div className="mb-4 sm:mb-6">
           <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">

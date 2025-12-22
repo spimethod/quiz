@@ -37,7 +37,7 @@ export default function SubscriptionPage() {
 
       {/* Main Content */}
       <main className="flex-grow-0 px-7 sm:px-9 md:px-11 lg:px-13 pt-0">
-        <div className="max-w-sm mx-auto">
+        <div className="max-w-sm mx-auto pt-[30px]">
           {/* Avocado Logo */}
           <div className="text-center mb-4">
             <Image
