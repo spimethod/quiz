@@ -14,10 +14,10 @@ export default function SupportSystemPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('supportSystem', option);
-    }
-    router.push('/quiz/why-avocado');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('supportSystem', option);
+      }
+      router.push('/quiz/why-avocado');
     }, 300);
   };
 

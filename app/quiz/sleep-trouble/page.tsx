@@ -14,10 +14,10 @@ export default function SleepTroublePage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('sleepTrouble', option);
-      }
-      router.push('/quiz/nightmares');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sleepTrouble', option);
+    }
+    router.push('/quiz/nightmares');
     }, 300);
   };
 

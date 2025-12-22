@@ -14,10 +14,10 @@ export default function FamilyTherapyPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('familyTherapy', option);
-      }
-      router.push('/quiz/social-groups');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('familyTherapy', option);
+    }
+    router.push('/quiz/social-groups');
     }, 300);
   };
 

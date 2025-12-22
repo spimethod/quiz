@@ -14,10 +14,10 @@ export default function NightmaresPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nightmares', option);
-      }
-      router.push('/quiz/support-system');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nightmares', option);
+    }
+    router.push('/quiz/support-system');
     }, 300);
   };
 

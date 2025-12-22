@@ -21,18 +21,18 @@ export default function MedicationsPage() {
   const handleNo = () => {
     setSelectedButton('no');
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('medications', JSON.stringify({ taking: false, details: '' }));
-      }
-      router.push('/quiz/therapy-history');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('medications', JSON.stringify({ taking: false, details: '' }));
+    }
+    router.push('/quiz/therapy-history');
     }, 300);
   };
 
   const handleYes = () => {
     setSelectedButton('yes');
     setTimeout(() => {
-      setShowInput(true);
-      setShouldAutoFocus(true);
+    setShowInput(true);
+    setShouldAutoFocus(true);
       setSelectedButton(null);
     }, 300);
   };
@@ -108,39 +108,39 @@ export default function MedicationsPage() {
   const footerContent = !showInput ? (
     <div ref={footerRef} className="max-w-md mx-auto w-full">
       {/* Yes/No Buttons */}
-      <div className="flex gap-4 w-full">
-        {/* Yes Button */}
-        <button
-          onClick={handleYes}
-          onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
+        <div className="flex gap-4 w-full">
+          {/* Yes Button */}
+          <button
+            onClick={handleYes}
+            onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
           className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
             selectedButton === 'yes'
               ? 'border-[#6B9D47] bg-[#6B9D47]/10'
               : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
           }`}
-        >
-          <span className="text-2xl sm:text-3xl mb-1">💊</span>
-          <span className="text-sm sm:text-base font-medium text-gray-700">
-            Yes
-          </span>
-        </button>
+          >
+            <span className="text-2xl sm:text-3xl mb-1">💊</span>
+            <span className="text-sm sm:text-base font-medium text-gray-700">
+              Yes
+            </span>
+          </button>
 
-        {/* No Button */}
-        <button
-          onClick={handleNo}
-          onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
+          {/* No Button */}
+          <button
+            onClick={handleNo}
+            onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
           className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
             selectedButton === 'no'
               ? 'border-[#6B9D47] bg-[#6B9D47]/10'
               : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
           }`}
-        >
-          <span className="text-2xl sm:text-3xl mb-1">🫙</span>
-          <span className="text-sm sm:text-base font-medium text-gray-700">
-            No
-          </span>
-        </button>
-      </div>
+          >
+            <span className="text-2xl sm:text-3xl mb-1">🫙</span>
+            <span className="text-sm sm:text-base font-medium text-gray-700">
+              No
+            </span>
+          </button>
+        </div>
     </div>
   ) : null;
 

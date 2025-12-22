@@ -14,10 +14,10 @@ export default function SocialGroupsPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('socialGroups', option);
-      }
-      router.push('/quiz/goals');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('socialGroups', option);
+    }
+    router.push('/quiz/goals');
     }, 300);
   };
 
