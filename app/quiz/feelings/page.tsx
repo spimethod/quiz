@@ -98,24 +98,48 @@ export default function FeelingsPage() {
   // Scroll to bottom on initial load (when no options selected)
   useEffect(() => {
     if (selectedOptions.length === 0 && !customValue.trim()) {
-      // Scroll to the custom input field (last element before footer)
       const scrollToBottom = () => {
-        const customInput = customInputRef.current;
-        if (customInput) {
-          customInput.scrollIntoView({ behavior: 'auto', block: 'end' });
-        } else {
-          // Fallback: scroll to bottom of page
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: 'auto'
+        // Wait for next frame to ensure DOM is fully rendered
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const customInput = customInputRef.current;
+            if (customInput) {
+              // Scroll to show the custom input at the bottom
+              const rect = customInput.getBoundingClientRect();
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              const targetScroll = scrollTop + rect.bottom - window.innerHeight;
+              
+              window.scrollTo({
+                top: Math.max(0, targetScroll),
+                behavior: 'auto'
+              });
+            } else {
+              // Fallback: scroll to absolute bottom
+              window.scrollTo({
+                top: document.documentElement.scrollHeight - window.innerHeight,
+                behavior: 'auto'
+              });
+            }
           });
-        }
+        });
       };
       
-      // Try multiple times to ensure it works after all content loads
-      setTimeout(scrollToBottom, 50);
-      setTimeout(scrollToBottom, 200);
-      setTimeout(scrollToBottom, 500);
+      // Try after various delays to catch different load states
+      scrollToBottom();
+      setTimeout(scrollToBottom, 100);
+      setTimeout(scrollToBottom, 300);
+      setTimeout(scrollToBottom, 600);
+      
+      // Also try after window load event
+      const handleLoad = () => {
+        setTimeout(scrollToBottom, 100);
+      };
+      if (document.readyState === 'complete') {
+        handleLoad();
+      } else {
+        window.addEventListener('load', handleLoad);
+        return () => window.removeEventListener('load', handleLoad);
+      }
     }
   }, []); // Only on mount
 
