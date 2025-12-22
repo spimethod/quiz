@@ -116,6 +116,70 @@ export default function GoalsPage() {
     };
   }, [isExpanded]);
 
+  // Scroll custom field into view when keyboard opens
+  useEffect(() => {
+    if (!isExpanded || !customInputRef.current) return;
+
+    const scrollToShowInput = () => {
+      const inputElement = customInputRef.current;
+      if (!inputElement) return;
+
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.innerHeight;
+      const keyboardOpen = windowHeight - viewportHeight > 150;
+
+      if (!keyboardOpen) return;
+
+      const inputRect = inputElement.getBoundingClientRect();
+      const continueButtonHeight = 80; // Approximate height of Continue button
+      const availableHeight = viewportHeight - continueButtonHeight;
+      
+      // Check if input is fully visible
+      const inputTop = inputRect.top;
+      const inputBottom = inputRect.bottom;
+      
+      // If input is not fully visible, scroll to show it
+      if (inputTop < 0 || inputBottom > availableHeight) {
+        const scrollOffset = inputTop < 0 
+          ? window.pageYOffset + inputTop - 10 // Add 10px padding from top
+          : window.pageYOffset + (inputBottom - availableHeight) + 10; // Add 10px padding from bottom
+        
+        window.scrollTo({
+          top: Math.max(0, scrollOffset),
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Scroll after keyboard appears
+    const timeoutId = setTimeout(scrollToShowInput, 300);
+
+    if (window.visualViewport) {
+      const handleViewportChange = () => {
+        scrollToShowInput();
+      };
+      
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+        window.visualViewport?.removeEventListener('scroll', handleViewportChange);
+      };
+    } else {
+      const handleResize = () => {
+        scrollToShowInput();
+      };
+      
+      window.addEventListener('resize', handleResize);
+      return () => {
+        clearTimeout(timeoutId);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, [isExpanded]);
+
   // Reduce padding under Continue button when keyboard is open
   useEffect(() => {
     if (!isExpanded || !customValue.trim()) return;
@@ -126,7 +190,7 @@ export default function GoalsPage() {
 
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       const windowHeight = window.innerHeight;
-      const keyboardOpen = windowHeight - viewportHeight > 150; // Keyboard is open if difference > 150px
+      const keyboardOpen = windowHeight - viewportHeight > 150;
 
       if (keyboardOpen) {
         continueButtonContainer.style.paddingBottom = '4px';
@@ -137,7 +201,6 @@ export default function GoalsPage() {
       }
     };
 
-    // Check on mount and when viewport changes
     const timeoutId = setTimeout(adjustPadding, 100);
 
     if (window.visualViewport) {
