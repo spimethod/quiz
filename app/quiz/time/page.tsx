@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import QuizLayout from '../../components/QuizLayout';
@@ -105,22 +105,30 @@ export default function TimePage() {
     { x: width * 0.97, y: curveData.p2.y }           // In 1 month - at end
   ];
 
-  const footerContent = (
+  // Scroll to show Continue button when 40 or 60 min is selected
+  useEffect(() => {
+    if (selectedTime === 40 || selectedTime === 60) {
+      const footer = document.querySelector('footer');
+      if (footer) {
+        setTimeout(() => {
+          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 100);
+      }
+    }
+  }, [selectedTime]);
+
+  const footerContent = selectedTime !== null ? (
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
         onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        disabled={selectedTime === null}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl transition-all duration-300 select-none ${
-          selectedTime !== null
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
+        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+        style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
       >
         Continue
       </button>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
