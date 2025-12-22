@@ -50,13 +50,13 @@ export default function PersonalPlanPage() {
 
         {/* Нижняя карточка */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none z-10" style={{ paddingBottom: 'calc(1.5rem + 60px)' }}>
-          <div className="bg-white w-full sm:max-w-[500px] rounded-t-[40px] sm:rounded-[40px] px-6 pt-10 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto">
+          <div className="bg-white w-full sm:max-w-[500px] rounded-t-[40px] sm:rounded-[40px] px-6 pt-10 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] pointer-events-auto" style={{ marginBottom: '80px' }}>
             <div className="max-w-md mx-auto text-center">
               <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4 leading-tight">
                 Avocado builds a personal mental-health plan just for you
               </h1>
               
-              <p className="text-gray-500 text-sm sm:text-base mb-0 leading-relaxed px-2 font-medium">
+              <p className="text-gray-500 text-sm sm:text-base mb-6 leading-relaxed px-2 font-medium">
                 Reach your goal faster with your 3D AI companion built on the latest <span className="font-bold text-gray-800">psychological science</span>
               </p>
             </div>
