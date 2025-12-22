@@ -129,6 +129,39 @@ export default function MainGoalPage() {
     };
   }, [isExpanded]);
 
+  // Scroll custom field into view when expanded (to avoid browser bar covering it)
+  useEffect(() => {
+    if (!isExpanded || !customInputRef.current) return;
+
+    const scrollToInput = () => {
+      if (customInputRef.current) {
+        customInputRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    };
+
+    // Initial scroll after DOM update
+    const timeoutId = setTimeout(scrollToInput, 150);
+
+    // Re-scroll when keyboard opens/closes
+    if (window.visualViewport) {
+      const handleViewportChange = () => {
+        setTimeout(scrollToInput, 100);
+      };
+      
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+      };
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [isExpanded]);
+
   const footerContent = !isExpanded && selectedGoal && (selectedGoal !== 'custom' || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
       <button
