@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
@@ -17,7 +17,7 @@ export default function TherapyHistoryPage() {
     'Not yet'
   ];
 
-  const handleSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSelect = (e: MouseEvent<HTMLButtonElement>) => {
     const option = e.currentTarget.getAttribute('data-option');
     if (option) {
       e.preventDefault();
@@ -72,14 +72,14 @@ export default function TherapyHistoryPage() {
           {options.map((option) => (
             <button
               key={option}
-              type="button"
-              onClick={() => handleSelect(option)}
-              onTouchEnd={(e) => { e.preventDefault(); handleSelect(option); }}
+              data-option={option}
+              onClick={handleSelect}
               className={`w-full flex items-center justify-between px-5 py-4 rounded-xl border-2 transition-all duration-200 select-none ${
                 selected === option
-                  ? 'border-[#6B9D47] bg-[#f0fdf4]'
+                  ? 'border-[#6B9D47] bg-[#6B9D47]/10'
                   : 'border-gray-200 bg-white hover:border-gray-300'
               }`}
+              style={{ touchAction: 'manipulation' }}
             >
               <span className={`text-base sm:text-lg font-medium ${
                 selected === option ? 'text-[#6B9D47]' : 'text-gray-700'
