@@ -491,17 +491,19 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
       </header>
 
       {/* Main Content */}
-      <div className={`flex-1 relative overflow-x-hidden pt-16 sm:pt-20 ${phase === 'insights' ? 'overflow-y-hidden' : 'overflow-y-auto'}`}>
+      <div className={`flex-1 relative overflow-x-hidden pt-16 sm:pt-20 ${phase === 'insights' ? 'overflow-y-auto' : 'overflow-y-auto'}`}>
         
         {/* Loading Phase Content - DESKTOP VERSION */}
         {isDesktop && (
           <motion.div
             className="px-4"
+            initial={{ height: 'auto', opacity: 1 }}
             animate={{ 
-              y: phase === 'insights' || phase === 'companion' ? -600 : 0,
+              height: phase === 'insights' || phase === 'companion' ? 0 : 'auto',
               opacity: phase === 'insights' || phase === 'companion' ? 0 : 1
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
           >
             <div className="max-w-md mx-auto pt-[60px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
               <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
@@ -535,11 +537,13 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         {isMobile && (
           <motion.div
             className="px-4"
+            initial={{ height: 'auto', opacity: 1 }}
             animate={{ 
-              y: phase === 'insights' || phase === 'companion' ? -400 : 0,
+              height: phase === 'insights' || phase === 'companion' ? 0 : 'auto',
               opacity: phase === 'insights' || phase === 'companion' ? 0 : 1
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
           >
             <div className="max-w-md mx-auto pt-[60px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
               <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
@@ -575,9 +579,10 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
             {phase !== 'insights' && phase !== 'companion' && (
               <motion.div
                 className="px-4"
-                initial={{ y: 0, opacity: 1 }}
-                exit={{ y: -300, opacity: 0 }}
+                initial={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
               >
                 <div className="max-w-md mx-auto pt-[60px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
                   <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
@@ -613,7 +618,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         <motion.div
           className="px-4 mt-4"
           animate={{ 
-            y: phase === 'companion' ? '-100vh' : phase === 'insights' ? slideUpY : 0,
+            y: phase === 'companion' ? '-100vh' : 0,
             opacity: phase === 'companion' ? 0 : 1
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
