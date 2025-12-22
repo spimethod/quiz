@@ -129,48 +129,45 @@ export default function GoalsPage() {
         const inputRect = inputElement.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
         const continueButtonHeight = 80; // Approximate height of Continue button
-        const browserBarHeight = 50; // Approximate height of browser navigation bar
-        const availableHeight = viewportHeight - continueButtonHeight - browserBarHeight;
-        const padding = 20; // Padding from top edge
+        const browserBarHeight = 60; // Approximate height of browser navigation bar (increased)
+        const topPadding = 30; // Padding from top edge
+        const bottomPadding = 10; // Padding from browser bar
         
-        // Calculate how much we need to scroll to show input fully above browser bar
+        // Calculate available space above browser bar
+        const availableTop = viewportHeight - browserBarHeight - continueButtonHeight - bottomPadding;
+        
         const inputTop = inputRect.top;
         const inputBottom = inputRect.bottom;
         const inputHeight = inputRect.height;
         
-        // Target: input should be fully visible above browser bar with padding
-        const targetTop = padding;
+        // Target: position input so its top is at topPadding and bottom is above browser bar
+        const targetTop = topPadding;
         const currentTop = inputTop;
-        const scrollNeeded = currentTop - targetTop;
         
-        // Check if input fits in available space
-        if (inputHeight <= availableHeight) {
-          // Input fits, scroll to position it at top with padding
-          if (scrollNeeded > 0) {
-            window.scrollTo({
-              top: window.pageYOffset + scrollNeeded,
-              behavior: 'smooth'
-            });
-          }
-        } else {
-          // Input is taller than available space, scroll to show top part
-          if (scrollNeeded > 0) {
-            window.scrollTo({
-              top: window.pageYOffset + scrollNeeded,
-              behavior: 'smooth'
-            });
-          }
-        }
-        
-        // Ensure input bottom doesn't go below browser bar
-        if (inputBottom > viewportHeight - browserBarHeight) {
-          const scrollNeededBottom = inputBottom - (viewportHeight - browserBarHeight) + padding;
+        // If input bottom would be below browser bar, scroll more aggressively
+        if (inputBottom > availableTop) {
+          // Scroll to position input top at targetTop, ensuring bottom is above browser bar
+          const scrollNeeded = currentTop - targetTop + (inputBottom - availableTop);
           window.scrollTo({
-            top: window.pageYOffset + scrollNeededBottom,
+            top: window.pageYOffset + scrollNeeded,
+            behavior: 'smooth'
+          });
+        } else if (currentTop < targetTop) {
+          // Input is too high, scroll down a bit (shouldn't happen often)
+          const scrollNeeded = currentTop - targetTop;
+          window.scrollTo({
+            top: window.pageYOffset + scrollNeeded,
+            behavior: 'smooth'
+          });
+        } else if (currentTop > targetTop) {
+          // Scroll to position input at top with padding
+          const scrollNeeded = currentTop - targetTop;
+          window.scrollTo({
+            top: window.pageYOffset + scrollNeeded,
             behavior: 'smooth'
           });
         }
-      }, 200);
+      }, 300);
     };
 
     scrollToShowInput();
