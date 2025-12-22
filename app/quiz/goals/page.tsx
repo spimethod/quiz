@@ -116,110 +116,38 @@ export default function GoalsPage() {
     };
   }, [isExpanded]);
 
-  // Scroll content up when custom field opens to show it fully in viewport
+  // Simple scroll: just scroll input container to top of screen when expanded
   useEffect(() => {
     if (!isExpanded || !customInputRef.current) return;
 
-    const scrollToShowInput = () => {
-      const inputElement = customInputRef.current;
-      if (!inputElement) return;
-
-      // Wait for DOM to update and keyboard to appear
-      setTimeout(() => {
-        const inputRect = inputElement.getBoundingClientRect();
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const continueButtonHeight = 80; // Approximate height of Continue button
-        const browserBarHeight = 60; // Approximate height of browser navigation bar (increased)
-        const topPadding = 30; // Padding from top edge
-        const bottomPadding = 10; // Padding from browser bar
-        
-        // Calculate available space above browser bar
-        const availableTop = viewportHeight - browserBarHeight - continueButtonHeight - bottomPadding;
-        
-        const inputTop = inputRect.top;
-        const inputBottom = inputRect.bottom;
-        const inputHeight = inputRect.height;
-        
-        // Target: position input so its top is at topPadding and bottom is above browser bar
-        const targetTop = topPadding;
-        const currentTop = inputTop;
-        
-        // If input bottom would be below browser bar, scroll more aggressively
-        if (inputBottom > availableTop) {
-          // Scroll to position input top at targetTop, ensuring bottom is above browser bar
-          const scrollNeeded = currentTop - targetTop + (inputBottom - availableTop);
-          window.scrollTo({
-            top: window.pageYOffset + scrollNeeded,
-            behavior: 'smooth'
-          });
-        } else if (currentTop < targetTop) {
-          // Input is too high, scroll down a bit (shouldn't happen often)
-          const scrollNeeded = currentTop - targetTop;
-          window.scrollTo({
-            top: window.pageYOffset + scrollNeeded,
-            behavior: 'smooth'
-          });
-        } else if (currentTop > targetTop) {
-          // Scroll to position input at top with padding
-          const scrollNeeded = currentTop - targetTop;
-          window.scrollTo({
-            top: window.pageYOffset + scrollNeeded,
-            behavior: 'smooth'
-          });
-        }
-      }, 300);
+    // Use scrollIntoView with block: 'start' to position input at top
+    const scrollToInput = () => {
+      if (customInputRef.current) {
+        customInputRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     };
 
-    scrollToShowInput();
+    // Initial scroll after DOM update
+    const timeoutId = setTimeout(scrollToInput, 150);
 
-    // Also handle viewport changes (keyboard open/close)
+    // Re-scroll when keyboard opens/closes
     if (window.visualViewport) {
       const handleViewportChange = () => {
-        scrollToShowInput();
+        setTimeout(scrollToInput, 100);
       };
       
       window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
       
       return () => {
+        clearTimeout(timeoutId);
         window.visualViewport?.removeEventListener('resize', handleViewportChange);
-        window.visualViewport?.removeEventListener('scroll', handleViewportChange);
       };
     }
-  }, [isExpanded]);
 
-  // Add bottom padding to main when keyboard is open so input stays above overlays
-  useEffect(() => {
-    if (!isExpanded) return;
-
-    const mainEl = document.querySelector('main') as HTMLElement | null;
-    if (!mainEl) return;
-
-    const adjustPadding = () => {
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const windowHeight = window.innerHeight;
-      const keyboardHeight = Math.max(0, windowHeight - viewportHeight);
-
-      // Extra space to clear browser bar and Continue button (approx)
-      const extra = keyboardHeight > 0 ? keyboardHeight + 140 : 0;
-      mainEl.style.paddingBottom = extra ? `${extra}px` : '';
-    };
-
-    adjustPadding();
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', adjustPadding);
-      return () => {
-        window.visualViewport?.removeEventListener('resize', adjustPadding);
-        mainEl.style.paddingBottom = '';
-      };
-    } else {
-      window.addEventListener('resize', adjustPadding);
-      return () => {
-        window.removeEventListener('resize', adjustPadding);
-        mainEl.style.paddingBottom = '';
-      };
-    }
+    return () => clearTimeout(timeoutId);
   }, [isExpanded]);
 
   // Reduce padding under Continue button when keyboard is open
