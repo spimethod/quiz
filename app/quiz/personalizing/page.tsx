@@ -213,8 +213,8 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        // Mobile - slide up more to reduce gap to 30px
-        setSlideUpY('-52vh');
+        // Mobile - slide up more to reduce gap
+        setSlideUpY('-54vh');
       } else if (width < 1024) {
         // Tablet - no slide up
         setSlideUpY('0');
@@ -672,7 +672,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
                     >
-                      <div className="pb-32 sm:pb-40">
+                      <div className="pb-6 sm:pb-8">
                          <div className="bg-[#EAF4E2] rounded-3xl p-4 sm:p-6 mb-2 space-y-3 sm:space-y-4 shadow-sm">
                            {/* Duration */}
                            <div className="flex items-center gap-3">
