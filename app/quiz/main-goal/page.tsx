@@ -26,8 +26,14 @@ export default function MainGoalPage() {
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
 
-  const handleSelect = (id: string) => {
-    setSelectedGoal(id);
+  const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const optionId = e.currentTarget.dataset.option;
+    if (!optionId) return;
+    
+    setSelectedGoal(optionId);
     // Текст в кастомном поле сохраняется, но не используется при выборе другой опции
     setIsExpanded(false); // Закрыть кастомное поле
     setIsRecording(false);
