@@ -225,23 +225,6 @@ export default function MedicalConditionsPage() {
           </div>
         )}
       </div>
-
-      {/* Floating Continue Button - appears when custom field is expanded, always visible and active */}
-      {showInput && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
-          <div className="max-w-sm mx-auto w-full">
-            <button
-              ref={continueBtnRef}
-              type="button"
-              onClick={handleContinue}
-              onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-              className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      )}
     </QuizLayout>
   );
 }
