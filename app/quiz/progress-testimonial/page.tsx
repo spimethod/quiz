@@ -47,7 +47,7 @@ export default function ProgressTestimonialPage() {
         </p>
 
         {/* Testimonial Card Image */}
-        <div className="relative w-full aspect-[3/4] max-w-[75%] sm:max-w-sm mb-6">
+        <div className="relative w-full aspect-[3/4] max-w-[60%] sm:max-w-[70%] md:max-w-sm mb-6">
           <Image
             src="/progress-testimonial.png"
             alt="User Progress Testimonial"
