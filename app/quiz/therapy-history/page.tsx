@@ -22,12 +22,12 @@ export default function TherapyHistoryPage() {
     if (option) {
       e.preventDefault();
       e.stopPropagation();
-      setSelected(option);
+    setSelected(option);
       setTimeout(() => {
-        if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined') {
           localStorage.setItem('therapyHistory', option);
-        }
-        router.push('/quiz/medical-conditions');
+      }
+      router.push('/quiz/medical-conditions');
       }, 300);
     }
   };

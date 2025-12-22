@@ -14,10 +14,10 @@ export default function PsychologyBooksPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('psychologyBooks', option);
-      }
-      router.push('/quiz/family-therapy');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('psychologyBooks', option);
+    }
+    router.push('/quiz/family-therapy');
     }, 300);
   };
 
