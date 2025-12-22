@@ -17,7 +17,7 @@ export default function GoalsPage() {
   const TOTAL_STEPS = 32;
 
   const goalOptions = [
-    'Support',
+    'Cognitive tools',
     'Stress relief',
     'Better sleep',
     'Mood boost',
@@ -25,7 +25,7 @@ export default function GoalsPage() {
     'Relaxation',
     'Self-awareness',
     'Confidence',
-    'Cognitive tools'
+    'Support'
   ];
 
   const handleSelect = (option: string) => {
