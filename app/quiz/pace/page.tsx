@@ -20,6 +20,7 @@ export default function PacePage() {
   const router = useRouter();
   const [selectedPace, setSelectedPace] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   // Очистка таймера при размонтировании компонента
   useEffect(() => {
@@ -27,6 +28,54 @@ export default function PacePage() {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
+
+  // Scroll to bottom on initial load (when no option selected)
+  useEffect(() => {
+    if (!selectedPace) {
+      const scrollToBottom = () => {
+        // Wait for next frame to ensure DOM is fully rendered
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const optionsContainer = optionsRef.current;
+            if (optionsContainer) {
+              // Scroll to show the options container at the bottom
+              const rect = optionsContainer.getBoundingClientRect();
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              const targetScroll = scrollTop + rect.bottom - window.innerHeight;
+              
+              window.scrollTo({
+                top: Math.max(0, targetScroll),
+                behavior: 'auto'
+              });
+            } else {
+              // Fallback: scroll to absolute bottom
+              window.scrollTo({
+                top: document.documentElement.scrollHeight - window.innerHeight,
+                behavior: 'auto'
+              });
+            }
+          });
+        });
+      };
+      
+      // Try after various delays to catch different load states
+      scrollToBottom();
+      setTimeout(scrollToBottom, 100);
+      setTimeout(scrollToBottom, 300);
+      setTimeout(scrollToBottom, 600);
+      
+      // Also try after window load event
+      const handleLoad = () => {
+        setTimeout(scrollToBottom, 100);
+      };
+      if (document.readyState === 'complete') {
+        handleLoad();
+      } else {
+        window.addEventListener('load', handleLoad);
+        return () => window.removeEventListener('load', handleLoad);
+      }
+    }
+  }, []); // Only on mount
 
   const handleSelect = (id: string) => {
     setSelectedPace(id);
