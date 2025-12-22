@@ -789,7 +789,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         <AnimatePresence>
           {phase === 'companion' && (
             <motion.div
-              className="absolute inset-0 top-[70px] sm:top-[80px] flex flex-col bg-[#f5f5f0] z-10"
+              className="absolute inset-0 top-[100px] sm:top-[80px] flex flex-col bg-[#f5f5f0] z-10"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
