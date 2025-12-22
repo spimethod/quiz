@@ -188,7 +188,7 @@ export default function PaywallPage() {
       <main className={`flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 ${avatar === 'girl' ? 'pt-[105px]' : 'pt-20'}`}> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
-        <div className="w-full max-w-3xl mx-auto mb-8 px-2">
+        <div className="w-full max-w-3xl mx-auto mb-2 px-2">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 md:gap-6 items-center">
              {/* Left Column - Before (aligned to right/center) */}
              <div className="flex justify-end mr-[-4px] sm:mr-[-6px] md:mr-[-8px]">
@@ -242,7 +242,7 @@ export default function PaywallPage() {
         </div>
 
         {/* Animated Down Arrow - Scroll Indicator */}
-        <div className="flex items-center justify-center gap-2 mt-2 mb-4">
+        <div className="flex items-center justify-center gap-2 mt-0 mb-2">
           <span className="text-xs sm:text-sm text-gray-400 opacity-60">Scroll</span>
           <motion.div
             animate={{
