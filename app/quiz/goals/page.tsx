@@ -85,7 +85,9 @@ export default function GoalsPage() {
       const target = event.target as Node;
       const clickedInsideInput = customInputRef.current?.contains(target);
       const clickedContinue = continueBtnRef.current?.contains(target);
-      if (!clickedInsideInput && !clickedContinue) {
+      // Check if clicked on an option button
+      const clickedOption = (target as HTMLElement).closest?.('[data-option]');
+      if (!clickedInsideInput && !clickedContinue && !clickedOption) {
         setIsExpanded(false);
         setIsRecording(false);
         setShouldAutoFocus(false);
