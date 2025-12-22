@@ -32,7 +32,13 @@ export default function FeelingsPage() {
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
 
-  const toggleOption = (option: string) => {
+  const toggleOption = (option: string, event?: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    // Prevent event bubbling and default behavior
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     if (selectedOptions.includes(option)) {
       setSelectedOptions(selectedOptions.filter(item => item !== option));
     } else {
@@ -157,13 +163,18 @@ export default function FeelingsPage() {
             {predefinedOptions.map((option) => (
               <button
                 key={option}
-                onClick={() => toggleOption(option)}
-                onTouchEnd={(e) => { e.preventDefault(); toggleOption(option); }}
+                onClick={(e) => toggleOption(option, e)}
+                onTouchStart={(e) => {
+                  // Use touchStart instead of touchEnd to prevent conflicts
+                  e.preventDefault();
+                  toggleOption(option, e);
+                }}
                 className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none flex-shrink-0 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
                   selectedOptions.includes(option)
                     ? 'bg-[#6B9D47] text-white shadow-md scale-105'
                     : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'
                 }`}
+                style={{ touchAction: 'manipulation' }}
               >
                 {option}
               </button>
@@ -227,7 +238,7 @@ export default function FeelingsPage() {
                   if (isRecording) setIsRecording(false);
                 }}
                   placeholder={isRecording ? "Speak please..." : "Type please..."}
-                  className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 pt-12 text-sm sm:text-base text-gray-700 placeholder-gray-400"
+                  className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
                 style={{ fontSize: '16px' }}
                 />
