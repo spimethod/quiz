@@ -25,6 +25,7 @@ export default function QuizLayout({
   hideBackButton = false
 }: QuizLayoutProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLElement>(null);
 
   // Spring scroll effect - bounce back when overscrolled
   useEffect(() => {
@@ -96,6 +97,75 @@ export default function QuizLayout({
     };
   }, []);
 
+  // Adjust footer padding when keyboard appears/disappears
+  useEffect(() => {
+    if (typeof window === 'undefined' || !footerRef.current) return;
+
+    const footer = footerRef.current;
+    const initialPaddingBottom = 24; // pb-6 = 1.5rem = 24px
+    
+    // Track the maximum viewport height (when keyboard is closed)
+    let maxViewportHeight = window.innerHeight;
+    
+    const adjustFooterPadding = () => {
+      const currentViewportHeight = window.innerHeight;
+      
+      // Update max height if viewport got larger (keyboard closed or orientation changed)
+      if (currentViewportHeight > maxViewportHeight) {
+        maxViewportHeight = currentViewportHeight;
+      }
+      
+      const viewportHeightDiff = maxViewportHeight - currentViewportHeight;
+      
+      // If viewport height decreased significantly (keyboard appeared)
+      if (viewportHeightDiff > 100) {
+        // Reduce padding proportionally to keyboard height
+        // Minimum padding of 8px (pb-2) when keyboard is fully visible
+        const keyboardHeight = viewportHeightDiff;
+        const maxKeyboardHeight = maxViewportHeight * 0.4; // ~40% of screen
+        const paddingReduction = Math.min(keyboardHeight / maxKeyboardHeight, 1) * (initialPaddingBottom - 8);
+        const newPadding = Math.max(8, initialPaddingBottom - paddingReduction);
+        
+        footer.style.paddingBottom = `${newPadding}px`;
+      } else {
+        // Keyboard not visible or closed, restore original padding
+        footer.style.paddingBottom = `${initialPaddingBottom}px`;
+      }
+    };
+
+    // Use Visual Viewport API if available (better for mobile keyboards)
+    if (window.visualViewport) {
+      const handleViewportChange = () => {
+        adjustFooterPadding();
+      };
+      
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
+      
+      // Initial adjustment
+      adjustFooterPadding();
+      
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+        window.visualViewport?.removeEventListener('scroll', handleViewportChange);
+      };
+    } else {
+      // Fallback to window resize
+      const handleResize = () => {
+        adjustFooterPadding();
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      // Initial adjustment
+      adjustFooterPadding();
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, [footer]);
+
   return (
     <div 
       ref={containerRef}
@@ -143,7 +213,7 @@ export default function QuizLayout({
 
       {/* Footer (Optional) */}
       {footer && (
-        <footer className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-6 pt-4 bg-[#f5f5f0]" style={{ opacity: 1, transform: 'translateY(0)' }}>
+        <footer ref={footerRef} className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-6 pt-4 bg-[#f5f5f0]" style={{ opacity: 1, transform: 'translateY(0)' }}>
           <div className="max-w-2xl mx-auto w-full flex justify-center">
             {footer}
           </div>
