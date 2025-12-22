@@ -42,7 +42,7 @@ export default function WhyAvocadoPage() {
 
         {/* Description */}
         <div className="mb-6 sm:mb-8">
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl leading-relaxed text-left max-w-[540px] mx-auto [zoom:110%]:text-[min(3vw,1.25rem)] [zoom:125%]:text-[min(2.5vw,1.1rem)] [zoom:150%]:text-[min(2vw,1rem)]">
+          <p className="text-gray-600 text-base sm:text-lg md:text-xl leading-relaxed text-left max-w-[540px] ml-0 [zoom:110%]:text-[min(3vw,1.25rem)] [zoom:125%]:text-[min(2.5vw,1.1rem)] [zoom:150%]:text-[min(2vw,1rem)]">
             Created by psychologists and clinical specialists, Avocado operates on the most recent scientific discoveries in psychology, knowledge from more than a thousand books and thousands of real therapeutic cases.
           </p>
         </div>
