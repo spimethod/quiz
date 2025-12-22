@@ -32,18 +32,14 @@ export default function FeelingsPage() {
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
 
-  const toggleOption = (option: string, event?: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
-    // Prevent event bubbling and default behavior
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter(item => item !== option));
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
-    }
+  const toggleOption = (option: string) => {
+    setSelectedOptions(prev => {
+      if (prev.includes(option)) {
+        return prev.filter(item => item !== option);
+      } else {
+        return [...prev, option];
+      }
+    });
   };
 
   const handleAddCustom = () => {
@@ -160,25 +156,33 @@ export default function FeelingsPage() {
         {/* Options Grid */}
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4">
-            {predefinedOptions.map((option) => (
-              <button
-                key={option}
-                onClick={(e) => toggleOption(option, e)}
-                onTouchStart={(e) => {
-                  // Use touchStart instead of touchEnd to prevent conflicts
-                  e.preventDefault();
-                  toggleOption(option, e);
-                }}
-                className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none flex-shrink-0 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
-                  selectedOptions.includes(option)
-                    ? 'bg-[#6B9D47] text-white shadow-md scale-105'
-                    : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'
-                }`}
-                style={{ touchAction: 'manipulation' }}
-              >
-                {option}
-              </button>
-            ))}
+            {predefinedOptions.map((option) => {
+              const isSelected = selectedOptions.includes(option);
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleOption(option);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleOption(option);
+                  }}
+                  className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none flex-shrink-0 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
+                    isSelected
+                      ? 'bg-[#6B9D47] text-white shadow-md scale-105'
+                      : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'
+                  }`}
+                  style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                >
+                  {option}
+                </button>
+              );
+            })}
           </div>
 
           {/* Custom Input - Collapsed/Expanded */}
