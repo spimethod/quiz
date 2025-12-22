@@ -364,7 +364,7 @@ export default function CommitmentPage() {
         </div>
 
         {/* Instruction with Animated Arrow */}
-        <div className={`relative flex flex-col items-center ${avatar === 'girl' ? 'ml-[calc(-9%+40px)]' : ''} ${hideInstructions ? 'opacity-0' : 'opacity-100'} transition-opacity duration-150`}>
+        <div className={`relative flex flex-col items-center ${avatar === 'girl' ? 'ml-[calc(-9%+43px)]' : ''} ${hideInstructions ? 'opacity-0' : 'opacity-100'} transition-opacity duration-150`}>
           {/* Animated Green Arrow pointing up */}
           <div className="mb-1 sm:mb-2">
             <motion.div
