@@ -25,8 +25,7 @@ export default function GoalsPage() {
     'Relaxation',
     'Self-awareness',
     'Confidence',
-    'Cognitive tools',
-    'Focus'
+    'Cognitive tools'
   ];
 
   const handleSelect = (option: string) => {
