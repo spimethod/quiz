@@ -184,7 +184,7 @@ export default function PacePage() {
       totalSteps={TOTAL_STEPS}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-md w-full mx-auto pt-[25px] sm:pt-[25px]">
+      <div className="max-w-md w-full mx-auto pt-[30px] sm:pt-[30px]">
         
         {/* Title */}
         <div className="text-center mb-2 sm:mb-3">
