@@ -162,32 +162,33 @@ export default function GoalsPage() {
         </div>
 
         {/* Goal Options */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-6">
-          {goalOptions.map((option) => (
-            <button
-              key={option}
-              type="button"
-              data-option={option}
-              onClick={handleOptionClick}
-              className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
-                selectedOptions.includes(option)
-                  ? 'bg-[#6B9D47] text-white shadow-md'
-                  : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'
-              }`}
-              style={{ 
-                touchAction: 'manipulation',
-                WebkitTapHighlightColor: 'transparent',
-                WebkitUserSelect: 'none',
-                userSelect: 'none'
-              }}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+        <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+            {goalOptions.map((option) => (
+              <button
+                key={option}
+                type="button"
+                data-option={option}
+                onClick={handleOptionClick}
+                className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
+                  selectedOptions.includes(option)
+                    ? 'bg-[#6B9D47] text-white shadow-md'
+                    : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'
+                }`}
+                style={{ 
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none'
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
 
-        {/* Custom Input - Collapsed/Expanded (same behavior as feelings step) */}
-        <div ref={customInputRef} className="w-full max-w-md mx-auto">
+          {/* Custom Input - Collapsed/Expanded (same behavior as feelings step) */}
+          <div ref={customInputRef} className={`w-full max-w-md mx-auto ${isExpanded ? 'mb-0' : ''}`}>
           {!isExpanded ? (
             /* Collapsed: Input + Button in one line */
             <div
@@ -199,24 +200,29 @@ export default function GoalsPage() {
                 type="text"
                 value={customValue}
                 onChange={(e) => setCustomValue(e.target.value)}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLInputElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  // При фокусе на input микрофон НЕ включается
+                  setIsRecording(false);
                 }}
                 onClick={() => {
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  // При клике на input микрофон НЕ включается  
+                  setIsRecording(false);
                 }}
                 placeholder="+ Add Your Own"
                 className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
+                style={{ fontSize: '16px' }}
               />
               <button
                 onClick={() => {
                   setIsExpanded(true);
-                  setIsRecording(true); // При клике на кнопку микрофон включается
-                  setShouldAutoFocus(false); // Не фокусируем textarea, чтобы не выключился микрофон
+                  setIsRecording(true);
+                  setShouldAutoFocus(false);
                 }}
                 className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold transition-all shadow-sm hover:shadow-md flex-shrink-0"
               >
@@ -232,17 +238,22 @@ export default function GoalsPage() {
                   setCustomValue(e.target.value);
                   if (isRecording) setIsRecording(false);
                 }}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLTextAreaElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   if (isRecording) setIsRecording(false);
                 }}
                 placeholder={isRecording ? "Speak please..." : "Type please..."}
                 className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
+                style={{ fontSize: '16px' }}
               />
-              {/* Microphone button - bottom right corner */}
+              {/* Microphone button - top right corner */}
               <button
                 onClick={handleMicClick}
-                className={`absolute bottom-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isRecording 
                     ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                     : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
@@ -265,7 +276,24 @@ export default function GoalsPage() {
               </button>
             </div>
           )}
+          </div>
         </div>
+
+      {/* Floating Continue Button - appears when custom field is expanded, always visible and active */}
+      {isExpanded && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
+          <div className="max-w-sm mx-auto w-full">
+            <button
+              onClick={handleContinue}
+              ref={continueBtnRef}
+              onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+              className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
 
       </div>
     </QuizLayout>
