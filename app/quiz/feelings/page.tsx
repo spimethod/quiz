@@ -289,15 +289,24 @@ export default function FeelingsPage() {
     };
   }, [isExpanded]);
 
-  // Scroll custom field into view when expanded (to avoid browser bar covering it)
+  // Scroll custom field into view when expanded (to keep both field and Continue button visible)
   useEffect(() => {
     if (!isExpanded || !customInputRef.current) return;
 
     const scrollToInput = () => {
       if (customInputRef.current) {
-        customInputRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+        // Get the visual viewport height (accounts for virtual keyboard)
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const inputRect = customInputRef.current.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Calculate scroll position to put custom field at ~30% from top of visible area
+        // This leaves room for the Continue button at the bottom
+        const targetTop = scrollTop + inputRect.top - (viewportHeight * 0.25);
+        
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: 'smooth'
         });
       }
     };
