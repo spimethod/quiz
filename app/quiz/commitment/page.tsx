@@ -181,15 +181,19 @@ export default function CommitmentPage() {
                   onMouseLeave={handleMouseUp}
                   onTouchStart={handleTouchStart}
                   onTouchEnd={handleTouchEnd}
-                  className="absolute left-1/2 top-[calc(58%+11px)] min-[300px]:top-[calc(58%+16px)] min-[390px]:top-[calc(58%+21px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
+                  onTouchCancel={handleTouchEnd}
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="absolute left-1/2 top-[calc(58%+11px)] min-[300px]:top-[calc(58%+16px)] min-[390px]:top-[calc(58%+21px)] -translate-x-1/2 -translate-y-1/2 w-[52%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10 select-none"
+                  style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
                   aria-label="Hold to commit"
                 >
                   <Image
                     src="/commit-button-mobile.png"
                     alt="Commit Button"
                     fill
-                    className="object-contain"
+                    className="object-contain pointer-events-none select-none"
                     priority
+                    draggable={false}
                   />
                 </button>
 
@@ -321,22 +325,27 @@ export default function CommitmentPage() {
                 onMouseLeave={handleMouseUp}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
-                className="absolute left-[42.3%] top-[66.8%] -translate-x-1/2 -translate-y-1/2 w-[55%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10"
+                onTouchCancel={handleTouchEnd}
+                onContextMenu={(e) => e.preventDefault()}
+                className="absolute left-[42.3%] top-[66.8%] -translate-x-1/2 -translate-y-1/2 w-[55%] aspect-square cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 rounded-full focus:outline-none z-10 select-none"
+                style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
                 aria-label="Hold to commit"
               >
                 <Image
                   src="/commit-button-mobile.png"
                   alt="Commit Button"
                   fill
-                  className="object-contain lg:hidden" // Mobile button for mobile/tablet
+                  className="object-contain lg:hidden pointer-events-none select-none"
                   priority
+                  draggable={false}
                 />
                 <Image
                   src="/commit-button-web.png"
                   alt="Commit Button"
                   fill
-                  className="object-contain hidden lg:block" // Web button for desktop
+                  className="object-contain hidden lg:block pointer-events-none select-none"
                   priority
+                  draggable={false}
                 />
               </button>
 
