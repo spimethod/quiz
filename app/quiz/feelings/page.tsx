@@ -95,6 +95,33 @@ export default function FeelingsPage() {
     }
   }, [isExpanded]);
 
+  // Scroll to bottom on initial load (when no options selected)
+  useEffect(() => {
+    if (selectedOptions.length === 0 && !customValue.trim()) {
+      // Scroll to bottom after a short delay to ensure layout is ready
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
+  }, []); // Only on mount
+
+  // Scroll up when Continue button appears
+  useEffect(() => {
+    const hasSelection = selectedOptions.length > 0 || customValue.trim();
+    if (hasSelection && !isExpanded) {
+      // Scroll up to show the Continue button
+      setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer) {
+          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 100);
+    }
+  }, [selectedOptions, customValue, isExpanded]);
+
   // Hide footer when expanded, show floating button instead
   useEffect(() => {
     const footer = document.querySelector('footer') as HTMLElement | null;
