@@ -163,7 +163,7 @@ export default function GoalsPage() {
 
         {/* Goal Options */}
         <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4">
             {goalOptions.map((option) => (
               <button
                 key={option}
@@ -253,7 +253,7 @@ export default function GoalsPage() {
               {/* Microphone button - top right corner */}
               <button
                 onClick={handleMicClick}
-                className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all z-10 ${
                   isRecording 
                     ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                     : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
