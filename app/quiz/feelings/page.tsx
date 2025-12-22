@@ -87,12 +87,24 @@ export default function FeelingsPage() {
     }
   }, [isExpanded]);
 
-  // Scroll into view when expanded
+  // Scroll into view when expanded (without zoom)
   useEffect(() => {
     if (isExpanded && customInputRef.current) {
       setTimeout(() => {
-        customInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+        const element = customInputRef.current;
+        if (element) {
+          // Use manual scroll instead of scrollIntoView to prevent zoom
+          const elementRect = element.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          const scrollOffset = windowHeight * 0.3; // Position element at 30% from top
+          const scrollPosition = window.pageYOffset + elementRect.top - scrollOffset;
+          
+          window.scrollTo({
+            top: Math.max(0, scrollPosition),
+            behavior: 'smooth'
+          });
+        }
+      }, 150);
     }
   }, [isExpanded]);
 
@@ -179,7 +191,11 @@ export default function FeelingsPage() {
                   type="text"
                   value={customValue}
                   onChange={(e) => setCustomValue(e.target.value)}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLInputElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
                   setIsRecording(false);
@@ -191,6 +207,7 @@ export default function FeelingsPage() {
                 }}
                   placeholder="+ Add Your Own"
                   className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
+                  style={{ fontSize: '16px' }}
                 />
                 <button
                 onClick={() => {
@@ -212,12 +229,17 @@ export default function FeelingsPage() {
                     setCustomValue(e.target.value);
                     if (isRecording) setIsRecording(false);
                   }}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLTextAreaElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   if (isRecording) setIsRecording(false);
                 }}
                   placeholder={isRecording ? "Speak please..." : "Type please..."}
                   className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
+                style={{ fontSize: '16px' }}
                 />
                 {/* Microphone button - bottom right corner */}
                 <button
