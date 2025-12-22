@@ -14,6 +14,7 @@ export default function MedicationsPage() {
   const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const customInputRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const continueBtnRef = useRef<HTMLButtonElement>(null);
   const CURRENT_STEP = 16;
   const TOTAL_STEPS = 32;
 
@@ -54,10 +55,9 @@ export default function MedicationsPage() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      const isOutsideInput = customInputRef.current && !customInputRef.current.contains(target);
-      const isOutsideFooter = footerRef.current && !footerRef.current.contains(target); // footer contains Continue
-      
-      if (isOutsideInput && isOutsideFooter) {
+      const clickedInsideInput = customInputRef.current?.contains(target);
+      const clickedContinue = continueBtnRef.current?.contains(target);
+      if (!clickedInsideInput && !clickedContinue) {
         setShowInput(false);
         setIsRecording(false);
         setShouldAutoFocus(false);
@@ -72,65 +72,77 @@ export default function MedicationsPage() {
     }
   }, [showInput]);
 
-  // Scroll into view when expanded
+  // Scroll up when Continue button appears (only when collapsing input, not during typing)
   useEffect(() => {
-    if (showInput && customInputRef.current) {
-      setTimeout(() => {
-        customInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+    const hasText = customValue.trim();
+    // Only scroll when collapsing expanded input, not during active typing
+    if (hasText && !showInput) {
+      // Use a debounce to avoid scrolling on every keystroke
+      const timeoutId = setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer && !showInput) {
+          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 300); // Debounce to avoid scrolling during typing
+      
+      return () => clearTimeout(timeoutId);
     }
+  }, [showInput]); // Removed customValue from dependencies to prevent scroll on every keystroke
+
+  // Hide footer when expanded, show floating button instead
+  useEffect(() => {
+    const footer = document.querySelector('footer') as HTMLElement | null;
+    if (!footer) return;
+
+    if (showInput) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = '';
+    }
+
+    return () => {
+      footer.style.display = '';
+    };
   }, [showInput]);
 
-  const footerContent = (
+  const footerContent = !showInput ? (
     <div ref={footerRef} className="max-w-md mx-auto w-full">
-      {!showInput ? (
-        // Yes/No Buttons
-        <div className="flex gap-4 w-full">
-          {/* Yes Button */}
-          <button
-            onClick={handleYes}
-            onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
-            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-              selectedButton === 'yes'
-                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-            }`}
-          >
-            <span className="text-2xl sm:text-3xl mb-1">💊</span>
-            <span className="text-sm sm:text-base font-medium text-gray-700">
-              Yes
-            </span>
-          </button>
-
-          {/* No Button */}
-          <button
-            onClick={handleNo}
-            onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
-            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-              selectedButton === 'no'
-                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-            }`}
-          >
-            <span className="text-2xl sm:text-3xl mb-1">🫙</span>
-            <span className="text-sm sm:text-base font-medium text-gray-700">
-              No
-            </span>
-          </button>
-        </div>
-      ) : (
-        // Continue Button
+      {/* Yes/No Buttons */}
+      <div className="flex gap-4 w-full">
+        {/* Yes Button */}
         <button
-          type="button"
-          onClick={handleContinue}
-          onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-          className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          onClick={handleYes}
+          onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
+          className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+            selectedButton === 'yes'
+              ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+              : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+          }`}
         >
-          Continue
+          <span className="text-2xl sm:text-3xl mb-1">💊</span>
+          <span className="text-sm sm:text-base font-medium text-gray-700">
+            Yes
+          </span>
         </button>
-      )}
+
+        {/* No Button */}
+        <button
+          onClick={handleNo}
+          onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
+          className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+            selectedButton === 'no'
+              ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+              : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+          }`}
+        >
+          <span className="text-2xl sm:text-3xl mb-1">🫙</span>
+          <span className="text-sm sm:text-base font-medium text-gray-700">
+            No
+          </span>
+        </button>
+      </div>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
@@ -167,7 +179,7 @@ export default function MedicationsPage() {
 
         {/* Custom Input Field - Shows when Yes is clicked */}
         {showInput && (
-          <div ref={customInputRef} className="w-full max-w-md mx-auto mb-6">
+          <div ref={customInputRef} className="w-full max-w-md mx-auto mb-0">
             <div className={`relative border-2 ${customValue.trim() ? 'border-[#6B9D47]' : 'border-gray-300'} rounded-3xl p-4 bg-white`}>
               <textarea
                 value={customValue}
@@ -175,17 +187,22 @@ export default function MedicationsPage() {
                   setCustomValue(e.target.value);
                   if (isRecording) setIsRecording(false);
                 }}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLTextAreaElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   if (isRecording) setIsRecording(false);
                 }}
                 placeholder={isRecording ? "Speak please..." : "Tell us about your medications..."}
                 className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
+                style={{ fontSize: '16px' }}
               />
-              {/* Microphone button - bottom right corner */}
+              {/* Microphone button - top right corner */}
               <button
                 onClick={handleMicClick}
-                className={`absolute bottom-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isRecording 
                     ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                     : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
@@ -210,6 +227,22 @@ export default function MedicationsPage() {
           </div>
         )}
       </div>
+
+      {/* Floating Continue Button - appears when custom field is expanded AND text is entered */}
+      {showInput && customValue.trim() && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
+          <div className="max-w-sm mx-auto w-full">
+            <button
+              ref={continueBtnRef}
+              onClick={handleContinue}
+              onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+              className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </QuizLayout>
   );
 }
