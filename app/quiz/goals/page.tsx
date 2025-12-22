@@ -13,6 +13,7 @@ export default function GoalsPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
+  const continueBtnRef = useRef<HTMLButtonElement>(null);
   const CURRENT_STEP = 23;
   const TOTAL_STEPS = 32;
 
@@ -81,14 +82,13 @@ export default function GoalsPage() {
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (customInputRef.current && !customInputRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const clickedInsideInput = customInputRef.current?.contains(target);
+      const clickedContinue = continueBtnRef.current?.contains(target);
+      if (!clickedInsideInput && !clickedContinue) {
         setIsExpanded(false);
         setIsRecording(false);
         setShouldAutoFocus(false);
-        // Scroll down after closing to show the title
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 100);
       }
     };
 
@@ -100,31 +100,33 @@ export default function GoalsPage() {
     }
   }, [isExpanded]);
 
-  // Scroll into view when expanded
+  // Hide footer when expanded
   useEffect(() => {
-    if (isExpanded && customInputRef.current) {
-      setTimeout(() => {
-        customInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+    const footer = document.querySelector('footer') as HTMLElement | null;
+    if (!footer) return;
+
+    if (isExpanded) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = '';
     }
+
+    return () => {
+      footer.style.display = '';
+    };
   }, [isExpanded]);
 
-  const footerContent = (
+  const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
-        onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
-        disabled={selectedOptions.length === 0 && !customValue.trim()}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
-          selectedOptions.length > 0 || customValue.trim()
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
+        ref={continueBtnRef}
+        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
       >
         Continue
       </button>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
@@ -164,13 +166,20 @@ export default function GoalsPage() {
           {goalOptions.map((option) => (
             <button
               key={option}
-              onClick={() => handleSelect(option)}
-              onTouchEnd={(e) => { e.preventDefault(); handleSelect(option); }}
+              type="button"
+              data-option={option}
+              onClick={handleOptionClick}
               className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
                 selectedOptions.includes(option)
                   ? 'bg-[#6B9D47] text-white shadow-md'
                   : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'
               }`}
+              style={{ 
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
+                WebkitUserSelect: 'none',
+                userSelect: 'none'
+              }}
             >
               {option}
             </button>
