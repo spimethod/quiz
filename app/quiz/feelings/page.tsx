@@ -9,15 +9,16 @@ import QuizLayout from '../../components/QuizLayout';
 const TOTAL_STEPS = 12;
 const CURRENT_STEP = 6;
 
+// Reordered to fit better in 3 rows on mobile (shorter options first for better distribution)
 const predefinedOptions = [
-  'Sleep issues',
   'Burnout',
   'Depression',
-  'Negative thoughts',
+  'Sleep issues',
+  'Loneliness',
   'Lack of focus',
   'Procrastination',
   'Social anxiety',
-  'Loneliness',
+  'Negative thoughts',
   'Low self-esteem',
 ];
 
@@ -150,13 +151,13 @@ export default function FeelingsPage() {
 
         {/* Options Grid */}
         <div className="mb-4 sm:mb-6">
-          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4" style={{ maxHeight: 'calc(3 * (2.5rem + 0.5rem))' }}>
             {predefinedOptions.map((option) => (
               <button
                 key={option}
                 onClick={() => toggleOption(option)}
                 onTouchEnd={(e) => { e.preventDefault(); toggleOption(option); }}
-                className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
+                className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none flex-shrink-0 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
                   selectedOptions.includes(option)
                     ? 'bg-[#6B9D47] text-white shadow-md scale-105'
                     : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'
