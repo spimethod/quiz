@@ -185,7 +185,7 @@ export default function PaywallPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 pb-[420px] pt-20 sm:pt-24"> {/* Large padding bottom for fixed footer */}
+      <main className={`flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 ${avatar === 'girl' ? 'pt-[105px]' : 'pt-20'}`}> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
         <div className="w-full max-w-3xl mx-auto mb-8 px-2">
