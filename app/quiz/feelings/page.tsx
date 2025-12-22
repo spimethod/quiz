@@ -11,7 +11,7 @@ const CURRENT_STEP = 6;
 
 // Reordered to fit better in 3 rows on mobile (shorter options first for better distribution)
 const predefinedOptions = [
-  'Burnout',
+  'Low self-esteem',
   'Depression',
   'Sleep issues',
   'Loneliness',
@@ -19,7 +19,7 @@ const predefinedOptions = [
   'Procrastination',
   'Social anxiety',
   'Negative thoughts',
-  'Low self-esteem',
+  'Burnout',
 ];
 
 export default function FeelingsPage() {
@@ -151,7 +151,7 @@ export default function FeelingsPage() {
 
         {/* Options Grid */}
         <div className="mb-4 sm:mb-6">
-          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4" style={{ maxHeight: 'calc(3 * (2.5rem + 0.5rem))' }}>
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4">
             {predefinedOptions.map((option) => (
               <button
                 key={option}
