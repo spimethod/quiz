@@ -300,9 +300,9 @@ export default function FeelingsPage() {
         const inputRect = customInputRef.current.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Calculate scroll position to put custom field at ~30% from top of visible area
-        // This leaves room for the Continue button at the bottom
-        const targetTop = scrollTop + inputRect.top - (viewportHeight * 0.25);
+        // Calculate scroll position to put custom field at ~10% from top of visible area
+        // This ensures the field is fully visible above browser bar and leaves room for Continue button
+        const targetTop = scrollTop + inputRect.top - (viewportHeight * 0.1);
         
         window.scrollTo({
           top: Math.max(0, targetTop),
