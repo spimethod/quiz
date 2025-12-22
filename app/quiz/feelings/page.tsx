@@ -87,53 +87,23 @@ export default function FeelingsPage() {
     }
   }, [isExpanded]);
 
-  // Keep footer from overlapping the custom input by changing its positioning when expanded
+  // Hide footer when expanded, show floating button instead
   useEffect(() => {
     const footer = document.querySelector('footer') as HTMLElement | null;
-    const mainEl = document.querySelector('main') as HTMLElement | null;
-    if (!footer || !mainEl) return;
-
-    // Capture original styles to restore later
-    const originalFooterStyles = {
-      position: footer.style.position,
-      bottom: footer.style.bottom,
-      left: footer.style.left,
-      right: footer.style.right,
-      paddingBottom: footer.style.paddingBottom,
-    };
-    const originalMainPadding = mainEl.style.paddingBottom;
+    if (!footer) return;
 
     if (isExpanded) {
-      // Let footer flow in document to avoid covering the input
-      footer.style.position = 'static';
-      footer.style.bottom = '';
-      footer.style.left = '';
-      footer.style.right = '';
-      footer.style.paddingBottom = '0px';
-      // Add small bottom padding to main content so footer has breathing room
-      mainEl.style.paddingBottom = '12px';
+      footer.style.display = 'none';
     } else {
-      // Restore original fixed footer
-      footer.style.position = originalFooterStyles.position || 'fixed';
-      footer.style.bottom = originalFooterStyles.bottom || '0';
-      footer.style.left = originalFooterStyles.left || '0';
-      footer.style.right = originalFooterStyles.right || '0';
-      footer.style.paddingBottom = originalFooterStyles.paddingBottom || '24px';
-      mainEl.style.paddingBottom = originalMainPadding || '';
+      footer.style.display = '';
     }
 
     return () => {
-      // Restore on unmount
-      footer.style.position = originalFooterStyles.position;
-      footer.style.bottom = originalFooterStyles.bottom;
-      footer.style.left = originalFooterStyles.left;
-      footer.style.right = originalFooterStyles.right;
-      footer.style.paddingBottom = originalFooterStyles.paddingBottom;
-      mainEl.style.paddingBottom = originalMainPadding;
+      footer.style.display = '';
     };
   }, [isExpanded]);
 
-  const footerContent = (
+  const footerContent = !isExpanded ? (
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
@@ -149,7 +119,7 @@ export default function FeelingsPage() {
         Continue
       </button>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
@@ -295,6 +265,26 @@ export default function FeelingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Floating Continue Button - appears when custom field is expanded */}
+      {isExpanded && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-4 pt-2 bg-[#f5f5f0] animate-slide-up">
+          <div className="max-w-sm mx-auto w-full">
+            <button
+              onClick={handleContinue}
+              onTouchEnd={(e) => { if (selectedOptions.length > 0 || customValue.trim()) { e.preventDefault(); handleContinue(); } }}
+              disabled={selectedOptions.length === 0 && !customValue.trim()}
+              className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
+                selectedOptions.length === 0 && !customValue.trim()
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer'
+              }`}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </QuizLayout>
   );
 }
