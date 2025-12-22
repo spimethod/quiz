@@ -29,51 +29,128 @@ export default function PacePage() {
     };
   }, []);
 
-  // Scroll to bottom on initial load (when no option selected)
+  // Scroll to bottom on initial load (when no option selected) - guaranteed approach
   useEffect(() => {
     if (!selectedPace) {
-      const scrollToBottom = () => {
-        // Wait for next frame to ensure DOM is fully rendered
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const optionsContainer = optionsRef.current;
-            if (optionsContainer) {
-              // Scroll to show the options container at the bottom
-              const rect = optionsContainer.getBoundingClientRect();
-              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-              const targetScroll = scrollTop + rect.bottom - window.innerHeight;
-              
-              window.scrollTo({
-                top: Math.max(0, targetScroll),
-                behavior: 'auto'
-              });
-            } else {
-              // Fallback: scroll to absolute bottom
-              window.scrollTo({
-                top: document.documentElement.scrollHeight - window.innerHeight,
-                behavior: 'auto'
-              });
-            }
+      let scrollTimeout: NodeJS.Timeout | null = null;
+      let lastHeight = 0;
+      let stableCount = 0;
+      const STABLE_THRESHOLD = 3; // Number of consecutive stable measurements
+      
+      const performScroll = () => {
+        const optionsContainer = optionsRef.current;
+        const currentHeight = document.documentElement.scrollHeight;
+        
+        if (optionsContainer) {
+          const rect = optionsContainer.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const targetScroll = scrollTop + rect.bottom - window.innerHeight;
+          
+          window.scrollTo({
+            top: Math.max(0, targetScroll),
+            behavior: 'auto'
           });
+        } else {
+          // Fallback: scroll to absolute bottom
+          window.scrollTo({
+            top: currentHeight - window.innerHeight,
+            behavior: 'auto'
+          });
+        }
+      };
+      
+      const checkAndScroll = () => {
+        const currentHeight = document.documentElement.scrollHeight;
+        
+        // Check if height is stable (not changing)
+        if (currentHeight === lastHeight) {
+          stableCount++;
+          if (stableCount >= STABLE_THRESHOLD) {
+            // Height is stable, perform scroll
+            performScroll();
+            return true; // Indicate we're done
+          }
+        } else {
+          // Height changed, reset counter
+          stableCount = 0;
+          lastHeight = currentHeight;
+        }
+        
+        return false; // Not stable yet, keep checking
+      };
+      
+      // Initial scroll attempts
+      const attemptScroll = () => {
+        if (!checkAndScroll()) {
+          // If not stable, schedule next check
+          scrollTimeout = setTimeout(attemptScroll, 100);
+        }
+      };
+      
+      // Start checking immediately
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          attemptScroll();
         });
-      };
+      });
       
-      // Try after various delays to catch different load states
-      scrollToBottom();
-      setTimeout(scrollToBottom, 100);
-      setTimeout(scrollToBottom, 300);
-      setTimeout(scrollToBottom, 600);
+      // Use MutationObserver to detect DOM changes
+      const observer = new MutationObserver(() => {
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+        attemptScroll();
+      });
       
-      // Also try after window load event
+      // Observe changes in the document body
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+      
+      // Use ResizeObserver to detect size changes
+      let resizeObserver: ResizeObserver | null = null;
+      if (window.ResizeObserver) {
+        resizeObserver = new ResizeObserver(() => {
+          if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+          }
+          attemptScroll();
+        });
+        
+        resizeObserver.observe(document.body);
+      }
+      
+      // Also listen to window load
       const handleLoad = () => {
-        setTimeout(scrollToBottom, 100);
+        setTimeout(() => {
+          performScroll();
+        }, 200);
       };
+      
       if (document.readyState === 'complete') {
         handleLoad();
       } else {
         window.addEventListener('load', handleLoad);
-        return () => window.removeEventListener('load', handleLoad);
       }
+      
+      // Final scroll after a longer delay as safety net
+      setTimeout(() => {
+        performScroll();
+      }, 1500);
+      
+      return () => {
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+        observer.disconnect();
+        if (resizeObserver) {
+          resizeObserver.disconnect();
+        }
+        window.removeEventListener('load', handleLoad);
+      };
     }
   }, []); // Only on mount
 
