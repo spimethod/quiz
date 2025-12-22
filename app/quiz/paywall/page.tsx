@@ -241,6 +241,37 @@ export default function PaywallPage() {
           </div>
         </div>
 
+        {/* Animated Down Arrow - Scroll Indicator */}
+        <div className="flex items-center justify-center gap-2 mt-2 mb-4">
+          <span className="text-xs sm:text-sm text-gray-400 opacity-60">Scroll</span>
+          <motion.div
+            animate={{
+              y: [0, 8, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="flex items-center justify-center"
+          >
+            <svg 
+              className="w-6 h-6 sm:w-7 sm:h-7 text-[#1a1a1a]" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                d="M19 9l-7 7-7-7" 
+              />
+            </svg>
+          </motion.div>
+          <span className="text-xs sm:text-sm text-gray-400 opacity-60">down</span>
+        </div>
+
         {/* Main Issues & Goal Block */}
         <div className="w-full max-w-lg mx-auto mb-4 px-4">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
@@ -301,37 +332,6 @@ export default function PaywallPage() {
           <p className="text-gray-500 text-base sm:text-lg px-4 mt-8">
             200× cheaper than a traditional therapist<br />with everyday check-ins
           </p>
-          
-          {/* Animated Down Arrow */}
-          <div className="flex items-center justify-center gap-2 mt-1 mb-2">
-            <span className="text-xs sm:text-sm text-gray-400 opacity-60">Scroll</span>
-            <motion.div
-              animate={{
-                y: [0, 8, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="flex items-center justify-center"
-            >
-              <svg 
-                className="w-6 h-6 sm:w-7 sm:h-7 text-[#1a1a1a]" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  d="M19 9l-7 7-7-7" 
-                />
-              </svg>
-            </motion.div>
-            <span className="text-xs sm:text-sm text-gray-400 opacity-60">down</span>
-          </div>
         </div>
 
         {/* Second Screen - Hero Image */}
