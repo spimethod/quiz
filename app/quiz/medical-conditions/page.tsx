@@ -14,6 +14,7 @@ export default function MedicalConditionsPage() {
   const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const customInputRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const continueBtnRef = useRef<HTMLButtonElement>(null);
   const CURRENT_STEP = 18;
   const TOTAL_STEPS = 32;
 
@@ -50,14 +51,13 @@ export default function MedicalConditionsPage() {
     router.push('/quiz/psychiatric-conditions');
   };
 
-  // Click outside handler
+  // Click outside handler (except Continue button)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      const isOutsideInput = customInputRef.current && !customInputRef.current.contains(target);
-      const isOutsideFooter = footerRef.current && !footerRef.current.contains(target);
-      
-      if (isOutsideInput && isOutsideFooter) {
+      const clickedInsideInput = customInputRef.current?.contains(target);
+      const clickedContinue = continueBtnRef.current?.contains(target);
+      if (!clickedInsideInput && !clickedContinue) {
         setShowInput(false);
         setIsRecording(false);
         setShouldAutoFocus(false);
@@ -72,67 +72,79 @@ export default function MedicalConditionsPage() {
     }
   }, [showInput]);
 
-  // Scroll into view when expanded
+  // Scroll up when Continue button appears (only when collapsing input, not during typing)
   useEffect(() => {
-    if (showInput && customInputRef.current) {
-      setTimeout(() => {
-        customInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+    const hasText = customValue.trim();
+    // Only scroll when collapsing expanded input, not during active typing
+    if (hasText && !showInput) {
+      // Use a debounce to avoid scrolling on every keystroke
+      const timeoutId = setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer && !showInput) {
+          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 300); // Debounce to avoid scrolling during typing
+      
+      return () => clearTimeout(timeoutId);
     }
+  }, [showInput]); // Removed customValue from dependencies to prevent scroll on every keystroke
+
+  // Hide footer when expanded, show floating button instead
+  useEffect(() => {
+    const footer = document.querySelector('footer') as HTMLElement | null;
+    if (!footer) return;
+
+    if (showInput) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = '';
+    }
+
+    return () => {
+      footer.style.display = '';
+    };
   }, [showInput]);
 
-  const footerContent = (
+  const footerContent = !showInput ? (
     <div ref={footerRef} className="max-w-md mx-auto w-full">
-      {!showInput ? (
-        // Yes/No Buttons
-        <div className="flex gap-4 w-full">
-          {/* Yes Button */}
-          <button
-            type="button"
-            onClick={handleYes}
-            onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
-            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-              selectedButton === 'yes'
-                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-            }`}
-          >
-            <span className="text-2xl sm:text-3xl mb-1">👍</span>
-            <span className="text-sm sm:text-base font-medium text-gray-700">
-              Yes
-            </span>
-          </button>
-
-          {/* No Button */}
-          <button
-            type="button"
-            onClick={handleNo}
-            onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
-            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-              selectedButton === 'no'
-                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-            }`}
-          >
-            <span className="text-2xl sm:text-3xl mb-1">👎</span>
-            <span className="text-sm sm:text-base font-medium text-gray-700">
-              No
-            </span>
-          </button>
-        </div>
-      ) : (
-        // Continue Button
+      {/* Yes/No Buttons */}
+      <div className="flex gap-4 w-full">
+        {/* Yes Button */}
         <button
           type="button"
-          onClick={handleContinue}
-          onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-          className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          onClick={handleYes}
+          onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
+          className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+            selectedButton === 'yes'
+              ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+              : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+          }`}
         >
-          Continue
+          <span className="text-2xl sm:text-3xl mb-1">👍</span>
+          <span className="text-sm sm:text-base font-medium text-gray-700">
+            Yes
+          </span>
         </button>
-      )}
+
+        {/* No Button */}
+        <button
+          type="button"
+          onClick={handleNo}
+          onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
+          className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+            selectedButton === 'no'
+              ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+              : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+          }`}
+        >
+          <span className="text-2xl sm:text-3xl mb-1">👎</span>
+          <span className="text-sm sm:text-base font-medium text-gray-700">
+            No
+          </span>
+        </button>
+      </div>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
@@ -213,6 +225,23 @@ export default function MedicalConditionsPage() {
           </div>
         )}
       </div>
+
+      {/* Floating Continue Button - appears when custom field is expanded, always visible and active */}
+      {showInput && (
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
+          <div className="max-w-sm mx-auto w-full">
+            <button
+              ref={continueBtnRef}
+              type="button"
+              onClick={handleContinue}
+              onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+              className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </QuizLayout>
   );
 }
