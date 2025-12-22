@@ -116,7 +116,7 @@ export default function GoalsPage() {
     };
   }, [isExpanded]);
 
-  // Scroll custom field into view when keyboard opens
+  // Scroll content up when custom field opens to show it fully in viewport
   useEffect(() => {
     if (!isExpanded || !customInputRef.current) return;
 
@@ -124,36 +124,43 @@ export default function GoalsPage() {
       const inputElement = customInputRef.current;
       if (!inputElement) return;
 
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const windowHeight = window.innerHeight;
-      const keyboardOpen = windowHeight - viewportHeight > 150;
-
-      if (!keyboardOpen) return;
-
-      const inputRect = inputElement.getBoundingClientRect();
-      const continueButtonHeight = 80; // Approximate height of Continue button
-      const availableHeight = viewportHeight - continueButtonHeight;
-      
-      // Check if input is fully visible
-      const inputTop = inputRect.top;
-      const inputBottom = inputRect.bottom;
-      
-      // If input is not fully visible, scroll to show it
-      if (inputTop < 0 || inputBottom > availableHeight) {
-        const scrollOffset = inputTop < 0 
-          ? window.pageYOffset + inputTop - 10 // Add 10px padding from top
-          : window.pageYOffset + (inputBottom - availableHeight) + 10; // Add 10px padding from bottom
+      // Wait for DOM to update and keyboard to appear
+      setTimeout(() => {
+        const inputRect = inputElement.getBoundingClientRect();
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const continueButtonHeight = 80; // Approximate height of Continue button
+        const availableHeight = viewportHeight - continueButtonHeight;
+        const padding = 10; // Padding from edges
         
-        window.scrollTo({
-          top: Math.max(0, scrollOffset),
-          behavior: 'smooth'
-        });
-      }
+        // Calculate how much we need to scroll to show input fully
+        const inputHeight = inputRect.height;
+        const inputTop = inputRect.top;
+        const inputBottom = inputRect.bottom;
+        
+        // Target: input should be fully visible with padding
+        const targetTop = padding;
+        const currentTop = inputTop;
+        const scrollNeeded = currentTop - targetTop;
+        
+        if (scrollNeeded > 0) {
+          window.scrollTo({
+            top: window.pageYOffset + scrollNeeded,
+            behavior: 'smooth'
+          });
+        } else if (inputBottom > availableHeight - padding) {
+          // If input bottom is below available area, scroll to show it
+          const scrollNeededBottom = inputBottom - (availableHeight - padding);
+          window.scrollTo({
+            top: window.pageYOffset + scrollNeededBottom,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
     };
 
-    // Scroll after keyboard appears
-    const timeoutId = setTimeout(scrollToShowInput, 300);
+    scrollToShowInput();
 
+    // Also handle viewport changes (keyboard open/close)
     if (window.visualViewport) {
       const handleViewportChange = () => {
         scrollToShowInput();
@@ -163,19 +170,8 @@ export default function GoalsPage() {
       window.visualViewport.addEventListener('scroll', handleViewportChange);
       
       return () => {
-        clearTimeout(timeoutId);
         window.visualViewport?.removeEventListener('resize', handleViewportChange);
         window.visualViewport?.removeEventListener('scroll', handleViewportChange);
-      };
-    } else {
-      const handleResize = () => {
-        scrollToShowInput();
-      };
-      
-      window.addEventListener('resize', handleResize);
-      return () => {
-        clearTimeout(timeoutId);
-        window.removeEventListener('resize', handleResize);
       };
     }
   }, [isExpanded]);
