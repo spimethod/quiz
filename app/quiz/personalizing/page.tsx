@@ -627,16 +627,18 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="inline-block border-2 border-[#6B9D47] rounded-2xl overflow-hidden bg-white shadow-sm"
+                    className="flex justify-center"
                   >
-                    <Image 
-                      src={activeReviewImage} 
-                      alt="User Review" 
-                      width={400} 
-                      height={200} 
-                      className="w-full h-auto" 
-                      priority 
-                    />
+                    <div className="inline-block border-2 border-[#6B9D47] rounded-2xl overflow-hidden bg-white shadow-sm">
+                      <Image 
+                        src={activeReviewImage} 
+                        alt="User Review" 
+                        width={400} 
+                        height={200} 
+                        className="w-full h-auto" 
+                        priority 
+                      />
+                    </div>
                   </motion.div>
                 )
               ) : (
