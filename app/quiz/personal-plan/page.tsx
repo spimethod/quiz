@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import QuizLayout from '../../components/QuizLayout';
 
 // Total steps before email capture
@@ -10,6 +11,21 @@ const CURRENT_STEP = 5;
 
 export default function PersonalPlanPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Change footer background to white for this page
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.style.backgroundColor = 'white';
+    }
+    return () => {
+      // Reset on unmount
+      const footer = document.querySelector('footer');
+      if (footer) {
+        footer.style.backgroundColor = '';
+      }
+    };
+  }, []);
 
   const handleContinue = () => {
     router.push('/quiz/feelings');
