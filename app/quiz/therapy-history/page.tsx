@@ -35,31 +35,14 @@ export default function TherapyHistoryPage() {
     }
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={handleContinue}
-        disabled={!selected}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
-          selected
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-        style={{ touchAction: 'manipulation' }}
-      >
-        Continue
-      </button>
-    </div>
-  );
-
   return (
     <QuizLayout
       currentStep={CURRENT_STEP}
       totalSteps={TOTAL_STEPS}
-      footer={footerContent}
+      footer={null}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[660px] w-full mx-auto flex flex-col items-center pt-[30px] pb-40">
+      <div className="max-w-[660px] w-full mx-auto flex flex-col items-center pt-[30px] pb-8">
         {/* Title */}
         <div className="mb-6 sm:mb-8 mt-4 sm:mt-6 text-center">
           <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight max-w-[540px] mx-auto [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
@@ -101,7 +84,7 @@ export default function TherapyHistoryPage() {
         </div>
 
         {/* Avocado Image */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-6">
           <Image
             src="/therapy-avocado.png"
             alt="Avocado on Therapy Couch"
@@ -109,6 +92,22 @@ export default function TherapyHistoryPage() {
             height={500}
             className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[350px] lg:h-[350px] max-w-[40vh] max-h-[40vh] object-contain"
           />
+        </div>
+
+        {/* Continue Button - in the same document flow */}
+        <div className="max-w-sm mx-auto w-full mt-4">
+          <button
+            onClick={handleContinue}
+            disabled={!selected}
+            className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
+              selected
+                ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            style={{ touchAction: 'manipulation' }}
+          >
+            Continue
+          </button>
         </div>
       </div>
     </QuizLayout>
