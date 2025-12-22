@@ -213,8 +213,8 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        // Mobile - same logic as desktop
-        setSlideUpY('-41vh');
+        // Mobile - slide up more to reduce gap to 30px
+        setSlideUpY('-52vh');
       } else if (width < 1024) {
         // Tablet - no slide up
         setSlideUpY('0');
