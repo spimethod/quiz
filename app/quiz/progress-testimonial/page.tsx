@@ -34,7 +34,7 @@ export default function ProgressTestimonialPage() {
       footer={footerContent}
       className="flex flex-col items-center"
     >
-      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-2 sm:pt-4">
+      <div className="max-w-md w-full mx-auto flex flex-col items-center pt-[25px]">
         
         {/* Title */}
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-center text-[#1a1a1a] leading-tight mb-3 sm:mb-4 px-2">
@@ -42,12 +42,12 @@ export default function ProgressTestimonialPage() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-center text-gray-600 text-sm sm:text-base mb-6 sm:mb-8 px-4 leading-relaxed">
+        <p className="text-center text-gray-600 text-sm sm:text-base mb-4 sm:mb-6 px-4 leading-relaxed">
           Avocado companion helps reduce stress and<br />build daily balance
         </p>
 
         {/* Testimonial Card Image */}
-        <div className="relative w-full aspect-[3/4] max-w-sm mb-6">
+        <div className="relative w-full aspect-[3/4] max-w-[75%] sm:max-w-sm mb-6">
           <Image
             src="/progress-testimonial.png"
             alt="User Progress Testimonial"
