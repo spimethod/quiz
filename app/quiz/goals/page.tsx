@@ -116,6 +116,52 @@ export default function GoalsPage() {
     };
   }, [isExpanded]);
 
+  // Auto-scroll custom field into view when keyboard opens
+  useEffect(() => {
+    if (!isExpanded || !customInputRef.current) return;
+
+    const scrollToInput = () => {
+      const inputElement = customInputRef.current;
+      if (!inputElement) return;
+
+      const inputRect = inputElement.getBoundingClientRect();
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const continueButtonHeight = 80; // Approximate height of Continue button
+      const padding = 20; // Extra padding above input
+      
+      // Calculate target scroll position to show input above Continue button
+      const targetScrollTop = window.pageYOffset + inputRect.top - (viewportHeight - inputRect.height - continueButtonHeight - padding);
+      
+      if (targetScrollTop > window.pageYOffset) {
+        window.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Scroll after a short delay to allow keyboard to appear
+    const timeoutId = setTimeout(scrollToInput, 300);
+
+    // Also listen to visual viewport changes (keyboard open/close)
+    if (window.visualViewport) {
+      const handleViewportChange = () => {
+        scrollToInput();
+      };
+      
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+      };
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isExpanded]);
+
   const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
       <button
