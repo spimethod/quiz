@@ -240,30 +240,30 @@ export default function GoalsPage() {
         {/* Goal Options */}
         <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4">
-            {goalOptions.map((option) => (
-              <button
-                key={option}
+          {goalOptions.map((option) => (
+            <button
+              key={option}
                 type="button"
                 data-option={option}
                 onClick={handleOptionClick}
-                className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
-                  selectedOptions.includes(option)
-                    ? 'bg-[#6B9D47] text-white shadow-md'
-                    : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'
-                }`}
+              className={`px-4 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-200 hover:scale-105 active:scale-95 select-none ${
+                selectedOptions.includes(option)
+                  ? 'bg-[#6B9D47] text-white shadow-md'
+                  : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#6B9D47]'
+              }`}
                 style={{ 
                   touchAction: 'manipulation',
                   WebkitTapHighlightColor: 'transparent',
                   WebkitUserSelect: 'none',
                   userSelect: 'none'
                 }}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+            >
+              {option}
+            </button>
+          ))}
+        </div>
 
-          {/* Custom Input - Collapsed/Expanded (same behavior as feelings step) */}
+        {/* Custom Input - Collapsed/Expanded (same behavior as feelings step) */}
           <div ref={customInputRef} className={`w-full max-w-md mx-auto ${isExpanded ? 'mb-0' : ''}`}>
           {!isExpanded ? (
             /* Collapsed: Input + Button in one line */
@@ -352,7 +352,7 @@ export default function GoalsPage() {
               </button>
             </div>
           )}
-          </div>
+        </div>
         </div>
 
       {/* Floating Continue Button - shown when expanded AND (option selected OR has custom text) */}

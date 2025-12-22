@@ -84,38 +84,38 @@ export default function CommitmentPage() {
           {/* Signed Contract Image Container with Navigation */}
           <div className="relative z-50">
             {/* Back Button - Mobile (Bottom Left) / Desktop (Left Side) */}
-            <button
-              onClick={() => router.back()}
+          <button
+            onClick={() => router.back()}
               className="absolute left-4 -bottom-20 lg:left-[-80px] lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 z-50 p-2 hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110"
-              aria-label="Go back"
-            >
-              <svg 
+            aria-label="Go back"
+          >
+            <svg 
                 className="w-14 h-14 lg:w-8 lg:h-8 text-gray-700" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
                 strokeWidth={3}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
           
             {/* Forward Button - Mobile (Bottom Right) / Desktop (Right Side) */}
-            <button
+          <button
               onClick={() => router.push('/quiz/personalizing')}
               className="absolute right-4 -bottom-20 lg:right-[-80px] lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 z-50 p-2 hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110"
-              aria-label="Go forward"
-            >
-              <svg 
+            aria-label="Go forward"
+          >
+            <svg 
                 className="w-14 h-14 lg:w-8 lg:h-8 text-gray-700" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
                 strokeWidth={3}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
           
             <Image
               src="/commitment-signed-v2.png"
