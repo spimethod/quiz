@@ -87,24 +87,42 @@ export default function FeelingsPage() {
     }
   }, [isExpanded]);
 
-  // Scroll into view when expanded (without zoom)
+  // Scroll into view when expanded (without zoom and without overlapping Continue button)
   useEffect(() => {
-    if (isExpanded && customInputRef.current) {
+    if (isExpanded && customInputRef.current && continueBtnRef.current) {
       setTimeout(() => {
         const element = customInputRef.current;
-        if (element) {
-          // Use manual scroll instead of scrollIntoView to prevent zoom
+        const continueBtn = continueBtnRef.current;
+        if (element && continueBtn) {
+          // Calculate available space considering fixed footer button
           const elementRect = element.getBoundingClientRect();
+          const continueBtnRect = continueBtn.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-          const scrollOffset = windowHeight * 0.3; // Position element at 30% from top
-          const scrollPosition = window.pageYOffset + elementRect.top - scrollOffset;
           
-          window.scrollTo({
-            top: Math.max(0, scrollPosition),
-            behavior: 'smooth'
-          });
+          // Estimate keyboard height (typically ~40% of screen on mobile)
+          const estimatedKeyboardHeight = windowHeight * 0.4;
+          const availableHeight = windowHeight - estimatedKeyboardHeight;
+          
+          // Calculate how much space we need for the element + padding
+          const elementHeight = elementRect.height;
+          const padding = 20; // Space between element and button
+          const neededSpace = elementHeight + padding;
+          
+          // Position element so it's visible but doesn't overlap with button
+          // Button is fixed at bottom, so we need to ensure element is above it
+          const maxElementBottom = availableHeight - continueBtnRect.height - padding;
+          const currentElementBottom = elementRect.bottom;
+          
+          // Only scroll if element would overlap with button area
+          if (currentElementBottom > maxElementBottom) {
+            const scrollAmount = currentElementBottom - maxElementBottom;
+            window.scrollTo({
+              top: window.pageYOffset + scrollAmount,
+              behavior: 'smooth'
+            });
+          }
         }
-      }, 150);
+      }, 200);
     }
   }, [isExpanded]);
 
