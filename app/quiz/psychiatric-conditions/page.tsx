@@ -111,7 +111,6 @@ export default function PsychiatricConditionsPage() {
       <div className="flex gap-4 w-full">
         {/* Yes Button */}
         <button
-          type="button"
           onClick={handleYes}
           onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
           className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
@@ -128,7 +127,6 @@ export default function PsychiatricConditionsPage() {
 
         {/* No Button */}
         <button
-          type="button"
           onClick={handleNo}
           onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
           className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
@@ -203,7 +201,6 @@ export default function PsychiatricConditionsPage() {
               />
               {/* Microphone button - top right corner */}
               <button
-                type="button"
                 onClick={handleMicClick}
                 className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isRecording 
