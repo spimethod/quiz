@@ -659,7 +659,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                         </>
                       ) : 'Your personal mental health insights are ready!'}
                     </h3>
-                    <div className="absolute right-0 bottom-0 w-[60%] min-[400px]:w-[60%] sm:w-[62%] md:w-[60%] h-[204%] min-[400px]:h-[210%] sm:h-[216%] md:h-[228%] pointer-events-none">
+                    <div className="absolute right-0 bottom-0 w-[69%] min-[400px]:w-[69%] sm:w-[71%] md:w-[69%] h-[235%] min-[400px]:h-[242%] sm:h-[248%] md:h-[262%] pointer-events-none">
                       <Image src={avatarImage} alt="Personalized Avocado" fill className="object-contain object-right-bottom" priority />
                     </div>
                   </div>
