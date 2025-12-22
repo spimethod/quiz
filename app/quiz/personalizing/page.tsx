@@ -645,7 +645,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className={`relative ${phase === 'insights' ? 'mt-[30px]' : 'mt-[12vh] min-[400px]:mt-[14vh] sm:mt-[18vh] md:mt-[168px]'}`}
+                  className={`relative ${phase === 'insights' ? 'mt-[30px]' : 'mt-4'}`}
                 >
                   <div className="relative bg-[#EAF4E2] rounded-2xl min-[400px]:rounded-3xl border border-[#d4e5c9] py-4 min-[400px]:py-6 pl-4 min-[400px]:pl-6 pr-[40%] min-[400px]:pr-[45%]" style={{ clipPath: 'inset(-100% 0 0 round 16px)' }}>
                     <h3 className="text-base min-[400px]:text-lg sm:text-xl font-bold text-[#1a1a1a] leading-relaxed min-[400px]:leading-loose tracking-wide break-words">
