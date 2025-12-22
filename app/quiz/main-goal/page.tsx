@@ -30,7 +30,7 @@ export default function MainGoalPage() {
     e.preventDefault();
     e.stopPropagation();
     
-    const optionId = e.currentTarget.dataset.option;
+    const optionId = e.currentTarget.getAttribute('data-option');
     if (!optionId) return;
     
     setSelectedGoal(optionId);
@@ -171,13 +171,19 @@ export default function MainGoalPage() {
             return (
               <div
                 key={option.id}
-                onClick={() => handleSelect(option.id)}
-                onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.id); }}
+                data-option={option.id}
+                onClick={handleSelect}
                 className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 select-none ${
                   isSelected
                     ? 'bg-[#f0fdf4] border-[#6B9D47] shadow-md scale-[1.02]'
                     : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
+                style={{
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none'
+                }}
               >
                 {/* Icon */}
                 <div className="relative w-6 h-6 sm:w-8 sm:h-8 mr-4 flex-shrink-0">
