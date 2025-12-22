@@ -289,24 +289,16 @@ export default function FeelingsPage() {
     };
   }, [isExpanded]);
 
-  // Scroll custom field into view when expanded (to keep both field and Continue button visible)
+  // Simple scroll: just scroll input container to top of screen when expanded
   useEffect(() => {
     if (!isExpanded || !customInputRef.current) return;
 
+    // Use scrollIntoView with block: 'start' to position input at top
     const scrollToInput = () => {
       if (customInputRef.current) {
-        // Get the visual viewport height (accounts for virtual keyboard)
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const inputRect = customInputRef.current.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Calculate scroll position to put custom field at ~10% from top of visible area
-        // This ensures the field is fully visible above browser bar and leaves room for Continue button
-        const targetTop = scrollTop + inputRect.top - (viewportHeight * 0.1);
-        
-        window.scrollTo({
-          top: Math.max(0, targetTop),
-          behavior: 'smooth'
+        customInputRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
       }
     };
@@ -330,6 +322,44 @@ export default function FeelingsPage() {
 
     return () => clearTimeout(timeoutId);
   }, [isExpanded]);
+
+  // Reduce padding under Continue button when keyboard is open
+  useEffect(() => {
+    if (!isExpanded || !(selectedOptions.length > 0 || customValue.trim())) return;
+
+    const adjustPadding = () => {
+      const continueButtonContainer = document.getElementById('continue-button-container');
+      if (!continueButtonContainer) return;
+
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.innerHeight;
+      const keyboardOpen = windowHeight - viewportHeight > 150;
+
+      if (keyboardOpen) {
+        continueButtonContainer.style.paddingBottom = '4px';
+        continueButtonContainer.style.paddingTop = '4px';
+      } else {
+        continueButtonContainer.style.paddingBottom = '';
+        continueButtonContainer.style.paddingTop = '';
+      }
+    };
+
+    const timeoutId = setTimeout(adjustPadding, 100);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', adjustPadding);
+      return () => {
+        clearTimeout(timeoutId);
+        window.visualViewport?.removeEventListener('resize', adjustPadding);
+      };
+    } else {
+      window.addEventListener('resize', adjustPadding);
+      return () => {
+        clearTimeout(timeoutId);
+        window.removeEventListener('resize', adjustPadding);
+      };
+    }
+  }, [isExpanded, selectedOptions, customValue]);
 
   const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
@@ -501,12 +531,14 @@ export default function FeelingsPage() {
 
       {/* Floating Continue Button - appears when custom field is expanded AND something is selected */}
       {isExpanded && (selectedOptions.length > 0 || customValue.trim()) && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up" id="continue-button-container">
           <div className="max-w-sm mx-auto w-full">
             <button
               onClick={handleContinue}
               onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+              ref={continueBtnRef}
               className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+              style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
             >
               Continue
             </button>
