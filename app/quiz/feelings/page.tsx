@@ -90,39 +90,39 @@ export default function FeelingsPage() {
   // Scroll into view when expanded (without zoom and without overlapping Continue button)
   useEffect(() => {
     if (isExpanded && customInputRef.current && continueBtnRef.current) {
-      setTimeout(() => {
+      // Wait for keyboard to appear and layout to stabilize
+      const timeoutId = setTimeout(() => {
         const element = customInputRef.current;
         const continueBtn = continueBtnRef.current;
         if (element && continueBtn) {
-          // Calculate available space considering fixed footer button
+          // Get current positions after keyboard appears
           const elementRect = element.getBoundingClientRect();
           const continueBtnRect = continueBtn.getBoundingClientRect();
-          const windowHeight = window.innerHeight;
           
-          // Estimate keyboard height (typically ~40% of screen on mobile)
-          const estimatedKeyboardHeight = windowHeight * 0.4;
-          const availableHeight = windowHeight - estimatedKeyboardHeight;
+          // Footer is fixed at bottom, so when keyboard appears, footer moves up
+          // We need to ensure element doesn't overlap with button
+          const padding = 20; // Minimum space between element and button
           
-          // Calculate how much space we need for the element + padding
-          const elementHeight = elementRect.height;
-          const padding = 20; // Space between element and button
-          const neededSpace = elementHeight + padding;
+          // Calculate if element overlaps with button
+          const elementBottom = elementRect.bottom;
+          const buttonTop = continueBtnRect.top;
           
-          // Position element so it's visible but doesn't overlap with button
-          // Button is fixed at bottom, so we need to ensure element is above it
-          const maxElementBottom = availableHeight - continueBtnRect.height - padding;
-          const currentElementBottom = elementRect.bottom;
-          
-          // Only scroll if element would overlap with button area
-          if (currentElementBottom > maxElementBottom) {
-            const scrollAmount = currentElementBottom - maxElementBottom;
+          // Only scroll if element is overlapping or too close to button
+          if (elementBottom > (buttonTop - padding)) {
+            // Calculate how much to scroll to create proper spacing
+            const overlap = elementBottom - (buttonTop - padding);
+            
+            // Scroll just enough to create padding, don't scroll more than necessary
             window.scrollTo({
-              top: window.pageYOffset + scrollAmount,
+              top: window.pageYOffset + overlap,
               behavior: 'smooth'
             });
           }
+          // If element is already properly positioned above button, don't scroll
         }
-      }, 200);
+      }, 400); // Wait for keyboard animation to complete
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [isExpanded]);
 
