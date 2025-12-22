@@ -101,7 +101,7 @@ export default function TherapyHistoryPage() {
         </div>
 
         {/* Avocado Image */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8 mt-auto">
           <Image
             src="/therapy-avocado.png"
             alt="Avocado on Therapy Couch"
