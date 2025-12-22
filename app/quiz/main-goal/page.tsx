@@ -74,35 +74,66 @@ export default function MainGoalPage() {
 
   // Click outside handler
   useEffect(() => {
-    // Не закрываем кастомное поле кликом вне, т.к. выбор взаимоисключающий,
-    // закрытие происходит только при выборе другой опции.
-  }, [isExpanded, selectedGoal, customValue]);
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const clickedInsideInput = customInputRef.current?.contains(target);
+      if (!clickedInsideInput) {
+        // Don't close on click outside - selection is exclusive, closing happens only when selecting another option
+      }
+    };
 
-  // Scroll into view when expanded
-  useEffect(() => {
-    if (isExpanded && customInputRef.current) {
-      setTimeout(() => {
-        customInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+    if (isExpanded) {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+        document.removeEventListener('click', handleClickOutside);
+      };
     }
   }, [isExpanded]);
 
-  const footerContent = (
+  // Scroll up when Continue button appears (only when collapsing input, not during typing)
+  useEffect(() => {
+    const hasSelection = selectedGoal && (selectedGoal !== 'custom' || customValue.trim());
+    // Only scroll when collapsing expanded input, not during active typing
+    if (hasSelection && !isExpanded) {
+      // Use a debounce to avoid scrolling on every keystroke
+      const timeoutId = setTimeout(() => {
+        const footer = document.querySelector('footer');
+        if (footer && !isExpanded) {
+          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 300); // Debounce to avoid scrolling during typing
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [selectedGoal, isExpanded]); // Removed customValue from dependencies to prevent scroll on every keystroke
+
+  // Hide footer when expanded, show floating button instead
+  useEffect(() => {
+    const footer = document.querySelector('footer') as HTMLElement | null;
+    if (!footer) return;
+
+    if (isExpanded) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = '';
+    }
+
+    return () => {
+      footer.style.display = '';
+    };
+  }, [isExpanded]);
+
+  const footerContent = !isExpanded && selectedGoal && (selectedGoal !== 'custom' || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
       <button
         onClick={handleContinue}
-        onTouchEnd={(e) => { if (selectedGoal && (selectedGoal !== 'custom' || customValue.trim())) { e.preventDefault(); handleContinue(); } }}
-        disabled={!selectedGoal || (selectedGoal === 'custom' && !customValue.trim())}
-        className={`w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none ${
-          selectedGoal && (selectedGoal !== 'custom' || customValue.trim())
-            ? 'bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
+        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 select-none bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
       >
         Continue
       </button>
     </div>
-  );
+  ) : null;
 
   return (
     <QuizLayout
@@ -111,7 +142,7 @@ export default function MainGoalPage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-md w-full mx-auto pt-2 sm:pt-4">
+      <div className="max-w-md w-full mx-auto pt-[25px]">
         
         {/* Title */}
         <div className="text-center mb-2 sm:mb-3">
@@ -185,10 +216,17 @@ export default function MainGoalPage() {
                 type="text"
                 value=""
                 readOnly
-                onFocus={() => handleCustomSelect({ autoFocus: true, startRecording: false })}
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLInputElement) {
+                    e.target.style.fontSize = '16px';
+                  }
+                  handleCustomSelect({ autoFocus: true, startRecording: false });
+                }}
                 onClick={() => handleCustomSelect({ autoFocus: true, startRecording: false })}
                 placeholder="+ Add Your Own"
                 className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
+                style={{ fontSize: '16px' }}
               />
               <button
                 onClick={() => handleCustomSelect({ autoFocus: false, startRecording: true })}
@@ -206,17 +244,22 @@ export default function MainGoalPage() {
                   setCustomValue(e.target.value);
                   if (isRecording) setIsRecording(false);
                 }}
-                onFocus={() => {
+                onFocus={(e) => {
+                  // Prevent zoom on iOS
+                  if (e.target instanceof HTMLTextAreaElement) {
+                    e.target.style.fontSize = '16px';
+                  }
                   if (isRecording) setIsRecording(false);
                 }}
                 placeholder={isRecording ? "Speak please..." : "Type please..."}
                 className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
+                style={{ fontSize: '16px' }}
               />
-              {/* Microphone button - bottom right corner */}
+              {/* Microphone button - top right corner */}
               <button
                 onClick={handleMicClick}
-                className={`absolute bottom-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isRecording 
                     ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                     : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
