@@ -1,20 +1,24 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
 
 export default function SocialGroupsPage() {
   const router = useRouter();
+  const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const CURRENT_STEP = 22;
   const TOTAL_STEPS = 32;
 
   const handleSelect = (option: 'yes' | 'no') => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('socialGroups', option);
-    }
-    // Сразу переходим на следующий шаг
-    router.push('/quiz/goals');
+    setSelectedButton(option);
+    setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('socialGroups', option);
+      }
+      router.push('/quiz/goals');
+    }, 200);
   };
 
   const footerContent = (
@@ -23,7 +27,11 @@ export default function SocialGroupsPage() {
       <button
         onClick={() => handleSelect('yes')}
         onTouchEnd={(e) => { e.preventDefault(); handleSelect('yes'); }}
-        className="flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
+        className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+          selectedButton === 'yes'
+            ? 'border-[#6B9D47] bg-[#f0fdf4]'
+            : 'border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4]'
+        }`}
       >
         <span className="text-2xl sm:text-3xl mb-1">👍</span>
         <span className="text-sm sm:text-base font-medium text-gray-700">
@@ -35,7 +43,11 @@ export default function SocialGroupsPage() {
       <button
         onClick={() => handleSelect('no')}
         onTouchEnd={(e) => { e.preventDefault(); handleSelect('no'); }}
-        className="flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
+        className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+          selectedButton === 'no'
+            ? 'border-[#6B9D47] bg-[#f0fdf4]'
+            : 'border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4]'
+        }`}
       >
         <span className="text-2xl sm:text-3xl mb-1">👎</span>
         <span className="text-sm sm:text-base font-medium text-gray-700">

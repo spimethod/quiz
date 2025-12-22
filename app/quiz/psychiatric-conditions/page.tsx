@@ -11,21 +11,29 @@ export default function PsychiatricConditionsPage() {
   const [customValue, setCustomValue] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
+  const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const customInputRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const CURRENT_STEP = 19;
   const TOTAL_STEPS = 32;
 
   const handleNo = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('psychiatricConditions', JSON.stringify({ hasConditions: false, details: '' }));
-    }
-    router.push('/quiz/psychology-books');
+    setSelectedButton('no');
+    setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('psychiatricConditions', JSON.stringify({ hasConditions: false, details: '' }));
+      }
+      router.push('/quiz/psychology-books');
+    }, 200);
   };
 
   const handleYes = () => {
-    setShowInput(true);
-    setShouldAutoFocus(true);
+    setSelectedButton('yes');
+    setTimeout(() => {
+      setShowInput(true);
+      setShouldAutoFocus(true);
+      setSelectedButton(null);
+    }, 200);
   };
 
   const handleMicClick = () => {
@@ -83,7 +91,11 @@ export default function PsychiatricConditionsPage() {
             type="button"
             onClick={handleYes}
             onTouchEnd={(e) => { e.preventDefault(); handleYes(); }}
-            className="flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
+            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+              selectedButton === 'yes'
+                ? 'border-[#6B9D47] bg-[#f0fdf4]'
+                : 'border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4]'
+            }`}
           >
             <span className="text-2xl sm:text-3xl mb-1">👍</span>
             <span className="text-sm sm:text-base font-medium text-gray-700">
@@ -96,7 +108,11 @@ export default function PsychiatricConditionsPage() {
             type="button"
             onClick={handleNo}
             onTouchEnd={(e) => { e.preventDefault(); handleNo(); }}
-            className="flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4] transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none"
+            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-xl bg-white border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+              selectedButton === 'no'
+                ? 'border-[#6B9D47] bg-[#f0fdf4]'
+                : 'border-gray-300 hover:border-[#6B9D47] hover:bg-[#f0fdf4]'
+            }`}
           >
             <span className="text-2xl sm:text-3xl mb-1">👎</span>
             <span className="text-sm sm:text-base font-medium text-gray-700">

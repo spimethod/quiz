@@ -1,20 +1,24 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
 
 export default function SupportSystemPage() {
   const router = useRouter();
+  const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const CURRENT_STEP = 14;
   const TOTAL_STEPS = 32;
 
   const handleSelect = (option: 'yes' | 'no') => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('supportSystem', option);
-    }
-    // Сразу переходим на следующий шаг
-    router.push('/quiz/why-avocado');
+    setSelectedButton(option);
+    setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('supportSystem', option);
+      }
+      router.push('/quiz/why-avocado');
+    }, 200);
   };
 
   const footerContent = (
