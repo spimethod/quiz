@@ -97,13 +97,19 @@ export default function FeelingsPage() {
 
   // Scroll to bottom on initial load (when no options selected) - guaranteed approach
   useEffect(() => {
-    if (selectedOptions.length === 0 && !customValue.trim()) {
+    // Only run on initial mount when nothing is selected and input is not expanded
+    if (selectedOptions.length === 0 && !customValue.trim() && !isExpanded) {
       let scrollTimeout: NodeJS.Timeout | null = null;
       let lastHeight = 0;
       let stableCount = 0;
+      let isScrolling = false; // Flag to prevent multiple simultaneous scrolls
       const STABLE_THRESHOLD = 3; // Number of consecutive stable measurements
       
       const performScroll = () => {
+        if (isScrolling) return; // Prevent concurrent scrolls
+        if (isExpanded || selectedOptions.length > 0 || customValue.trim()) return; // Don't scroll if conditions changed
+        
+        isScrolling = true;
         const customInput = customInputRef.current;
         const currentHeight = document.documentElement.scrollHeight;
         
@@ -123,9 +129,18 @@ export default function FeelingsPage() {
             behavior: 'auto'
           });
         }
+        
+        setTimeout(() => {
+          isScrolling = false;
+        }, 100);
       };
       
       const checkAndScroll = () => {
+        // Don't check if input is expanded or user has made selections
+        if (isExpanded || selectedOptions.length > 0 || customValue.trim()) {
+          return true; // Stop checking
+        }
+        
         const currentHeight = document.documentElement.scrollHeight;
         
         // Check if height is stable (not changing)
@@ -160,33 +175,54 @@ export default function FeelingsPage() {
         });
       });
       
-      // Use MutationObserver to detect DOM changes
-      const observer = new MutationObserver(() => {
+      // Use MutationObserver to detect DOM changes, but ignore textarea content changes
+      const observer = new MutationObserver((mutations) => {
+        // Ignore mutations inside textarea (characterData changes)
+        const hasTextareaChanges = mutations.some(mutation => {
+          const target = mutation.target as HTMLElement;
+          return target.tagName === 'TEXTAREA' || target.closest('textarea');
+        });
+        
+        if (hasTextareaChanges) return; // Skip scroll when textarea content changes
+        
         if (scrollTimeout) {
           clearTimeout(scrollTimeout);
         }
         attemptScroll();
       });
       
-      // Observe changes in the document body
+      // Observe changes in the document body, but exclude textarea
       observer.observe(document.body, {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['style', 'class']
+        attributeFilter: ['style', 'class'],
+        characterData: false // Don't track text changes
       });
       
-      // Use ResizeObserver to detect size changes
+      // Use ResizeObserver to detect size changes, but only observe main content, not textarea
       let resizeObserver: ResizeObserver | null = null;
       if (window.ResizeObserver) {
-        resizeObserver = new ResizeObserver(() => {
+        resizeObserver = new ResizeObserver((entries) => {
+          // Ignore resize events from textarea
+          const hasTextareaResize = entries.some(entry => {
+            const target = entry.target as HTMLElement;
+            return target.tagName === 'TEXTAREA' || target.closest('textarea');
+          });
+          
+          if (hasTextareaResize) return; // Skip scroll when textarea resizes
+          
           if (scrollTimeout) {
             clearTimeout(scrollTimeout);
           }
           attemptScroll();
         });
         
-        resizeObserver.observe(document.body);
+        // Only observe main content area, not textarea
+        const mainContent = document.querySelector('main');
+        if (mainContent) {
+          resizeObserver.observe(mainContent);
+        }
       }
       
       // Also listen to window load
@@ -218,21 +254,24 @@ export default function FeelingsPage() {
         window.removeEventListener('load', handleLoad);
       };
     }
-  }, []); // Only on mount
+  }, [selectedOptions, customValue, isExpanded]); // Depend on these to stop when conditions change
 
-  // Scroll up when Continue button appears
+  // Scroll up when Continue button appears (only when collapsing input, not during typing)
   useEffect(() => {
     const hasSelection = selectedOptions.length > 0 || customValue.trim();
+    // Only scroll when collapsing expanded input, not during active typing
     if (hasSelection && !isExpanded) {
-      // Scroll up to show the Continue button
-      setTimeout(() => {
+      // Use a debounce to avoid scrolling on every keystroke
+      const timeoutId = setTimeout(() => {
         const footer = document.querySelector('footer');
-        if (footer) {
+        if (footer && !isExpanded) {
           footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
-      }, 100);
+      }, 300); // Debounce to avoid scrolling during typing
+      
+      return () => clearTimeout(timeoutId);
     }
-  }, [selectedOptions, customValue, isExpanded]);
+  }, [selectedOptions, isExpanded]); // Removed customValue from dependencies to prevent scroll on every keystroke
 
   // Hide footer when expanded, show floating button instead
   useEffect(() => {
