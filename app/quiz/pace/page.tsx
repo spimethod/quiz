@@ -124,7 +124,7 @@ export default function PacePage() {
         </div>
 
         {/* Options List */}
-        <div className="flex flex-col gap-3 sm:gap-4">
+        <div ref={optionsRef} className="flex flex-col gap-3 sm:gap-4">
           {options.map((option) => {
             const isSelected = selectedPace === option.id;
             return (
