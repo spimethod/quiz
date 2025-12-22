@@ -101,26 +101,31 @@ export default function FeelingsPage() {
           
           // Footer is fixed at bottom, so when keyboard appears, footer moves up
           // We need to ensure element doesn't overlap with button
-          const padding = 20; // Minimum space between element and button
+          const padding = 24; // Minimum space between element and button
           
           // Calculate if element overlaps with button
           const elementBottom = elementRect.bottom;
           const buttonTop = continueBtnRect.top;
           
-          // Only scroll if element is overlapping or too close to button
-          if (elementBottom > (buttonTop - padding)) {
-            // Calculate how much to scroll to create proper spacing
+          // Check if element is overlapping button (element bottom is below button top minus padding)
+          const isOverlapping = elementBottom > (buttonTop - padding);
+          
+          if (isOverlapping) {
+            // Calculate exact overlap amount
             const overlap = elementBottom - (buttonTop - padding);
             
-            // Scroll just enough to create padding, don't scroll more than necessary
+            // Scroll only the exact amount needed to fix overlap, no more
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+            const newScrollTop = currentScrollTop + overlap;
+            
             window.scrollTo({
-              top: window.pageYOffset + overlap,
+              top: Math.max(0, newScrollTop),
               behavior: 'smooth'
             });
           }
-          // If element is already properly positioned above button, don't scroll
+          // If element is already properly positioned above button with padding, don't scroll at all
         }
-      }, 400); // Wait for keyboard animation to complete
+      }, 500); // Wait longer for keyboard animation to fully complete
       
       return () => clearTimeout(timeoutId);
     }
