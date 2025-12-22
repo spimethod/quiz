@@ -59,7 +59,7 @@ export default function TherapyHistoryPage() {
       footer={footerContent}
       className="px-4 sm:px-6 md:px-8 lg:px-10"
     >
-      <div className="max-w-[660px] w-full mx-auto pt-[30px] min-h-[calc(100vh-200px)] flex flex-col">
+      <div className="max-w-[660px] w-full mx-auto pt-[30px] pb-32">
         {/* Title */}
         <div className="mb-6 sm:mb-8 mt-4 sm:mt-6 text-center">
           <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight max-w-[540px] mx-auto [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
@@ -101,7 +101,7 @@ export default function TherapyHistoryPage() {
         </div>
 
         {/* Avocado Image */}
-        <div className="flex justify-center mb-8 mt-auto">
+        <div className="flex justify-center mb-8">
           <Image
             src="/therapy-avocado.png"
             alt="Avocado on Therapy Couch"
