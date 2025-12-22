@@ -338,7 +338,7 @@ export default function FeelingsPage() {
         </div>
 
         {/* Options Grid */}
-        <div className="mb-4 sm:mb-6">
+        <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-4">
             {predefinedOptions.map((option) => {
               const isSelected = selectedOptions.includes(option);
@@ -367,7 +367,7 @@ export default function FeelingsPage() {
           </div>
 
           {/* Custom Input - Collapsed/Expanded */}
-          <div ref={customInputRef} className="w-full max-w-md mx-auto">
+          <div ref={customInputRef} className={`w-full max-w-md mx-auto ${isExpanded ? 'mb-0' : ''}`}>
             {!isExpanded ? (
               /* Collapsed: Input + Button in one line */
             <div 
@@ -459,7 +459,7 @@ export default function FeelingsPage() {
 
       {/* Floating Continue Button - appears when custom field is expanded AND something is selected */}
       {isExpanded && (selectedOptions.length > 0 || customValue.trim()) && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-4 pt-2 bg-[#f5f5f0] animate-slide-up">
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
           <div className="max-w-sm mx-auto w-full">
             <button
               onClick={handleContinue}
