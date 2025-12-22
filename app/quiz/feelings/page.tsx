@@ -32,7 +32,13 @@ export default function FeelingsPage() {
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
 
-  const toggleOption = (option: string) => {
+  const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const option = e.currentTarget.dataset.option;
+    if (!option) return;
+    
     setSelectedOptions(prev => {
       if (prev.includes(option)) {
         return prev.filter(item => item !== option);
@@ -162,22 +168,19 @@ export default function FeelingsPage() {
                 <button
                   key={option}
                   type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleOption(option);
-                  }}
-                  onTouchEnd={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleOption(option);
-                  }}
+                  data-option={option}
+                  onClick={handleOptionClick}
                   className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-200 select-none flex-shrink-0 [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:110%]:px-3.5 [zoom:110%]:py-2.5 [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:125%]:px-3 [zoom:125%]:py-2 [zoom:150%]:text-[min(2vw,0.9rem)] [zoom:150%]:px-2.5 [zoom:150%]:py-1.5 ${
                     isSelected
                       ? 'bg-[#6B9D47] text-white shadow-md scale-105'
                       : 'bg-white text-gray-800 border border-gray-300 hover:border-[#6B9D47] hover:scale-105'
                   }`}
-                  style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none'
+                  }}
                 >
                   {option}
                 </button>
