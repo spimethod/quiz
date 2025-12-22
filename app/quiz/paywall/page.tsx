@@ -208,7 +208,7 @@ export default function PaywallPage() {
              </div>
 
              {/* Center Image */}
-             <div className="w-[140px] sm:w-[200px] md:w-[280px]">
+             <div className={`w-[140px] sm:w-[200px] md:w-[280px] ${avatar === 'girl' ? 'pt-[25px]' : ''}`}>
                <div className="relative w-full aspect-square">
                 <Image 
                   src={avatar === 'girl' ? "/before-after-avocado-girl.png" : "/before-after-avocado.png"}
