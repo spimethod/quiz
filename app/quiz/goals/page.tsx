@@ -28,12 +28,20 @@ export default function GoalsPage() {
     'Support'
   ];
 
-  const handleSelect = (option: string) => {
-    setSelectedOptions(prev => 
-      prev.includes(option) 
-        ? prev.filter(item => item !== option)
-        : [...prev, option]
-    );
+  const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const option = e.currentTarget.dataset.option;
+    if (!option) return;
+    
+    setSelectedOptions(prev => {
+      if (prev.includes(option)) {
+        return prev.filter(item => item !== option);
+      } else {
+        return [...prev, option];
+      }
+    });
   };
 
   const handleAddCustom = () => {
