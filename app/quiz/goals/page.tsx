@@ -118,10 +118,10 @@ export default function GoalsPage() {
 
   // Reduce padding under Continue button when keyboard is open
   useEffect(() => {
-    if (!isExpanded) return;
+    if (!isExpanded || !customValue.trim()) return;
 
     const adjustPadding = () => {
-      const continueButtonContainer = document.querySelector('.fixed.bottom-0');
+      const continueButtonContainer = document.getElementById('continue-button-container');
       if (!continueButtonContainer) return;
 
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
@@ -129,29 +129,31 @@ export default function GoalsPage() {
       const keyboardOpen = windowHeight - viewportHeight > 150; // Keyboard is open if difference > 150px
 
       if (keyboardOpen) {
-        (continueButtonContainer as HTMLElement).style.paddingBottom = '4px';
-        (continueButtonContainer as HTMLElement).style.paddingTop = '4px';
+        continueButtonContainer.style.paddingBottom = '4px';
+        continueButtonContainer.style.paddingTop = '4px';
       } else {
-        (continueButtonContainer as HTMLElement).style.paddingBottom = '';
-        (continueButtonContainer as HTMLElement).style.paddingTop = '';
+        continueButtonContainer.style.paddingBottom = '';
+        continueButtonContainer.style.paddingTop = '';
       }
     };
 
     // Check on mount and when viewport changes
-    adjustPadding();
+    const timeoutId = setTimeout(adjustPadding, 100);
 
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', adjustPadding);
       return () => {
+        clearTimeout(timeoutId);
         window.visualViewport?.removeEventListener('resize', adjustPadding);
       };
     } else {
       window.addEventListener('resize', adjustPadding);
       return () => {
+        clearTimeout(timeoutId);
         window.removeEventListener('resize', adjustPadding);
       };
     }
-  }, [isExpanded]);
+  }, [isExpanded, customValue]);
 
   const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
@@ -318,7 +320,7 @@ export default function GoalsPage() {
 
       {/* Floating Continue Button - appears when custom field is expanded AND has text */}
       {isExpanded && customValue.trim() && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up" id="continue-button-container">
           <div className="max-w-sm mx-auto w-full">
             <button
               onClick={handleContinue}
