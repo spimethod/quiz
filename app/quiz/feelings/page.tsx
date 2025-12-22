@@ -98,25 +98,23 @@ export default function FeelingsPage() {
   // Scroll to bottom on initial load (when no options selected)
   useEffect(() => {
     if (selectedOptions.length === 0 && !customValue.trim()) {
-      // Scroll to bottom after layout is ready
+      // Scroll to the custom input field (last element before footer)
       const scrollToBottom = () => {
-        const scrollHeight = Math.max(
-          document.body.scrollHeight,
-          document.body.offsetHeight,
-          document.documentElement.clientHeight,
-          document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight
-        );
-        window.scrollTo({
-          top: scrollHeight,
-          behavior: 'auto' // Use 'auto' for immediate scroll on load
-        });
+        const customInput = customInputRef.current;
+        if (customInput) {
+          customInput.scrollIntoView({ behavior: 'auto', block: 'end' });
+        } else {
+          // Fallback: scroll to bottom of page
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'auto'
+          });
+        }
       };
       
       // Try multiple times to ensure it works after all content loads
-      scrollToBottom();
-      setTimeout(scrollToBottom, 100);
-      setTimeout(scrollToBottom, 300);
+      setTimeout(scrollToBottom, 50);
+      setTimeout(scrollToBottom, 200);
       setTimeout(scrollToBottom, 500);
     }
   }, []); // Only on mount
