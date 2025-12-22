@@ -579,7 +579,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                 exit={{ y: -300, opacity: 0 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
               >
-                <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+                <div className="max-w-md mx-auto pt-[30px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
                   <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
                   <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
 
