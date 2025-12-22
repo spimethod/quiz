@@ -118,13 +118,13 @@ export default function QuizLayout({
       const viewportHeightDiff = maxViewportHeight - currentViewportHeight;
       
       // If viewport height decreased significantly (keyboard appeared)
-      if (viewportHeightDiff > 100) {
-        // Reduce padding proportionally to keyboard height
-        // Minimum padding of 8px (pb-2) when keyboard is fully visible
+      if (viewportHeightDiff > 50) {
+        // Reduce padding more aggressively - minimum padding of 0px when keyboard is visible
         const keyboardHeight = viewportHeightDiff;
         const maxKeyboardHeight = maxViewportHeight * 0.4; // ~40% of screen
-        const paddingReduction = Math.min(keyboardHeight / maxKeyboardHeight, 1) * (initialPaddingBottom - 8);
-        const newPadding = Math.max(8, initialPaddingBottom - paddingReduction);
+        // More aggressive reduction - reduce padding faster
+        const paddingReduction = Math.min(keyboardHeight / maxKeyboardHeight, 1) * initialPaddingBottom;
+        const newPadding = Math.max(0, initialPaddingBottom - paddingReduction);
         
         footer.style.paddingBottom = `${newPadding}px`;
       } else {
