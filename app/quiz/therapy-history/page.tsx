@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type MouseEvent } from 'react';
+import { useState, useRef, useEffect, type MouseEvent } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
@@ -8,6 +8,8 @@ import QuizLayout from '../../components/QuizLayout';
 export default function TherapyHistoryPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<string | null>(null);
+  const continueBtnRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const CURRENT_STEP = 17;
   const TOTAL_STEPS = 32;
 
