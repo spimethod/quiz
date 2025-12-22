@@ -31,7 +31,6 @@ export default function FeelingsPage() {
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
-  const footerRef = useRef<HTMLElement | null>(null);
 
   const toggleOption = (option: string) => {
     if (selectedOptions.includes(option)) {
@@ -88,126 +87,50 @@ export default function FeelingsPage() {
     }
   }, [isExpanded]);
 
-  // Adjust footer padding and scroll when expanded (keyboard appears)
+  // Keep footer from overlapping the custom input by changing its positioning when expanded
   useEffect(() => {
-    if (!isExpanded || !customInputRef.current || !continueBtnRef.current) {
-      // Reset footer padding when collapsed
-      const footer = document.querySelector('footer');
-      if (footer) {
-        footer.style.paddingBottom = '24px';
-      }
-      return;
-    }
-    
-    // Find footer element
-    const footer = document.querySelector('footer') as HTMLElement;
-    if (!footer) return;
-    
-    const initialPaddingBottom = 24; // pb-6 = 1.5rem = 24px
-    let maxViewportHeight = window.innerHeight;
-    
-    // Function to adjust footer padding based on keyboard visibility
-    const adjustFooterPadding = () => {
-      // Use visualViewport if available (more reliable for mobile keyboards)
-      const currentHeight = window.visualViewport?.height || window.innerHeight;
-      
-      // Update max height if viewport got larger
-      if (currentHeight > maxViewportHeight) {
-        maxViewportHeight = currentHeight;
-      }
-      
-      const heightDiff = maxViewportHeight - currentHeight;
-      
-      // If keyboard is visible (viewport height decreased significantly)
-      if (heightDiff > 50) {
-        // Aggressively reduce padding - minimum 0px
-        const keyboardHeight = heightDiff;
-        const maxKeyboardHeight = maxViewportHeight * 0.4;
-        const paddingReduction = Math.min(keyboardHeight / maxKeyboardHeight, 1) * initialPaddingBottom;
-        const newPadding = Math.max(0, initialPaddingBottom - paddingReduction);
-        
-        footer.style.paddingBottom = `${newPadding}px`;
-      } else {
-        // Keyboard not visible, restore original padding
-        footer.style.paddingBottom = `${initialPaddingBottom}px`;
-      }
+    const footer = document.querySelector('footer') as HTMLElement | null;
+    const mainEl = document.querySelector('main') as HTMLElement | null;
+    if (!footer || !mainEl) return;
+
+    // Capture original styles to restore later
+    const originalFooterStyles = {
+      position: footer.style.position,
+      bottom: footer.style.bottom,
+      left: footer.style.left,
+      right: footer.style.right,
+      paddingBottom: footer.style.paddingBottom,
     };
-    
-    // Function to check and adjust scroll position
-    const adjustScroll = () => {
-      const element = customInputRef.current;
-      const continueBtn = continueBtnRef.current;
-      if (!element || !continueBtn) return;
-      
-      const elementRect = element.getBoundingClientRect();
-      const continueBtnRect = continueBtn.getBoundingClientRect();
-      const padding = 20;
-      
-      const elementBottom = elementRect.bottom;
-      const buttonTop = continueBtnRect.top;
-      const isOverlapping = elementBottom > (buttonTop - padding);
-      
-      if (isOverlapping) {
-        const overlap = elementBottom - (buttonTop - padding);
-        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-        const newScrollTop = currentScrollTop + overlap;
-        
-        requestAnimationFrame(() => {
-          window.scrollTo({
-            top: Math.max(0, newScrollTop),
-            behavior: 'smooth'
-          });
-        });
-      }
-    };
-    
-    // Combined adjustment function
-    const adjustAll = () => {
-      adjustFooterPadding();
-      adjustScroll();
-    };
-    
-    // Use Visual Viewport API if available
-    if (window.visualViewport) {
-      const handleViewportChange = () => {
-        adjustAll();
-      };
-      
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
-      
-      // Initial adjustment with delay for keyboard animation
-      setTimeout(adjustAll, 300);
-      setTimeout(adjustAll, 600);
-      
-      return () => {
-        window.visualViewport?.removeEventListener('resize', handleViewportChange);
-        window.visualViewport?.removeEventListener('scroll', handleViewportChange);
-        // Reset padding on cleanup
-        footer.style.paddingBottom = `${initialPaddingBottom}px`;
-      };
+    const originalMainPadding = mainEl.style.paddingBottom;
+
+    if (isExpanded) {
+      // Let footer flow in document to avoid covering the input
+      footer.style.position = 'static';
+      footer.style.bottom = '';
+      footer.style.left = '';
+      footer.style.right = '';
+      footer.style.paddingBottom = '0px';
+      // Add small bottom padding to main content so footer has breathing room
+      mainEl.style.paddingBottom = '12px';
     } else {
-      // Fallback to window resize and interval checking
-      const handleResize = () => {
-        adjustAll();
-      };
-      
-      window.addEventListener('resize', handleResize);
-      
-      // Also check periodically (keyboard might not trigger resize on some devices)
-      const intervalId = setInterval(adjustAll, 200);
-      
-      // Initial adjustments
-      setTimeout(adjustAll, 300);
-      setTimeout(adjustAll, 600);
-      
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        clearInterval(intervalId);
-        // Reset padding on cleanup
-        footer.style.paddingBottom = `${initialPaddingBottom}px`;
-      };
+      // Restore original fixed footer
+      footer.style.position = originalFooterStyles.position || 'fixed';
+      footer.style.bottom = originalFooterStyles.bottom || '0';
+      footer.style.left = originalFooterStyles.left || '0';
+      footer.style.right = originalFooterStyles.right || '0';
+      footer.style.paddingBottom = originalFooterStyles.paddingBottom || '24px';
+      mainEl.style.paddingBottom = originalMainPadding || '';
     }
+
+    return () => {
+      // Restore on unmount
+      footer.style.position = originalFooterStyles.position;
+      footer.style.bottom = originalFooterStyles.bottom;
+      footer.style.left = originalFooterStyles.left;
+      footer.style.right = originalFooterStyles.right;
+      footer.style.paddingBottom = originalFooterStyles.paddingBottom;
+      mainEl.style.paddingBottom = originalMainPadding;
+    };
   }, [isExpanded]);
 
   const footerContent = (
