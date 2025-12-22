@@ -89,46 +89,64 @@ export default function FeelingsPage() {
 
   // Scroll into view when expanded (without zoom and without overlapping Continue button)
   useEffect(() => {
-    if (isExpanded && customInputRef.current && continueBtnRef.current) {
-      // Wait for keyboard to appear and layout to stabilize
-      const timeoutId = setTimeout(() => {
-        const element = customInputRef.current;
-        const continueBtn = continueBtnRef.current;
-        if (element && continueBtn) {
-          // Get current positions after keyboard appears
-          const elementRect = element.getBoundingClientRect();
-          const continueBtnRect = continueBtn.getBoundingClientRect();
-          
-          // Footer is fixed at bottom, so when keyboard appears, footer moves up
-          // We need to ensure element doesn't overlap with button
-          const padding = 24; // Minimum space between element and button
-          
-          // Calculate if element overlaps with button
-          const elementBottom = elementRect.bottom;
-          const buttonTop = continueBtnRect.top;
-          
-          // Check if element is overlapping button (element bottom is below button top minus padding)
-          const isOverlapping = elementBottom > (buttonTop - padding);
-          
-          if (isOverlapping) {
-            // Calculate exact overlap amount
-            const overlap = elementBottom - (buttonTop - padding);
-            
-            // Scroll only the exact amount needed to fix overlap, no more
-            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-            const newScrollTop = currentScrollTop + overlap;
-            
-            window.scrollTo({
-              top: Math.max(0, newScrollTop),
-              behavior: 'smooth'
-            });
-          }
-          // If element is already properly positioned above button with padding, don't scroll at all
-        }
-      }, 500); // Wait longer for keyboard animation to fully complete
+    if (!isExpanded || !customInputRef.current || !continueBtnRef.current) return;
+    
+    // Function to check and adjust scroll position
+    const adjustScroll = () => {
+      const element = customInputRef.current;
+      const continueBtn = continueBtnRef.current;
+      if (!element || !continueBtn) return;
       
-      return () => clearTimeout(timeoutId);
-    }
+      // Get current positions after keyboard appears
+      const elementRect = element.getBoundingClientRect();
+      const continueBtnRect = continueBtn.getBoundingClientRect();
+      
+      // Footer is fixed at bottom, so when keyboard appears, footer moves up
+      // We need to ensure element doesn't overlap with button
+      const padding = 20; // Minimum space between element and button
+      
+      // Calculate if element overlaps with button
+      const elementBottom = elementRect.bottom;
+      const buttonTop = continueBtnRect.top;
+      
+      // Check if element is overlapping button (element bottom is below button top minus padding)
+      const isOverlapping = elementBottom > (buttonTop - padding);
+      
+      if (isOverlapping) {
+        // Calculate exact overlap amount - only scroll what's needed
+        const overlap = elementBottom - (buttonTop - padding);
+        
+        // Scroll only the exact amount needed to fix overlap, no more
+        const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const newScrollTop = currentScrollTop + overlap;
+        
+        // Use requestAnimationFrame for smoother scroll
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: Math.max(0, newScrollTop),
+            behavior: 'smooth'
+          });
+        });
+      }
+      // If element is already properly positioned above button with padding, don't scroll at all
+    };
+    
+    // Wait for keyboard to appear and layout to stabilize
+    const timeoutId = setTimeout(adjustScroll, 600);
+    
+    // Also listen to resize events (keyboard show/hide triggers resize on mobile)
+    const handleResize = () => {
+      if (isExpanded) {
+        setTimeout(adjustScroll, 100);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [isExpanded]);
 
   const footerContent = (
