@@ -82,7 +82,7 @@ export default function CommitmentPage() {
           <div className="absolute inset-0 bg-white/50" />
           
           {/* Signed Contract Image Container with Navigation */}
-          <div className="relative z-50 -mt-40 sm:-mt-24 md:mt-0">
+          <div className="relative z-50">
             {/* Back Button - Mobile (Bottom Left) / Desktop (Left Side) */}
             <button
               onClick={() => router.back()}
