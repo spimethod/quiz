@@ -58,7 +58,7 @@ export default function PersonalPlanPage() {
                src="/personal-plan-avocado.png"
                alt="Avocado Plan"
                fill
-               className="object-contain object-center scale-[1.7] translate-y-20 sm:translate-y-24"
+               className="object-contain object-center scale-[1.7] translate-y-20 sm:translate-y-24 -translate-x-[10px]"
                priority
              />
            </div>
