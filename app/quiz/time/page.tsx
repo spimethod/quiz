@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import QuizLayout from '../../components/QuizLayout';
@@ -11,6 +11,7 @@ export default function TimePage() {
   const TOTAL_STEPS = 32;
 
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
+  const optionsGridRef = useRef<HTMLDivElement>(null);
 
   const timeOptions = [5, 10, 15, 30, 40, 60];
 
@@ -105,13 +106,12 @@ export default function TimePage() {
     { x: width * 0.97, y: curveData.p2.y }           // In 1 month - at end
   ];
 
-  // Scroll to show Continue button when 40 or 60 min is selected
+  // Scroll to show options grid when 40 or 60 min is selected (so Continue doesn't cover them)
   useEffect(() => {
     if (selectedTime === 40 || selectedTime === 60) {
-      const footer = document.querySelector('footer');
-      if (footer) {
+      if (optionsGridRef.current) {
         setTimeout(() => {
-          footer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          optionsGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
       }
     }
@@ -243,7 +243,7 @@ export default function TimePage() {
         </div>
 
         {/* Options Grid */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div ref={optionsGridRef} className="grid grid-cols-2 gap-3 sm:gap-4">
           {timeOptions.map((time) => (
             <button
               key={time}
