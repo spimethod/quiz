@@ -54,7 +54,7 @@ export default function DoingAmazingPage() {
             alt="Happy Avocado"
             width={500}
             height={500}
-            className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain"
+            className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[400px] lg:h-[400px] max-w-[45vh] max-h-[45vh] object-contain"
             priority
           />
         </div>
