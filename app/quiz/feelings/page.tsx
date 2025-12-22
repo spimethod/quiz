@@ -227,14 +227,14 @@ export default function FeelingsPage() {
                   if (isRecording) setIsRecording(false);
                 }}
                   placeholder={isRecording ? "Speak please..." : "Type please..."}
-                  className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
+                  className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 pt-12 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
                 style={{ fontSize: '16px' }}
                 />
-                {/* Microphone button - bottom right corner */}
+                {/* Microphone button - top right corner */}
                 <button
                   onClick={handleMicClick}
-                  className={`absolute bottom-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                  className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                     isRecording 
                       ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                       : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
