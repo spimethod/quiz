@@ -789,7 +789,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
         <AnimatePresence>
           {phase === 'companion' && (
             <motion.div
-              className="absolute inset-0 top-[30px] sm:top-[40px] flex flex-col bg-[#f5f5f0] z-10"
+              className="absolute inset-0 top-[70px] sm:top-[80px] flex flex-col bg-[#f5f5f0] z-10"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
@@ -809,9 +809,9 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                   </div>
 
                   {/* Main Content - flexible, can shrink */}
-                  <div className="relative w-full max-w-[500px] sm:max-w-[450px] flex-1 min-h-0">
+                  <div className="relative w-full max-w-[500px] sm:max-w-[450px] flex-1 min-h-0 mb-10">
                     {/* Avocado icon for chat */}
-                    <div className="absolute bottom-0 left-[-20px] sm:left-[-30px] w-14 h-14 rounded-full flex items-center justify-center z-30"
+                    <div className="absolute bottom-6 left-[-17px] sm:left-[-27px] w-14 h-14 rounded-full flex items-center justify-center z-30"
                       style={{ display: companionType === 'chat' ? 'flex' : 'none' }}
                     >
                       <Image
