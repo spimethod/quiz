@@ -48,13 +48,13 @@ export default function DoingAmazingPage() {
         </div>
 
         {/* Avocado Image */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mt-4 mb-4">
           <Image
             src="/doing-amazing.png"
             alt="Happy Avocado"
             width={500}
             height={500}
-            className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 object-contain"
+            className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain"
             priority
           />
         </div>
