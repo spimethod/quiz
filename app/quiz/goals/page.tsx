@@ -152,7 +152,7 @@ export default function GoalsPage() {
 
   // Reduce padding under Continue button when keyboard is open
   useEffect(() => {
-    if (!isExpanded || !customValue.trim()) return;
+    if (!isExpanded || !(selectedOptions.length > 0 || customValue.trim())) return;
 
     const adjustPadding = () => {
       const continueButtonContainer = document.getElementById('continue-button-container');
@@ -186,7 +186,7 @@ export default function GoalsPage() {
         window.removeEventListener('resize', adjustPadding);
       };
     }
-  }, [isExpanded, customValue]);
+  }, [isExpanded, customValue, selectedOptions]);
 
   const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
@@ -353,8 +353,8 @@ export default function GoalsPage() {
           </div>
         </div>
 
-      {/* Floating Continue Button - appears when custom field is expanded AND has text */}
-      {isExpanded && customValue.trim() && (
+      {/* Floating Continue Button - appears when custom field is expanded AND (has text OR option selected) */}
+      {isExpanded && (selectedOptions.length > 0 || customValue.trim()) && (
         <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up" id="continue-button-container">
           <div className="max-w-sm mx-auto w-full">
             <button
