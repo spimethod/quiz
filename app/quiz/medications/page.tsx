@@ -228,8 +228,8 @@ export default function MedicationsPage() {
         )}
       </div>
 
-      {/* Floating Continue Button - appears when custom field is expanded AND text is entered */}
-      {showInput && customValue.trim() && (
+      {/* Floating Continue Button - appears when custom field is expanded, always visible and active */}
+      {showInput && (
         <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up">
           <div className="max-w-sm mx-auto w-full">
             <button
