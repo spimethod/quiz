@@ -188,6 +188,40 @@ export default function GoalsPage() {
     }
   }, [isExpanded]);
 
+  // Add bottom padding to main when keyboard is open so input stays above overlays
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const mainEl = document.querySelector('main') as HTMLElement | null;
+    if (!mainEl) return;
+
+    const adjustPadding = () => {
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.innerHeight;
+      const keyboardHeight = Math.max(0, windowHeight - viewportHeight);
+
+      // Extra space to clear browser bar and Continue button (approx)
+      const extra = keyboardHeight > 0 ? keyboardHeight + 140 : 0;
+      mainEl.style.paddingBottom = extra ? `${extra}px` : '';
+    };
+
+    adjustPadding();
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', adjustPadding);
+      return () => {
+        window.visualViewport?.removeEventListener('resize', adjustPadding);
+        mainEl.style.paddingBottom = '';
+      };
+    } else {
+      window.addEventListener('resize', adjustPadding);
+      return () => {
+        window.removeEventListener('resize', adjustPadding);
+        mainEl.style.paddingBottom = '';
+      };
+    }
+  }, [isExpanded]);
+
   // Reduce padding under Continue button when keyboard is open
   useEffect(() => {
     if (!isExpanded || !customValue.trim()) return;
