@@ -285,7 +285,7 @@ export default function CommitmentPage() {
             </>
           ) : (
             /* Girl Version - Universal (Mobile/Tablet/Web) - Using Aspect Ratio Container */
-            <div className="relative mx-auto w-72 sm:w-84 md:w-[26rem] max-w-[78vw] aspect-[4876/5396]">
+            <div className="relative mx-auto w-72 sm:w-84 md:w-[26rem] max-w-[78vw] aspect-[4876/5396] translate-x-[30px]">
               <div className="absolute inset-0 scale-108 -translate-x-[10.3%] -translate-y-[1.4%]">
                 <Image
                   src="/commitment-avocado-girl.png"
@@ -364,7 +364,7 @@ export default function CommitmentPage() {
         </div>
 
         {/* Instruction with Animated Arrow */}
-        <div className={`relative flex flex-col items-center ${avatar === 'girl' ? 'ml-[-9%]' : ''} ${hideInstructions ? 'opacity-0' : 'opacity-100'} transition-opacity duration-150`}>
+        <div className={`relative flex flex-col items-center ${avatar === 'girl' ? 'ml-[calc(-9%+30px)]' : ''} ${hideInstructions ? 'opacity-0' : 'opacity-100'} transition-opacity duration-150`}>
           {/* Animated Green Arrow pointing up */}
           <div className="mb-1 sm:mb-2">
             <motion.div
