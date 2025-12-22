@@ -98,13 +98,26 @@ export default function FeelingsPage() {
   // Scroll to bottom on initial load (when no options selected)
   useEffect(() => {
     if (selectedOptions.length === 0 && !customValue.trim()) {
-      // Scroll to bottom after a short delay to ensure layout is ready
-      setTimeout(() => {
+      // Scroll to bottom after layout is ready
+      const scrollToBottom = () => {
+        const scrollHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
         window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
+          top: scrollHeight,
+          behavior: 'auto' // Use 'auto' for immediate scroll on load
         });
-      }, 100);
+      };
+      
+      // Try multiple times to ensure it works after all content loads
+      scrollToBottom();
+      setTimeout(scrollToBottom, 100);
+      setTimeout(scrollToBottom, 300);
+      setTimeout(scrollToBottom, 500);
     }
   }, []); // Only on mount
 
