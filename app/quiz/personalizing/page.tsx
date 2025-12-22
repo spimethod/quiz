@@ -503,7 +503,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
-            <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+            <div className="max-w-md mx-auto pt-[30px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
               <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
 
@@ -541,7 +541,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
             }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           >
-            <div className="max-w-md mx-auto pt-4 pb-8 flex flex-col items-center justify-start min-h-[40vh]">
+            <div className="max-w-md mx-auto pt-[30px] pb-8 flex flex-col items-center justify-start min-h-[40vh]">
               <h1 className="text-3xl font-bold text-[#1a1a1a] text-center mb-2">Personalizing your experience...</h1>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 text-center mb-8 leading-relaxed">Avocado is analyzing your responses to tailor recommendations just for you!</p>
 
@@ -657,7 +657,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                         </>
                       ) : 'Your personal mental health insights are ready!'}
                     </h3>
-                    <div className="absolute right-0 bottom-0 w-[40%] min-[400px]:w-[40%] sm:w-[44%] md:w-[50%] h-[115%] min-[400px]:h-[115%] sm:h-[130%] md:h-[190%] pointer-events-none">
+                    <div className="absolute right-0 bottom-0 w-[45%] min-[400px]:w-[45%] sm:w-[48%] md:w-[50%] h-[140%] min-[400px]:h-[145%] sm:h-[160%] md:h-[190%] pointer-events-none">
                       <Image src={avatarImage} alt="Personalized Avocado" fill className="object-contain object-right-bottom" priority />
                     </div>
                   </div>
