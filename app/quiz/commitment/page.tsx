@@ -66,7 +66,7 @@ export default function CommitmentPage() {
     router.push('/quiz/personalizing');
   };
 
-  const hideInstructions = avatar === 'boy' && holdProgress > 0;
+  const hideInstructions = holdProgress > 0;
 
   return (
     <QuizLayout
