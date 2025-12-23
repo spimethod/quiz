@@ -61,37 +61,37 @@ export default function AgePage() {
           border-radius: 4px;
           outline: none;
           touch-action: pan-x;
+          cursor: pointer;
         }
         
         .slider::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 20px;
-          height: 20px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
-          background: #6B9D47;
+          background: radial-gradient(circle at center, #6B9D47 10px, white 10px, white 12px, transparent 12px);
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-          margin-top: 0;
+          border: none;
+          margin-top: -18px;
+          touch-action: pan-x;
         }
 
         .slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
-          background: #6B9D47;
+          background: radial-gradient(circle at center, #6B9D47 10px, white 10px, white 12px, transparent 12px);
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          border: none;
         }
 
         .slider:disabled::-webkit-slider-thumb {
-          background: #9ca3af;
+          background: radial-gradient(circle at center, #9ca3af 10px, white 10px, white 12px, transparent 12px);
         }
 
         .slider:disabled::-moz-range-thumb {
-          background: #9ca3af;
+          background: radial-gradient(circle at center, #9ca3af 10px, white 10px, white 12px, transparent 12px);
         }
 
         .slider:disabled {
@@ -159,8 +159,8 @@ export default function AgePage() {
               <p className="text-3xl font-bold text-gray-900">{age}</p>
             </div>
 
-            {/* Slider */}
-            <div className="px-2">
+            {/* Slider - 44px touch area, 20px visual thumb */}
+            <div className="px-2 py-5">
               <input
                 type="range"
                 min="16"
