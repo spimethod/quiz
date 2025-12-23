@@ -1,11 +1,14 @@
 'use client';
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 export default function WhyAvocadoPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const CURRENT_STEP = 15;
   const TOTAL_STEPS = 32;
 
@@ -13,52 +16,96 @@ export default function WhyAvocadoPage() {
     router.push('/quiz/medications');
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={handleContinue}
-        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap select-none"
-      >
-        Ready? Let's keep going!
-      </button>
+  return (
+    <div
+      ref={containerRef}
+      data-why="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
+    >
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-why="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
+
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Title */}
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight px-2">
+              Why Avo can become your AI mental-health companion?
+            </h1>
+          </div>
+
+          {/* Description */}
+          <div className="mb-8">
+            <p className="text-gray-600 text-sm leading-relaxed text-left px-2">
+              Created by psychologists and clinical specialists, Avocado operates on the most recent scientific discoveries in psychology, knowledge from more than a thousand books and thousands of real therapeutic cases.
+            </p>
+          </div>
+
+          {/* Avocado Image */}
+          <div className="flex justify-center mb-2">
+            <Image
+              src="/why-avocado.png"
+              alt="Avocado Companion"
+              width={600}
+              height={600}
+              className="portrait:h-[40vh] landscape:h-[35vh] w-auto object-contain"
+              priority
+            />
+          </div>
+
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="max-w-md mx-auto w-full flex justify-center">
+          <button
+            onClick={handleContinue}
+            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          >
+            Ready? Let's keep going!
+          </button>
+        </div>
+      </footer>
     </div>
   );
-
-  return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
-    >
-      <div className="max-w-[660px] w-full mx-auto pt-[30px]">
-        {/* Title */}
-        <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight max-w-[540px] mx-auto [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
-            Why Avo can become your AI mental-health companion?
-          </h1>
-        </div>
-
-        {/* Description */}
-        <div className="mb-6 sm:mb-8">
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl leading-relaxed text-left max-w-[540px] ml-[20px] [zoom:110%]:text-[min(3vw,1.25rem)] [zoom:125%]:text-[min(2.5vw,1.1rem)] [zoom:150%]:text-[min(2vw,1rem)]">
-            Created by psychologists and clinical specialists, Avocado operates on the most recent scientific discoveries in psychology, knowledge from more than a thousand books and thousands of real therapeutic cases.
-          </p>
-        </div>
-
-        {/* Avocado Image */}
-        <div className="flex justify-center mb-8">
-          <Image
-            src="/why-avocado.png"
-            alt="Avocado Companion"
-            width={600}
-            height={600}
-            className="w-80 h-80 sm:w-96 sm:h-96 md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] max-w-[55vh] max-h-[55vh] object-contain"
-          />
-        </div>
-      </div>
-    </QuizLayout>
-  );
 }
-
