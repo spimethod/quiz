@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CURRENT_STEP = 31;
 const TOTAL_STEPS = 32;
+
+const API_URL = 'https://api.avocadoaid.app:80/generate_greeting/';
+const API_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcl9pZCI6IjlmYjRkM2FlLTY2NGUtNDA0Mi05YzU0LTkxOTRkN2QwYWM5NyIsImlhdCI6MTc1Mzk3NDI2Nn0.Sduj1C1_obiqcqhoE6A8vdJrQ81qbW_cuj313EnOQd4';
 
 // Graph helpers from TimePage
 const getTforX = (targetX: number, p0x: number, p1x: number, p2x: number) => {
@@ -42,17 +45,11 @@ export default function PersonalizingPage() {
   // Typing animation state
   const [displayedText, setDisplayedText] = useState('');
   const [hasTypingAnimationPlayed, setHasTypingAnimationPlayed] = useState(false);
-  const fullChatText = `Nightmares stealing your rest? You're doing your best even when sleep feels unsafe.
-
-Like rebooting a phone, a 30-second "4-7-8" breath can reset your nervous system: inhale 4, hold 7, exhale 8.
-
-Thousands sleep deeper within a week using our nightmare-soothe stories. Tap below to find your calm inside the app.
-
-Nightmares stealing your rest? You're doing your best even when sleep feels unsafe.
-
-Like rebooting a phone, a 30-second "4-7-8" breath can reset your nervous system: inhale 4, hold 7, exhale 8.
-
-Thousands sleep deeper within a week using our nightmare-soothe stories. Tap below to find your calm inside the app.`;
+  const [apiGreeting, setApiGreeting] = useState<string>('');
+  const [isLoadingGreeting, setIsLoadingGreeting] = useState(false);
+  
+  // Use API response or empty string if no response
+  const fullChatText = apiGreeting || '';
   
   // Device detection
   const [isDesktop, setIsDesktop] = useState(true);
@@ -170,10 +167,199 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
           if (items.length) setFocusGoal(items.map((item, i) => i === 0 ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item.toLowerCase()).join(', '));
         } catch {}
       }
+      
+      // Load saved API greeting if available
+      const savedGreeting = localStorage.getItem('apiGreeting');
+      if (savedGreeting) {
+        setApiGreeting(savedGreeting);
+      }
     }
   }, []);
 
   const capitalizeFirst = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+
+  // Collect quiz data and build questionnaire
+  const collectQuizData = useCallback(() => {
+    if (typeof window === 'undefined') return {};
+    
+    const questionnaire: Record<string, string> = {};
+    
+    // Age
+    const age = localStorage.getItem('userAge');
+    if (age) questionnaire["What's your age?"] = age;
+    
+    // Feelings
+    const feelings = localStorage.getItem('userFeelings');
+    if (feelings) {
+      try {
+        const parsed = JSON.parse(feelings);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          questionnaire["Have you noticed any feelings or challenges in the past three months?"] = parsed.join(', ');
+        }
+      } catch {}
+    }
+    
+    // Main Goal
+    const mainGoalData = localStorage.getItem('mainGoal');
+    if (mainGoalData) {
+      try {
+        const parsed = JSON.parse(mainGoalData);
+        const goalLabels: Record<string, string> = {
+          'stress': 'Reduce daily stress',
+          'emotion': 'Feel emotionally stable',
+          'relationships': 'Improve relationships',
+          'productivity': 'Boost productivity',
+          'trauma': 'Heal from past trauma',
+          'sleep': 'Sleep better',
+          'understanding': 'Understand myself better',
+          'support': 'Find support',
+          'wellness': 'Feel better overall',
+        };
+        const goalValue = parsed.type === 'custom' ? parsed.value : (goalLabels[parsed.type] || parsed.value);
+        questionnaire["What's your main goal?"] = goalValue;
+      } catch {}
+    }
+    
+    // Weekly Goals
+    const goalsData = localStorage.getItem('goals');
+    if (goalsData) {
+      try {
+        const parsed = JSON.parse(goalsData);
+        const allGoals = [...(parsed.selected || [])];
+        if (parsed.custom) allGoals.push(parsed.custom);
+        if (allGoals.length > 0) {
+          questionnaire["What would you like to focus on this week?"] = allGoals.join(', ');
+        }
+      } catch {}
+    }
+    
+    // Time Commitment
+    const time = localStorage.getItem('timeCommitment');
+    if (time) questionnaire["How much time can you dedicate daily?"] = `${time} minutes`;
+    
+    // Pace
+    const pace = localStorage.getItem('userPace');
+    if (pace) questionnaire["How fast do you want to progress?"] = pace;
+    
+    // Overall Feeling
+    const overall = localStorage.getItem('overallFeeling');
+    if (overall) questionnaire["How are you feeling overall today?"] = `${overall}/10`;
+    
+    // Sleep Trouble
+    const sleep = localStorage.getItem('sleepTrouble');
+    if (sleep) questionnaire["Do you have trouble sleeping?"] = sleep;
+    
+    // Nightmares
+    const nightmares = localStorage.getItem('nightmares');
+    if (nightmares) questionnaire["Do you experience nightmares?"] = nightmares;
+    
+    // Therapy History
+    const therapy = localStorage.getItem('therapyHistory');
+    if (therapy) questionnaire["Have you tried therapy before?"] = therapy;
+    
+    // Psychiatric Conditions
+    const psychiatric = localStorage.getItem('psychiatricConditions');
+    if (psychiatric) {
+      try {
+        const parsed = JSON.parse(psychiatric);
+        if (parsed.hasConditions) {
+          questionnaire["Do you have any psychiatric conditions?"] = `Yes: ${parsed.details || 'Not specified'}`;
+        } else {
+          questionnaire["Do you have any psychiatric conditions?"] = "No";
+        }
+      } catch {}
+    }
+    
+    // Medications
+    const meds = localStorage.getItem('medications');
+    if (meds) {
+      try {
+        const parsed = JSON.parse(meds);
+        if (parsed.taking) {
+          questionnaire["Are you currently taking any medications?"] = `Yes: ${parsed.details || 'Not specified'}`;
+        } else {
+          questionnaire["Are you currently taking any medications?"] = "No";
+        }
+      } catch {}
+    }
+    
+    // Medical Conditions
+    const medical = localStorage.getItem('medicalConditions');
+    if (medical) {
+      try {
+        const parsed = JSON.parse(medical);
+        if (parsed.hasConditions) {
+          questionnaire["Do you have any medical conditions?"] = `Yes: ${parsed.details || 'Not specified'}`;
+        } else {
+          questionnaire["Do you have any medical conditions?"] = "No";
+        }
+      } catch {}
+    }
+    
+    // Support System
+    const support = localStorage.getItem('supportSystem');
+    if (support) questionnaire["Do you have a support system?"] = support;
+    
+    // Social Groups
+    const social = localStorage.getItem('socialGroups');
+    if (social) questionnaire["Are you part of any social groups?"] = social;
+    
+    // Family Therapy
+    const family = localStorage.getItem('familyTherapy');
+    if (family) questionnaire["Has anyone in your family tried therapy?"] = family;
+    
+    // Psychology Books
+    const books = localStorage.getItem('psychologyBooks');
+    if (books) questionnaire["Have you read psychology or self-help books?"] = books;
+    
+    // User Name
+    const name = localStorage.getItem('userName');
+    if (name) questionnaire["What's your name?"] = name;
+    
+    return questionnaire;
+  }, []);
+
+  // Send quiz data to API
+  const sendQuizDataToAPI = useCallback(async () => {
+    const questionnaire = collectQuizData();
+    
+    if (Object.keys(questionnaire).length === 0) {
+      console.log('No quiz data to send');
+      return;
+    }
+    
+    setIsLoadingGreeting(true);
+    
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': API_TOKEN,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questionnaire }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Assuming the response has a greeting or message field
+        const greeting = data.greeting || data.message || data.text || '';
+        setApiGreeting(greeting);
+        // Save to localStorage for persistence
+        if (greeting) {
+          localStorage.setItem('apiGreeting', greeting);
+        }
+      } else {
+        console.error('API request failed:', response.status);
+        setApiGreeting('');
+      }
+    } catch (error) {
+      console.error('Error sending quiz data:', error);
+      setApiGreeting('');
+    } finally {
+      setIsLoadingGreeting(false);
+    }
+  }, [collectQuizData]);
 
   // Companion handlers
   const handleReplay = () => {
@@ -313,7 +499,7 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
 
   // Typing animation effect
   useEffect(() => {
-    if (companionType === 'chat' && !hasTypingAnimationPlayed) {
+    if (companionType === 'chat' && !hasTypingAnimationPlayed && fullChatText.length > 0) {
       setDisplayedText('');
       let currentIndex = 0;
       const typingSpeed = 8; // ms per character (fast typing)
@@ -765,6 +951,8 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                    onClick={() => {
                      if (phase === 'ready') {
                        setPhase('insights');
+                       // Send quiz data to API when transitioning from ready to insights
+                       sendQuizDataToAPI();
                      } else {
                        setPhase('companion');
                      }
@@ -773,6 +961,8 @@ Thousands sleep deeper within a week using our nightmare-soothe stories. Tap bel
                      e.preventDefault(); 
                      if (phase === 'ready') {
                        setPhase('insights');
+                       // Send quiz data to API when transitioning from ready to insights
+                       sendQuizDataToAPI();
                      } else {
                        setPhase('companion');
                      }
