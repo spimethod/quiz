@@ -73,7 +73,7 @@ export default function DoingAmazingPage() {
           </div>
 
           {/* Description */}
-          <div className="mb-4 text-center">
+          <div className="mb-12 text-center">
             <p className="text-gray-600 text-sm sm:text-base px-2">
               Every step you take is helping you understand yourself better. Be proud of your progress — you've got this!
             </p>
