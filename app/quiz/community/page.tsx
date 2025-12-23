@@ -1,11 +1,14 @@
 'use client';
 
+import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 export default function CommunityPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const CURRENT_STEP = 24;
   const TOTAL_STEPS = 32;
 
@@ -13,38 +16,77 @@ export default function CommunityPage() {
     router.push('/quiz/name');
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={handleContinue}
-        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 rounded-xl bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer transition-all duration-300 select-none"
-      >
-        Continue
-      </button>
-    </div>
-  );
-
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-community="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[600px] w-full mx-auto pt-[50px]">
-        <div className="flex justify-center w-full">
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-community="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
+
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-8">
+        <div className="max-w-md w-full flex justify-center">
           <Image
             src="/community-reviews.png"
             alt="Community Reviews"
             width={600}
             height={600}
-            className="w-full max-w-[400px] h-auto object-contain"
+            className="w-full max-w-[85%] portrait:h-[55vh] landscape:h-[50vh] object-contain"
             priority
           />
         </div>
-      </div>
-    </QuizLayout>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="max-w-md mx-auto w-full flex justify-center">
+          <button
+            onClick={handleContinue}
+            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+            className="w-full font-semibold text-lg py-3 px-8 rounded-xl bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer transition-all duration-300 select-none"
+          >
+            Continue
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 }
-
