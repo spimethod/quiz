@@ -377,6 +377,44 @@ export default function FeelingsPage() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Scroll to Continue button when it appears (expanded state with selections)
+  useEffect(() => {
+    if (isExpanded && (selectedOptions.length > 0 || customValue.trim()) && continueBtnRef.current) {
+      // Wait for button to render, then scroll with extra offset to clear browser UI
+      setTimeout(() => {
+        const button = continueBtnRef.current;
+        if (button) {
+          const rect = button.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          // Add 100px extra offset to ensure button clears browser UI
+          const targetScroll = scrollTop + rect.top - (window.innerHeight - rect.height - 100);
+          window.scrollTo({
+            top: Math.max(0, targetScroll),
+            behavior: 'smooth'
+          });
+        }
+      }, 300);
+    }
+  }, [isExpanded, selectedOptions.length, customValue]);
+
+  // Dynamically enable/disable scroll based on state
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const shouldAllowScroll = isExpanded || selectedOptions.length > 0;
+    
+    if (shouldAllowScroll) {
+      // Allow scroll when expanded or selections made
+      container.style.touchAction = 'auto';
+      container.style.overflowY = 'auto';
+    } else {
+      // Disable scroll when closed and no selections
+      container.style.touchAction = 'none';
+      container.style.overflowY = 'hidden';
+    }
+  }, [isExpanded, selectedOptions.length]);
+
   return (
     <div
       ref={containerRef}
