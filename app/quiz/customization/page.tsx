@@ -116,8 +116,9 @@ export default function CustomizationPage() {
             {/* Left Arrow */}
             <button 
               onClick={handlePrevSlide}
+              onTouchEnd={(e) => { e.preventDefault(); if (currentSlide > 0) handlePrevSlide(); }}
               disabled={currentSlide === 0}
-              className={`absolute left-0 sm:-left-8 md:-left-12 z-20 p-2 rounded-full transition-all ${
+              className={`absolute left-0 sm:-left-8 md:-left-12 z-20 p-2 rounded-full transition-all select-none ${
                 currentSlide === 0 
                   ? 'text-gray-300 cursor-not-allowed' 
                   : 'text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]'
@@ -160,8 +161,9 @@ export default function CustomizationPage() {
             {/* Right Arrow */}
             <button 
               onClick={handleNextSlide}
+              onTouchEnd={(e) => { e.preventDefault(); if (currentSlide < slides.length - 1) handleNextSlide(); }}
               disabled={currentSlide === slides.length - 1}
-              className={`absolute right-0 sm:-right-8 md:-right-12 z-20 p-2 rounded-full transition-all ${
+              className={`absolute right-0 sm:-right-8 md:-right-12 z-20 p-2 rounded-full transition-all select-none ${
                 currentSlide === slides.length - 1 
                   ? 'text-gray-300 cursor-not-allowed' 
                   : 'text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]'
@@ -182,11 +184,18 @@ export default function CustomizationPage() {
                   if (index !== currentSlide) {
                     setDirection(index > currentSlide ? 1 : -1);
                     setCurrentSlide(index);
-                    // Reset commitment flag when avatar changes
                     localStorage.removeItem('commitmentSigned');
                   }
                 }}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  if (index !== currentSlide) {
+                    setDirection(index > currentSlide ? 1 : -1);
+                    setCurrentSlide(index);
+                    localStorage.removeItem('commitmentSigned');
+                  }
+                }}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 select-none ${
                   index === currentSlide 
                     ? 'bg-[#6B9D47] w-4' 
                     : 'bg-gray-300 hover:bg-gray-400'

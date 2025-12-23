@@ -119,7 +119,8 @@ export default function CheckoutPage() {
             {/* Got it button */}
             <button
               onClick={handleGotIt}
-              className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center text-white font-bold text-lg hover:scale-105 active:scale-95"
+              onTouchEnd={(e) => { e.preventDefault(); handleGotIt(); }}
+              className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center text-white font-bold text-lg hover:scale-105 active:scale-95 select-none"
             >
               Got it
             </button>
@@ -132,7 +133,8 @@ export default function CheckoutPage() {
         <div className="p-4">
           <button
             onClick={handleClose}
-            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+            onTouchEnd={(e) => { e.preventDefault(); handleClose(); }}
+            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors select-none"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -162,7 +164,11 @@ export default function CheckoutPage() {
         {/* Payment Methods */}
         <div className="space-y-3 mb-6">
           {/* Google Pay Button */}
-          <button className="w-full h-14 rounded-full bg-[#F3BC00] hover:bg-[#e0ad00] transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95">
+          <button 
+            onClick={handlePay}
+            onTouchEnd={(e) => { e.preventDefault(); handlePay(); }}
+            className="w-full h-14 rounded-full bg-[#F3BC00] hover:bg-[#e0ad00] transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 select-none"
+          >
             <Image
               src="/gpay.png"
               alt="Google Pay"
@@ -173,7 +179,11 @@ export default function CheckoutPage() {
           </button>
 
           {/* Apple Pay Button */}
-          <button className="w-full h-14 rounded-full bg-black hover:bg-gray-800 transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95">
+          <button 
+            onClick={handlePay}
+            onTouchEnd={(e) => { e.preventDefault(); handlePay(); }}
+            className="w-full h-14 rounded-full bg-black hover:bg-gray-800 transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 select-none"
+          >
             <svg className="w-7 h-7 text-white -mr-0.5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
             </svg>
@@ -259,7 +269,8 @@ export default function CheckoutPage() {
         {/* Pay Button */}
         <button
           onClick={handlePay}
-          className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center gap-2 text-white font-semibold text-lg mb-6 hover:scale-105 active:scale-95"
+          onTouchEnd={(e) => { e.preventDefault(); handlePay(); }}
+          className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center gap-2 text-white font-semibold text-lg mb-6 hover:scale-105 active:scale-95 select-none"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>

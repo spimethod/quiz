@@ -17,17 +17,17 @@ export default function TherapyHistoryPage() {
     'Not yet'
   ];
 
-  const handleSelect = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSelect = (e: MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     const option = e.currentTarget.getAttribute('data-option');
     if (option) {
-      e.preventDefault();
-      e.stopPropagation();
-    setSelected(option);
+      setSelected(option);
       setTimeout(() => {
-      if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined') {
           localStorage.setItem('therapyHistory', option);
-      }
-      router.push('/quiz/medical-conditions');
+        }
+        router.push('/quiz/medical-conditions');
       }, 300);
     }
   };
@@ -54,6 +54,7 @@ export default function TherapyHistoryPage() {
               key={option}
               data-option={option}
               onClick={handleSelect}
+              onTouchEnd={handleSelect}
               className={`w-full flex items-center justify-between px-5 py-4 rounded-xl border-2 transition-all duration-200 select-none ${
                 selected === option
                   ? 'border-[#6B9D47] bg-[#6B9D47]/10'

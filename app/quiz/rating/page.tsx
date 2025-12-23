@@ -102,7 +102,8 @@ export default function RatingPage() {
         {/* Back Arrow */}
         <button
           onClick={() => router.back()}
-          className="absolute left-8 sm:left-20 md:left-40 lg:left-52 top-3 sm:top-5 p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110 z-10"
+          onTouchEnd={(e) => { e.preventDefault(); router.back(); }}
+          className="absolute left-8 sm:left-20 md:left-40 lg:left-52 top-3 sm:top-5 p-1.5 sm:p-2 hover:bg-gray-200 rounded-full transition-all duration-200 hover:scale-110 z-10 select-none"
           aria-label="Go back"
         >
           <svg 
