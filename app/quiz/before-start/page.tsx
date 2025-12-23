@@ -92,16 +92,16 @@ export default function BeforeStartPage() {
           </div>
 
           {/* Title */}
-          <div className="text-center mb-2">
+          <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900">
               Before we start
             </h1>
           </div>
 
           {/* Main Description */}
-          <div className="flex justify-center mb-3">
+          <div className="flex justify-center mb-8">
             <div className="w-full px-2">
-              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed text-justify">
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed text-justify">
                 This 3-minute checkup is a brief, honest reflection. Your answers help <strong className="font-semibold">Avocado</strong>, your <strong className="font-semibold">AI companion</strong>, create a personal mental health report with tailored recommendations and a step-by-step improvement plan.
               </p>
             </div>
@@ -109,7 +109,7 @@ export default function BeforeStartPage() {
 
           {/* Disclaimer */}
           <div className="flex justify-center">
-            <p className="text-[9px] sm:text-[10px] text-gray-500 leading-relaxed text-justify w-full px-2">
+            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed text-justify w-full px-2">
               Avocado provides helpful tools for managing stress and supporting your mental health. However, it's not a substitute for professional therapy. If you ever feel overwhelmed, please reach out to a licensed professional.
             </p>
           </div>
