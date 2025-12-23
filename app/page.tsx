@@ -10,6 +10,13 @@ export default function Home() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Clear session data when starting a new quiz
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('apiGreeting');
+    }
+  }, []);
+
   const handleGenderSelect = (gender: 'male' | 'female') => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedGender', gender);

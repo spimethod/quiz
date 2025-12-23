@@ -168,8 +168,11 @@ export default function PersonalizingPage() {
         } catch {}
       }
       
-      // Clear any old API greeting to ensure fresh data
-      localStorage.removeItem('apiGreeting');
+      // Load saved API greeting from sessionStorage (persists for back navigation within session)
+      const savedGreeting = sessionStorage.getItem('apiGreeting');
+      if (savedGreeting) {
+        setApiGreeting(savedGreeting);
+      }
     }
   }, []);
 
@@ -361,6 +364,10 @@ export default function PersonalizingPage() {
         // Assuming the response has a greeting or message field
         const greeting = (result.data.greeting || result.data.message || result.data.text || '') as string;
         setApiGreeting(greeting);
+        // Save to sessionStorage (persists for back navigation, clears on tab close)
+        if (greeting) {
+          sessionStorage.setItem('apiGreeting', greeting);
+        }
       } else {
         setApiGreeting('');
       }
