@@ -130,7 +130,7 @@ export default function Home() {
           </p>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] uppercase mb-0 tracking-wide">
+          <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] uppercase mb-0 tracking-wide mt-2">
             3-MINUTE QUIZ
           </h2>
         </div>

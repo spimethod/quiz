@@ -17,7 +17,7 @@ export default function CustomizationPage() {
   const [direction, setDirection] = useState(0);
 
   const slides = [
-    { id: 'girl', src: '/custom-avocado-girl.png', alt: 'Avocado Girl', className: 'scale-95 translate-y-6' },
+    { id: 'girl', src: '/custom-avocado-girl.png', alt: 'Avocado Girl', className: 'scale-100' },
     { id: 'boy', src: '/custom-avocado-boy.png', alt: 'Avocado Boy', className: 'scale-100' },
   ];
 

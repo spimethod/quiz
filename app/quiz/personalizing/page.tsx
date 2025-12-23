@@ -168,9 +168,11 @@ export default function PersonalizingPage() {
         } catch {}
       }
       
-      // Don't load from sessionStorage on mount - always fetch fresh data
-      // sessionStorage is only used for back navigation, not initial load
-      sessionStorage.removeItem('apiGreeting');
+      // Load previous greeting from sessionStorage to show while fetching fresh data
+      const savedGreeting = sessionStorage.getItem('apiGreeting');
+      if (savedGreeting) {
+        setApiGreeting(savedGreeting);
+      }
     }
   }, []);
 

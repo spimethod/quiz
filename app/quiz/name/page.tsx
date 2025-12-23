@@ -117,12 +117,13 @@ export default function NamePage() {
           </div>
 
           {/* Avocado Image */}
-          <div className="relative portrait:h-[32vh] landscape:h-[28vh] w-auto flex-shrink-0 mb-2">
+          <div className="flex justify-center mb-2">
             <Image
               src="/name-avocado.png"
               alt="Avocado asking for name"
-              fill
-              className="object-contain"
+              width={500}
+              height={500}
+              className="portrait:h-[32vh] landscape:h-[28vh] w-auto object-contain"
               priority
             />
           </div>
