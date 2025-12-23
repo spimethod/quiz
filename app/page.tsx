@@ -90,10 +90,9 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden" 
+      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden" 
       style={{ 
-        overscrollBehaviorY: 'auto',
-        WebkitOverflowScrolling: 'touch',
+        overscrollBehaviorY: 'none',
         position: 'relative'
       }}
     >
@@ -111,27 +110,30 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content - Top aligned with 75px offset from logo */}
-      <main className="flex-1 flex flex-col items-center px-4 max-w-md sm:max-w-lg mx-auto w-full pb-8" style={{ overscrollBehaviorY: 'contain', paddingTop: '75px' }}>
-        {/* Main Title */}
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-[#1a1a1a] leading-tight mb-4 mt-2 uppercase tracking-tight">
-          GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
-        </h1>
+      {/* Main Content - Responsive layout that fits screen */}
+      <main className="flex-1 flex flex-col items-center justify-between px-4 max-w-md sm:max-w-lg mx-auto w-full pt-[70px] pb-4 sm:pb-6 min-h-0">
+        {/* Top Content */}
+        <div className="flex flex-col items-center w-full">
+          {/* Main Title */}
+          <h1 className="text-[clamp(1.25rem,5vw,1.875rem)] font-extrabold text-center text-[#1a1a1a] leading-tight mb-2 sm:mb-4 uppercase tracking-tight">
+            GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
+          </h1>
 
-        {/* Description Text */}
-        <p className="text-center text-gray-600 text-xs sm:text-sm leading-relaxed mb-6 px-2 text-justify">
-          Receive an <span className="font-bold text-gray-800">AI-powered</span> evaluation with <span className="font-bold text-gray-800">tailored advice</span> and a <span className="font-bold text-gray-800">clear improvement plan</span> — guided by <span className="font-bold text-gray-800">Avocado</span>, your <span className="font-bold text-gray-800">AI companion</span>.
-        </p>
+          {/* Description Text */}
+          <p className="text-center text-gray-600 text-[clamp(0.65rem,2.5vw,0.875rem)] leading-relaxed mb-3 sm:mb-6 px-2 text-justify">
+            Receive an <span className="font-bold text-gray-800">AI-powered</span> evaluation with <span className="font-bold text-gray-800">tailored advice</span> and a <span className="font-bold text-gray-800">clear improvement plan</span> — guided by <span className="font-bold text-gray-800">Avocado</span>, your <span className="font-bold text-gray-800">AI companion</span>.
+          </p>
 
-        {/* Subtitle */}
-        <h2 className="text-xl font-bold text-[#1a1a1a] uppercase mb-2 tracking-wide">
-          3-MINUTE QUIZ
-        </h2>
+          {/* Subtitle */}
+          <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] uppercase mb-1 sm:mb-2 tracking-wide">
+            3-MINUTE QUIZ
+          </h2>
+        </div>
 
-        {/* Illustration Row */}
-        <div className="flex justify-center items-end w-full gap-0 mb-6 px-2">
+        {/* Illustration Row - Flexible height */}
+        <div className="flex justify-center items-end w-full gap-0 flex-1 min-h-0 max-h-[35vh] sm:max-h-[40vh] px-2">
           {/* Female Door */}
-          <div className="relative w-[30%] h-48 sm:h-64 flex-shrink-0">
+          <div className="relative w-[30%] h-full max-h-[28vh] sm:max-h-[35vh] flex-shrink-0">
             <Image
               src="/door-female.png"
               alt="Female Door"
@@ -142,7 +144,7 @@ export default function Home() {
           </div>
 
           {/* Avocado Character */}
-          <div className="relative w-[45%] h-56 sm:h-72 flex-shrink-0 -mb-3 z-10 -mx-4">
+          <div className="relative w-[45%] h-full max-h-[32vh] sm:max-h-[40vh] flex-shrink-0 -mb-2 z-10 -mx-4">
             <Image
               src="/home-avocado.png"
               alt="Avocado Character"
@@ -153,7 +155,7 @@ export default function Home() {
           </div>
 
           {/* Male Door */}
-          <div className="relative w-[30%] h-48 sm:h-64 flex-shrink-0">
+          <div className="relative w-[30%] h-full max-h-[28vh] sm:max-h-[35vh] flex-shrink-0">
             <Image
               src="/door-male.png"
               alt="Male Door"
@@ -164,43 +166,45 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex flex-row gap-3 w-full mb-6 px-2">
-          <button
-            onClick={() => handleGenderSelect('female')}
-            onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('female'); }}
-            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
-          >
-            <span>Female</span>
-            <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          
-          <button
-            onClick={() => handleGenderSelect('male')}
-            onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('male'); }}
-            className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
-          >
-            <span>Male</span>
-            <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
+        {/* Bottom Content */}
+        <div className="flex flex-col items-center w-full mt-2 sm:mt-4">
+          {/* Buttons */}
+          <div className="flex flex-row gap-3 w-full mb-3 sm:mb-4 px-2">
+            <button
+              onClick={() => handleGenderSelect('female')}
+              onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('female'); }}
+              className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
+            >
+              <span>Female</span>
+              <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            
+            <button
+              onClick={() => handleGenderSelect('male')}
+              onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('male'); }}
+              className="flex-1 bg-[#7da35e] hover:bg-[#6b8f4f] text-white font-semibold text-base md:text-lg py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between shadow-sm active:scale-95 hover:scale-105 cursor-pointer transform select-none"
+            >
+              <span>Male</span>
+              <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
 
-        {/* Footer Links */}
-        <div className="text-[10px] text-center text-gray-500 leading-tight max-w-xs mx-auto mb-8">
-          <p>
-            By clicking "Male" or "Female" you agree with the{' '}
-            <button onClick={() => setActiveModal('terms')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('terms'); }} className="text-blue-500 hover:underline select-none">Terms of Use and Service</button>,{' '}
-            <button onClick={() => setActiveModal('privacy')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('privacy'); }} className="text-blue-500 hover:underline select-none">Privacy Policy</button>,{' '}
-            <button onClick={() => setActiveModal('subscription')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('subscription'); }} className="text-blue-500 hover:underline select-none">Subscription Policy</button>{' '}
-            and{' '}
-            <button onClick={() => setActiveModal('cookie')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('cookie'); }} className="text-blue-500 hover:underline select-none">Cookie Policy</button>.
-          </p>
+          {/* Footer Links */}
+          <div className="text-[10px] text-center text-gray-500 leading-tight max-w-xs mx-auto">
+            <p>
+              By clicking "Male" or "Female" you agree with the{' '}
+              <button onClick={() => setActiveModal('terms')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('terms'); }} className="text-blue-500 hover:underline select-none">Terms of Use and Service</button>,{' '}
+              <button onClick={() => setActiveModal('privacy')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('privacy'); }} className="text-blue-500 hover:underline select-none">Privacy Policy</button>,{' '}
+              <button onClick={() => setActiveModal('subscription')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('subscription'); }} className="text-blue-500 hover:underline select-none">Subscription Policy</button>{' '}
+              and{' '}
+              <button onClick={() => setActiveModal('cookie')} onTouchEnd={(e) => { e.preventDefault(); setActiveModal('cookie'); }} className="text-blue-500 hover:underline select-none">Cookie Policy</button>.
+            </p>
+          </div>
         </div>
-
       </main>
 
       {/* Modals */}
