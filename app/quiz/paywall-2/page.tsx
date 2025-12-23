@@ -574,22 +574,22 @@ export default function PaywallPage() {
             </h2>
             <div className="grid grid-cols-3 gap-6 sm:gap-8">
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-1.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-1.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-3.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-3.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-5.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-5.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-2.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-2.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-4.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-4.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-6.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-6.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
             </div>
           </div>
@@ -616,7 +616,7 @@ export default function PaywallPage() {
           </div>
           
           {/* Stats */}
-          <div className="space-y-6 text-center">
+          <div className="space-y-6 text-left pl-4">
             <div>
               <p className="text-3xl sm:text-4xl font-bold text-[#6B9D47] mb-2">91%</p>
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -695,7 +695,7 @@ export default function PaywallPage() {
         </div>
 
         {/* Reviews Cloud Section */}
-        <div className="w-full max-w-2xl mx-auto my-8">
+        <div className="w-full max-w-4xl mx-auto my-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 leading-tight px-4">
             Join the new era of psychotherapy
           </h2>
@@ -705,9 +705,9 @@ export default function PaywallPage() {
           <Image
             src="/reviews-cloud.png"
             alt="Customer Reviews"
-            width={800}
-            height={600}
-            className="w-full h-auto object-contain"
+            width={1200}
+            height={900}
+            className="w-full h-auto object-contain scale-110"
           />
         </div>
 
