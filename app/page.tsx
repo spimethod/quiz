@@ -90,10 +90,10 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden" 
+      data-landing="true"
+      className="flex flex-col bg-[#f5f5f0] animate-fadeIn portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden" 
       style={{ 
-        overscrollBehavior: 'none',
-        touchAction: 'none'
+        overscrollBehavior: 'none'
       }}
     >
       {/* Header with Logo - In flow, not fixed */}
@@ -128,8 +128,8 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* Illustration Row - Fixed height */}
-        <div className="flex justify-center items-end w-full gap-0 h-[38vh] px-2 mt-1 mb-1">
+        {/* Illustration Row - Fixed in portrait, flexible in landscape */}
+        <div className="flex justify-center items-end w-full gap-0 portrait:h-[38vh] landscape:h-[50vw] landscape:max-h-[300px] px-2 mt-1 mb-1">
           {/* Female Door */}
           <div className="relative w-[30%] h-full max-h-[28vh] flex-shrink-0">
             <Image
@@ -486,6 +486,15 @@ export default function Home() {
           <p>If you have questions about this Policy or your data preferences, please contact: <a href="mailto:support@youravocado.app" className="text-blue-600 hover:underline">support@youravocado.app</a></p>
         </div>
       </Modal>
+
+      {/* Portrait-only touch-action lock */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-landing="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }
