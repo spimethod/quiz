@@ -506,22 +506,22 @@ export default function PaywallPage() {
             </h2>
             <div className="grid grid-cols-3 gap-6 sm:gap-8">
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-1.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-1.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-3.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-3.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-5.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-5.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-2.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-2.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-4.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-4.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
               <div className="flex items-center justify-center h-10">
-                <Image src="/magazine-6.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+                <Image src="/magazine-6.png" alt="Magazine" width={140} height={50} className="w-24 sm:w-28 h-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 active:grayscale-0 active:opacity-100 transition-all cursor-pointer" />
               </div>
             </div>
           </div>
