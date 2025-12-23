@@ -90,9 +90,9 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-[100dvh] flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden overflow-y-auto supports-[min-height:100dvh]:min-h-[100dvh]" 
+      className="h-[100dvh] flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden overflow-y-auto" 
       style={{ 
-        overscrollBehaviorY: 'none', // Блокирует "пружину" и сдвиг шапки, когда скролла нет
+        overscrollBehaviorY: 'none',
         WebkitOverflowScrolling: 'touch'
       }}
     >
@@ -128,8 +128,8 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* Illustration Row - Fixed height relative to viewport to prevent stretching */}
-        <div className="flex justify-center items-end w-full gap-0 h-[38vh] px-2 mt-1 mb-1">
+        {/* Illustration Row - Flexible height to fill available space without overflow */}
+        <div className="flex justify-center items-end w-full gap-0 flex-1 min-h-[160px] px-2 mt-1 mb-1">
           {/* Female Door */}
           <div className="relative w-[30%] h-full max-h-[28vh] flex-shrink-0">
             <Image
