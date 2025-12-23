@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 export default function NightmaresPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const CURRENT_STEP = 13;
   const TOTAL_STEPS = 32;
@@ -14,82 +16,129 @@ export default function NightmaresPage() {
   const handleSelect = (option: 'yes' | 'no') => {
     setSelectedButton(option);
     setTimeout(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('nightmares', option);
-    }
-    router.push('/quiz/support-system');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nightmares', option);
+      }
+      router.push('/quiz/support-system');
     }, 300);
   };
 
-  const footerContent = (
-    <div className="flex gap-4 w-full max-w-md mx-auto">
-      {/* Yes Button */}
-      <button
-        onClick={() => handleSelect('yes')}
-        onTouchEnd={(e) => { e.preventDefault(); handleSelect('yes'); }}
-        className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-          selectedButton === 'yes'
-            ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-            : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-        }`}
-      >
-        <span className="text-2xl sm:text-3xl mb-1">👍</span>
-        <span className="text-sm sm:text-base font-medium text-gray-700">
-          Yes
-        </span>
-      </button>
-
-      {/* No Button */}
-      <button
-        onClick={() => handleSelect('no')}
-        onTouchEnd={(e) => { e.preventDefault(); handleSelect('no'); }}
-        className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
-          selectedButton === 'no'
-            ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-            : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
-        }`}
-      >
-        <span className="text-2xl sm:text-3xl mb-1">👎</span>
-        <span className="text-sm sm:text-base font-medium text-gray-700">
-          No
-        </span>
-      </button>
-    </div>
-  );
-
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-nightmares="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[660px] w-full mx-auto pt-[30px]">
-        {/* Title */}
-        <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight max-w-[540px] mx-auto [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
-            Do nightmares often disturb your sleep?
-          </h1>
-        </div>
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-nightmares="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
 
-        {/* Description */}
-        <div className="mb-8 sm:mb-10 text-center">
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl [zoom:110%]:text-[min(3vw,1.25rem)] [zoom:125%]:text-[min(2.5vw,1.1rem)] [zoom:150%]:text-[min(2vw,1rem)]">
-            Recurring nightmares can impact your emotional state. Let us know if this is something you struggle with.
-          </p>
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
         </div>
+      </header>
 
-        {/* Avocado Image */}
-        <div className="flex justify-center mb-8">
-          <Image
-            src="/nightmare-avocado.png"
-            alt="Crying Avocado with Nightmare"
-            width={500}
-            height={500}
-            className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[400px] lg:h-[400px] max-w-[45vh] max-h-[45vh] object-contain"
-          />
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Title */}
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight px-2">
+              Do nightmares often disturb your sleep?
+            </h1>
+          </div>
+
+          {/* Description */}
+          <div className="mb-12 text-center">
+            <p className="text-gray-600 text-sm px-2">
+              Recurring nightmares can impact your emotional state. Let us know if this is something you struggle with.
+            </p>
+          </div>
+
+          {/* Avocado Image */}
+          <div className="flex justify-center mb-2">
+            <Image
+              src="/nightmare-avocado.png"
+              alt="Crying Avocado with Nightmare"
+              width={500}
+              height={500}
+              className="portrait:h-[35vh] landscape:h-[30vh] w-auto object-contain"
+              priority
+            />
+          </div>
+
         </div>
-      </div>
-    </QuizLayout>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="flex gap-4 w-full max-w-md mx-auto">
+          {/* Yes Button */}
+          <button
+            onClick={() => handleSelect('yes')}
+            onTouchEnd={(e) => { e.preventDefault(); handleSelect('yes'); }}
+            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+              selectedButton === 'yes'
+                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+            }`}
+            style={{ touchAction: 'manipulation' }}
+          >
+            <span className="text-2xl sm:text-3xl mb-1">👍</span>
+            <span className="text-sm sm:text-base font-medium text-gray-700">
+              Yes
+            </span>
+          </button>
+
+          {/* No Button */}
+          <button
+            onClick={() => handleSelect('no')}
+            onTouchEnd={(e) => { e.preventDefault(); handleSelect('no'); }}
+            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-sm select-none ${
+              selectedButton === 'no'
+                ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+                : 'bg-white border-gray-300 hover:border-[#6B9D47] hover:bg-[#6B9D47]/10'
+            }`}
+            style={{ touchAction: 'manipulation' }}
+          >
+            <span className="text-2xl sm:text-3xl mb-1">👎</span>
+            <span className="text-sm sm:text-base font-medium text-gray-700">
+              No
+            </span>
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 }
