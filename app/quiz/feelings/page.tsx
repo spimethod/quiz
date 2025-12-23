@@ -397,22 +397,15 @@ export default function FeelingsPage() {
     }
   }, [isExpanded, selectedOptions.length, customValue]);
 
-  // Dynamically enable/disable scroll based on state
+  // Dynamically enable/disable touch scroll based on state
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const shouldAllowScroll = isExpanded || selectedOptions.length > 0;
     
-    if (shouldAllowScroll) {
-      // Allow scroll when expanded or selections made
-      container.style.touchAction = 'auto';
-      container.style.overflowY = 'auto';
-    } else {
-      // Disable scroll when closed and no selections
-      container.style.touchAction = 'none';
-      container.style.overflowY = 'hidden';
-    }
+    // Only control touch-action, overflow is always auto for content scrolling
+    container.style.touchAction = shouldAllowScroll ? 'auto' : 'none';
   }, [isExpanded, selectedOptions.length]);
 
   return (
@@ -453,7 +446,7 @@ export default function FeelingsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col px-4 pt-4 pb-32">
+      <main className="flex-1 flex flex-col px-4 pt-4 pb-32 overflow-y-auto overflow-x-hidden">
         <div className="max-w-[660px] w-full mx-auto">
         {/* Title */}
         <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
