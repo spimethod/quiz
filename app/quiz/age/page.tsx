@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
-// Total steps before email capture (update this as you add more pages)
-const TOTAL_STEPS = 12; // This will be the step number of the email capture page
+const TOTAL_STEPS = 12;
 const CURRENT_STEP = 2;
 
 export default function AgePage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
@@ -32,106 +33,26 @@ export default function AgePage() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('userAge', preferNotToSay ? 'prefer-not-to-say' : age.toString());
     }
-    // Navigate to before-start page
     router.push('/quiz/before-start');
   };
 
-  const footerContent = (
-    <button
-      onClick={handleContinue}
-      onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-      className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white font-semibold text-base sm:text-lg md:text-xl py-3 px-8 sm:px-10 md:px-12 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer w-full max-w-md select-none"
-    >
-      Continue
-    </button>
-  );
-
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-8 sm:px-10 md:px-12 lg:px-6 pb-2 sm:pb-4"
+    <div
+      ref={containerRef}
+      data-age="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-2xl w-full mx-auto pt-[30px]">
-        {/* Avocado Characters Image */}
-        <div className="flex justify-center mb-1 sm:mb-2 mt-2 sm:mt-0">
-            <Image
-              src="/age-avocados.png"
-              alt="Avocado Characters"
-            width={400}
-            height={400}
-            className="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 max-w-[35vh] max-h-[35vh] object-contain avocado-zoom-fix"
-              priority
-            />
-        </div>
-
-        {/* Title and Subtitle */}
-        <div className="text-center mb-2 sm:mb-3">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-1.5">
-            What's your age?
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-1 sm:mb-2 px-2">
-            Used only to tailor your AI report<br className="sm:hidden" /> and step-by-step plan
-          </p>
-        </div>
-
-        {/* Age Slider */}
-        <div className="mb-1 sm:mb-2">
-          <div className="text-center mb-1 sm:mb-2">
-            <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1">Slide to select your age</p>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">{age}</p>
-          </div>
-
-          {/* Slider */}
-          <div className="relative px-2 sm:px-4">
-            <input
-              type="range"
-              min="16"
-              max="75"
-              value={age}
-              onChange={(e) => setAge(Number(e.target.value))}
-              disabled={preferNotToSay}
-              className="w-full h-1.5 sm:h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
-              style={{
-                background: preferNotToSay 
-                  ? '#d1d5db' 
-                  : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
-              }}
-            />
-            <div className="flex justify-between text-[10px] sm:text-xs text-gray-500 mt-1 sm:mt-2">
-              <span>16</span>
-              <span>75+</span>
-            </div>
-          </div>
-
-          {/* Age Comment */}
-          <div className="text-center mt-0.5 sm:mt-1 min-h-[35px] sm:min-h-[45px]">
-            {!preferNotToSay && (
-              <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 italic px-2 sm:px-4 whitespace-nowrap">
-                {getAgeComment(age)}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Prefer not to say checkbox */}
-        <div className="mb-2 sm:mb-3">
-          <label className="flex items-center justify-center cursor-pointer group">
-            <input
-              type="checkbox"
-              checked={preferNotToSay}
-              onChange={(e) => setPreferNotToSay(e.target.checked)}
-              className="w-4 h-4 sm:w-5 sm:h-5 text-[#6B9D47] bg-gray-100 border-gray-300 rounded focus:ring-[#6B9D47] focus:ring-2 cursor-pointer"
-            />
-            <span className="ml-2 sm:ml-3 text-sm sm:text-base text-gray-700 group-hover:text-gray-900">
-              Prefer not to say <span className="text-gray-500 text-xs sm:text-sm">(less accurate results)</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
+      {/* Portrait mode: disable touch scroll */}
       <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-age="true"] {
+            touch-action: none;
+          }
+        }
+        
         .slider::-webkit-slider-thumb {
           appearance: none;
           width: 20px;
@@ -141,6 +62,7 @@ export default function AgePage() {
           cursor: pointer;
           border: 2.5px solid white;
           box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          touch-action: pan-x;
         }
 
         .slider::-moz-range-thumb {
@@ -166,29 +88,134 @@ export default function AgePage() {
         .slider:disabled {
           cursor: not-allowed;
         }
-
-        @media (min-width: 640px) {
-          .slider::-webkit-slider-thumb {
-            width: 24px;
-            height: 24px;
-            border: 3px solid white;
-          }
-
-          .slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border: 3px solid white;
-          }
-        }
-
-        /* Уменьшение картинки только при zoom 150%+ (узкий viewport на десктопе) */
-        @media (max-width: 950px) and (min-width: 641px) {
-          .avocado-zoom-fix {
-            max-width: 25vh !important;
-            max-height: 25vh !important;
-          }
+        
+        .slider {
+          touch-action: pan-x;
         }
       `}</style>
-    </QuizLayout>
+
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-2">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Avocado Characters Image */}
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/age-avocados.png"
+              alt="Avocado Characters"
+              width={400}
+              height={400}
+              className="portrait:h-[28vh] landscape:h-[25vh] w-auto object-contain"
+              priority
+            />
+          </div>
+
+          {/* Title and Subtitle */}
+          <div className="text-center mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+              What's your age?
+            </h1>
+            <p className="text-sm text-gray-700 px-2">
+              Used only to tailor your AI report and step-by-step plan
+            </p>
+          </div>
+
+          {/* Age Slider */}
+          <div className="w-full max-w-sm mb-2">
+            <div className="text-center mb-2">
+              <p className="text-xs text-gray-600 mb-1">Slide to select your age</p>
+              <p className="text-3xl font-bold text-gray-900">{age}</p>
+            </div>
+
+            {/* Slider */}
+            <div className="relative px-2">
+              <input
+                type="range"
+                min="16"
+                max="75"
+                value={age}
+                onChange={(e) => setAge(Number(e.target.value))}
+                disabled={preferNotToSay}
+                className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: preferNotToSay 
+                    ? '#d1d5db' 
+                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
+                }}
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>16</span>
+                <span>75+</span>
+              </div>
+            </div>
+
+            {/* Age Comment */}
+            <div className="text-center mt-1 min-h-[30px]">
+              {!preferNotToSay && (
+                <p className="text-xs text-gray-600 italic px-2">
+                  {getAgeComment(age)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Prefer not to say checkbox */}
+          <div className="mb-2">
+            <label className="flex items-center justify-center cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={preferNotToSay}
+                onChange={(e) => setPreferNotToSay(e.target.checked)}
+                className="w-4 h-4 text-[#6B9D47] bg-gray-100 border-gray-300 rounded focus:ring-[#6B9D47] focus:ring-2 cursor-pointer"
+              />
+              <span className="ml-2 text-sm text-gray-700 group-hover:text-gray-900">
+                Prefer not to say <span className="text-gray-500 text-xs">(less accurate results)</span>
+              </span>
+            </label>
+          </div>
+
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="max-w-md mx-auto w-full flex justify-center">
+          <button
+            onClick={handleContinue}
+            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          >
+            Continue
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 }
