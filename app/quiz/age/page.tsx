@@ -64,7 +64,7 @@ export default function AgePage() {
           border-radius: 4px;
         }
         
-        /* 44px invisible touch area with 20px visual circle centered */
+        /* 44px invisible touch area with 20px visual circle centered on track */
         .slider::-webkit-slider-thumb {
           appearance: none;
           width: 44px;
@@ -73,7 +73,7 @@ export default function AgePage() {
           background: radial-gradient(circle, #6B9D47 23%, transparent 23%);
           cursor: pointer;
           border: none;
-          margin-top: -18px;
+          margin-top: 0;
           touch-action: pan-x;
           -webkit-tap-highlight-color: transparent;
         }
@@ -173,11 +173,13 @@ export default function AgePage() {
             </div>
 
             {/* Slider with larger touch area */}
-            <div className="relative px-2 slider-container">
-              {/* Track background */}
+            <div className="relative px-2 slider-container h-[44px] flex items-center">
+              {/* Track background - centered vertically */}
               <div 
-                className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-2 rounded-lg pointer-events-none"
+                className="absolute left-2 right-2 h-2 rounded-lg pointer-events-none"
                 style={{
+                  top: '50%',
+                  transform: 'translateY(-50%)',
                   background: preferNotToSay 
                     ? '#d1d5db' 
                     : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
@@ -194,10 +196,10 @@ export default function AgePage() {
                 disabled={preferNotToSay}
                 className="w-full appearance-none cursor-pointer slider relative z-10"
               />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>16</span>
-                <span>75+</span>
-              </div>
+            </div>
+            <div className="flex justify-between text-xs text-gray-500 mt-1 px-2">
+              <span>16</span>
+              <span>75+</span>
             </div>
 
             {/* Age Comment */}
