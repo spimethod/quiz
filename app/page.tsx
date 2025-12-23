@@ -90,10 +90,11 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="h-screen flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden" 
+      className="fixed inset-0 flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden" 
       style={{ 
-        overscrollBehaviorY: 'none',
-        position: 'relative'
+        overscrollBehavior: 'none',
+        touchAction: 'none',
+        position: 'fixed'
       }}
     >
       {/* Header with Logo - In flow, not fixed */}
