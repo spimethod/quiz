@@ -97,7 +97,7 @@ export default function Home() {
       }}
     >
       {/* Header with Logo - In flow, not fixed */}
-      <header className="flex-shrink-0 pt-3 sm:pt-4 pb-1 flex justify-center bg-[#f5f5f0] safe-area-top">
+      <header className="flex-shrink-0 pt-3 sm:pt-4 flex justify-center bg-[#f5f5f0] safe-area-top">
         <Image
           src="/avocado-logo.png"
           alt="Avocado"
@@ -109,29 +109,29 @@ export default function Home() {
       </header>
 
       {/* Main Content - Responsive layout that fits screen */}
-      <main className="flex-1 flex flex-col items-center justify-between px-4 max-w-md sm:max-w-lg mx-auto w-full pb-4 sm:pb-6 min-h-0">
+      <main className="flex-1 flex flex-col items-center justify-start gap-2 px-4 max-w-md sm:max-w-lg mx-auto w-full pt-6 pb-4 sm:pb-6 min-h-0">
         {/* Top Content */}
         <div className="flex flex-col items-center w-full">
           {/* Main Title */}
-          <h1 className="text-[clamp(1.25rem,5vw,1.875rem)] font-extrabold text-center text-[#1a1a1a] leading-tight mb-2 sm:mb-4 uppercase tracking-tight">
+          <h1 className="text-[clamp(1.25rem,5vw,1.875rem)] font-extrabold text-center text-[#1a1a1a] leading-tight mb-2 uppercase tracking-tight">
             GET YOUR PERSONAL<br />MENTAL HEALTH<br />REPORT
           </h1>
 
           {/* Description Text */}
-          <p className="text-center text-gray-600 text-[clamp(0.65rem,2.5vw,0.875rem)] leading-relaxed mb-3 sm:mb-6 px-2 text-justify">
+          <p className="text-center text-gray-600 text-[clamp(0.65rem,2.5vw,0.875rem)] leading-relaxed mb-2 px-2 text-justify">
             Receive an <span className="font-bold text-gray-800">AI-powered</span> evaluation with <span className="font-bold text-gray-800">tailored advice</span> and a <span className="font-bold text-gray-800">clear improvement plan</span> — guided by <span className="font-bold text-gray-800">Avocado</span>, your <span className="font-bold text-gray-800">AI companion</span>.
           </p>
 
           {/* Subtitle */}
-          <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] uppercase mb-1 sm:mb-2 tracking-wide">
+          <h2 className="text-lg sm:text-xl font-bold text-[#1a1a1a] uppercase mb-0 tracking-wide">
             3-MINUTE QUIZ
           </h2>
         </div>
 
-        {/* Illustration Row - Flexible height */}
-        <div className="flex justify-center items-end w-full gap-0 flex-1 min-h-0 max-h-[35vh] sm:max-h-[40vh] px-2">
+        {/* Illustration Row - Fixed height relative to viewport to prevent stretching */}
+        <div className="flex justify-center items-end w-full gap-0 h-[38vh] px-2 mt-1 mb-1">
           {/* Female Door */}
-          <div className="relative w-[30%] h-full max-h-[28vh] sm:max-h-[35vh] flex-shrink-0">
+          <div className="relative w-[30%] h-full max-h-[28vh] flex-shrink-0">
             <Image
               src="/door-female.png"
               alt="Female Door"
@@ -142,7 +142,7 @@ export default function Home() {
           </div>
 
           {/* Avocado Character */}
-          <div className="relative w-[45%] h-full max-h-[32vh] sm:max-h-[40vh] flex-shrink-0 -mb-2 z-10 -mx-4">
+          <div className="relative w-[45%] h-full max-h-[32vh] flex-shrink-0 -mb-2 z-10 -mx-4">
             <Image
               src="/home-avocado.png"
               alt="Avocado Character"
@@ -153,7 +153,7 @@ export default function Home() {
           </div>
 
           {/* Male Door */}
-          <div className="relative w-[30%] h-full max-h-[28vh] sm:max-h-[35vh] flex-shrink-0">
+          <div className="relative w-[30%] h-full max-h-[28vh] flex-shrink-0">
             <Image
               src="/door-male.png"
               alt="Male Door"
@@ -165,9 +165,9 @@ export default function Home() {
         </div>
 
         {/* Bottom Content */}
-        <div className="flex flex-col items-center w-full mt-2 sm:mt-4">
+        <div className="flex flex-col items-center w-full mt-1">
           {/* Buttons */}
-          <div className="flex flex-row gap-3 w-full mb-3 sm:mb-4 px-2">
+          <div className="flex flex-row gap-3 w-full mb-3 px-2">
             <button
               onClick={() => handleGenderSelect('female')}
               onTouchEnd={(e) => { e.preventDefault(); handleGenderSelect('female'); }}
