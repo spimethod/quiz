@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, type MouseEvent } from 'react';
+import { useState, useRef, type MouseEvent } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 export default function TherapyHistoryPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const CURRENT_STEP = 17;
   const TOTAL_STEPS = 32;
@@ -33,66 +35,109 @@ export default function TherapyHistoryPage() {
   };
 
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={null}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-therapy="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[660px] w-full mx-auto flex flex-col items-center pt-[30px]">
-        {/* Title */}
-        <div className="mb-6 sm:mb-8 mt-4 sm:mt-6 text-center">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight max-w-[540px] mx-auto [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
-            Have you worked with anyone before to support your mental health?
-          </h1>
-        </div>
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-therapy="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
 
-        {/* Options */}
-        <div className="space-y-3 mb-6 max-w-md mx-auto w-full">
-          {options.map((option) => (
-            <button
-              key={option}
-              data-option={option}
-              onClick={handleSelect}
-              onTouchEnd={handleSelect}
-              className={`w-full flex items-center justify-between px-5 py-4 rounded-xl border-2 transition-all duration-200 select-none ${
-                selected === option
-                  ? 'border-[#6B9D47] bg-[#6B9D47]/10'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
-              }`}
-              style={{ touchAction: 'manipulation' }}
-            >
-              <span className={`text-base sm:text-lg font-medium ${
-                selected === option ? 'text-[#6B9D47]' : 'text-gray-700'
-              }`}>
-                {option}
-              </span>
-              {/* Radio circle */}
-              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                selected === option
-                  ? 'border-[#6B9D47]'
-                  : 'border-gray-300'
-              }`}>
-                {selected === option && (
-                  <div className="w-3 h-3 rounded-full bg-[#6B9D47]" />
-                )}
-              </div>
-            </button>
-          ))}
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
         </div>
+      </header>
 
-        {/* Avocado Image */}
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/therapy-avocado.png"
-            alt="Avocado on Therapy Couch"
-            width={500}
-            height={500}
-            className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-[350px] lg:h-[350px] max-w-[40vh] max-h-[40vh] object-contain"
-          />
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Title */}
+          <div className="mb-8 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight px-2">
+              Have you worked with anyone before to support your mental health?
+            </h1>
+          </div>
+
+          {/* Options */}
+          <div className="space-y-3 mb-4 w-full">
+            {options.map((option) => (
+              <button
+                key={option}
+                data-option={option}
+                onClick={handleSelect}
+                onTouchEnd={handleSelect}
+                className={`w-full flex items-center justify-between px-5 py-4 rounded-xl border-2 transition-all duration-200 select-none ${
+                  selected === option
+                    ? 'border-[#6B9D47] bg-[#6B9D47]/10'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+                style={{ touchAction: 'manipulation' }}
+              >
+                <span className={`text-base sm:text-lg font-medium ${
+                  selected === option ? 'text-[#6B9D47]' : 'text-gray-700'
+                }`}>
+                  {option}
+                </span>
+                {/* Radio circle */}
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                  selected === option
+                    ? 'border-[#6B9D47]'
+                    : 'border-gray-300'
+                }`}>
+                  {selected === option && (
+                    <div className="w-3 h-3 rounded-full bg-[#6B9D47]" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Avocado Image */}
+          <div className="flex justify-center mb-2">
+            <Image
+              src="/therapy-avocado.png"
+              alt="Avocado on Therapy Couch"
+              width={500}
+              height={500}
+              className="portrait:h-[30vh] landscape:h-[28vh] w-auto object-contain"
+              priority
+            />
+          </div>
+
         </div>
-      </div>
-    </QuizLayout>
+      </main>
+    </div>
   );
 }
-
