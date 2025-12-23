@@ -328,15 +328,22 @@ export default function PersonalizingPage() {
       return;
     }
     
+    // Clear old data before making new request
+    setApiGreeting('');
+    sessionStorage.removeItem('apiGreeting');
     setIsLoadingGreeting(true);
     
     try {
+      console.log('Sending questionnaire to API:', questionnaire);
+      
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
         },
         body: JSON.stringify({ questionnaire }),
+        cache: 'no-store',
       });
       
       const result = {
@@ -355,15 +362,19 @@ export default function PersonalizingPage() {
         console.error('API request failed:', response.status);
       }
       
+      console.log('API response:', result);
+      
       if (result.ok) {
         // Assuming the response has a greeting or message field
         const greeting = (result.data.greeting || result.data.message || result.data.text || '') as string;
+        console.log('Setting greeting:', greeting);
         setApiGreeting(greeting);
         // Save to sessionStorage (persists for back navigation, clears on tab close)
         if (greeting) {
           sessionStorage.setItem('apiGreeting', greeting);
         }
       } else {
+        console.log('API request failed, clearing greeting');
         setApiGreeting('');
       }
     } catch (error) {
