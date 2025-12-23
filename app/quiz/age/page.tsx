@@ -73,7 +73,7 @@ export default function AgePage() {
           background: radial-gradient(circle at center, #6B9D47 10px, white 10px, white 12px, transparent 12px);
           cursor: pointer;
           border: none;
-          margin-top: -18px;
+          margin-top: -16px;
           touch-action: pan-x;
         }
 
