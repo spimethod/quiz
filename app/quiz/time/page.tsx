@@ -106,9 +106,9 @@ export default function TimePage() {
     { x: width * 0.97, y: curveData.p2.y }           // In 1 month - at end
   ];
 
-  // Scroll to show options grid when 40 or 60 min is selected (so Continue doesn't cover them)
+  // Scroll to show options grid when second row is selected (15, 30, 40, 60 min)
   useEffect(() => {
-    if (selectedTime === 40 || selectedTime === 60) {
+    if (selectedTime && selectedTime >= 15) {
       if (optionsGridRef.current) {
         setTimeout(() => {
           optionsGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
