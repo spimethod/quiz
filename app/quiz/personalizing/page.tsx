@@ -319,7 +319,7 @@ export default function PersonalizingPage() {
     return questionnaire;
   }, []);
 
-  // Send quiz data to API using GET with body (via XMLHttpRequest for browser compatibility)
+  // Send quiz data to API using POST
   const sendQuizDataToAPI = useCallback(async () => {
     const questionnaire = collectQuizData();
     
@@ -331,34 +331,30 @@ export default function PersonalizingPage() {
     setIsLoadingGreeting(true);
     
     try {
-      // Using XMLHttpRequest because fetch() doesn't allow body with GET in browsers
-      const result = await new Promise<{ok: boolean; data: Record<string, unknown>}>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', API_URL, true);
-        xhr.setRequestHeader('Authorization', API_TOKEN);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              resolve({ ok: true, data });
-            } catch {
-              resolve({ ok: true, data: { greeting: xhr.responseText } });
-            }
-          } else {
-            console.error('API request failed:', xhr.status, xhr.responseText);
-            resolve({ ok: false, data: {} });
-          }
-        };
-        
-        xhr.onerror = () => {
-          reject(new Error('Network error'));
-        };
-        
-        // Send with body (XMLHttpRequest allows this with GET)
-        xhr.send(JSON.stringify({ questionnaire }));
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': API_TOKEN,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questionnaire }),
       });
+      
+      const result = {
+        ok: response.ok,
+        data: {} as Record<string, unknown>,
+      };
+      
+      if (response.ok) {
+        try {
+          result.data = await response.json();
+        } catch {
+          const text = await response.text();
+          result.data = { greeting: text };
+        }
+      } else {
+        console.error('API request failed:', response.status);
+      }
       
       if (result.ok) {
         // Assuming the response has a greeting or message field
