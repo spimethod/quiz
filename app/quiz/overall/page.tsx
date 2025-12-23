@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 // Total steps before email capture
 const TOTAL_STEPS = 12;
@@ -59,6 +60,7 @@ const feelingOptions = [
 
 export default function OverallPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedValue, setSelectedValue] = useState(5);
 
   const handleSelect = (value: number) => {
@@ -69,80 +71,125 @@ export default function OverallPage() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('overallFeeling', selectedValue.toString());
     }
-    // Navigate to next page
     router.push('/quiz/doing-amazing');
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={handleContinue}
-        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
-      >
-        Continue
-      </button>
-    </div>
-  );
-
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-overall="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[660px] w-full mx-auto pt-[30px]">
-        {/* Title */}
-        <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
-            Let's check in — how are you feeling overall?
-          </h1>
-        </div>
+      {/* Portrait mode: disable touch scroll but allow button interaction */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-overall="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
 
-        {/* Subtitle */}
-        <div className="mb-4 sm:mb-6 text-center">
-          <p className="text-sm sm:text-base text-gray-600 max-w-[540px] mx-auto [zoom:110%]:text-[min(2.5vw,1.1rem)] [zoom:125%]:text-[min(2.2vw,1rem)] [zoom:150%]:text-[min(2vw,0.9rem)]">
-            Your answer helps me support you better. Be honest — there's no right or wrong way to feel!
-          </p>
-        </div>
-
-        {/* Selected State */}
-        <div className="mb-6 sm:mb-8 mt-12 sm:mt-16 text-center">
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-800 font-medium [zoom:110%]:text-[min(3vw,1.75rem)] [zoom:125%]:text-[min(2.8vw,1.5rem)] [zoom:150%]:text-[min(2.5vw,1.25rem)]">
-            {feelingOptions.find(option => option.value === selectedValue)?.text}
-          </p>
-        </div>
-
-        {/* Feeling Scale */}
-        <div className="mb-12 sm:mb-16 flex justify-center gap-2 sm:gap-3">
-          {feelingOptions.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option.value)}
-              onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.value); }}
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-200 hover:scale-110 select-none ${
-                selectedValue === option.value ? 'ring-4 ring-offset-2 ring-gray-300' : ''
-              }`}
-              style={{ backgroundColor: option.color }}
-              aria-label={`Feeling level ${option.value}`}
-            />
-          ))}
-        </div>
-
-        {/* Avocado Image */}
-        <div className="flex justify-center mb-8">
-            <div className="relative w-56 h-56 sm:w-60 sm:h-60 md:w-72 md:h-72 max-w-[38vh] max-h-[38vh] [zoom:110%]:w-[min(25vh,240px)] [zoom:110%]:h-[min(25vh,240px)] [zoom:125%]:w-[min(22vh,220px)] [zoom:125%]:h-[min(22vh,220px)] [zoom:150%]:w-[min(20vh,200px)] [zoom:150%]:h-[min(20vh,200px)]">
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
             <Image
-              src="/doctor-avocado.png"
-              alt="Doctor Avocado"
-              fill
-              className="object-contain"
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
               priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
             />
           </div>
         </div>
-      </div>
-    </QuizLayout>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-2">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          {/* Title */}
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+              Let's check in — how are you feeling overall?
+            </h1>
+          </div>
+
+          {/* Subtitle */}
+          <div className="mb-3 text-center">
+            <p className="text-sm text-gray-600 px-2">
+              Your answer helps me support you better. Be honest — there's no right or wrong way to feel!
+            </p>
+          </div>
+
+          {/* Selected State */}
+          <div className="mb-4 text-center">
+            <p className="text-base sm:text-lg text-gray-800 font-medium px-2">
+              {feelingOptions.find(option => option.value === selectedValue)?.text}
+            </p>
+          </div>
+
+          {/* Feeling Scale - with touch-action for buttons */}
+          <div className="mb-4 flex justify-center gap-2" style={{ touchAction: 'manipulation' }}>
+            {feelingOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => handleSelect(option.value)}
+                onTouchEnd={(e) => { e.preventDefault(); handleSelect(option.value); }}
+                className={`w-9 h-9 rounded-full transition-all duration-200 hover:scale-110 select-none ${
+                  selectedValue === option.value ? 'ring-4 ring-offset-2 ring-gray-300' : ''
+                }`}
+                style={{ 
+                  backgroundColor: option.color,
+                  touchAction: 'manipulation'
+                }}
+                aria-label={`Feeling level ${option.value}`}
+              />
+            ))}
+          </div>
+
+          {/* Avocado Image */}
+          <div className="flex justify-center mb-2">
+            <div className="relative portrait:h-[28vh] landscape:h-[25vh] w-[240px]">
+              <Image
+                src="/doctor-avocado.png"
+                alt="Doctor Avocado"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="max-w-md mx-auto w-full flex justify-center">
+          <button
+            onClick={handleContinue}
+            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          >
+            Continue
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 }
