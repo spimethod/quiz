@@ -79,8 +79,8 @@ export default function PersonalPlanPage() {
       </main>
 
       {/* Bottom Card + Footer - unified white container */}
-      <footer className="bg-[#f5f5f0] relative z-20 px-4">
-        <div className="w-full sm:max-w-[500px] mx-auto rounded-t-[40px] sm:rounded-[40px] px-6 pt-8 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] bg-white">
+      <footer className="bg-[#f5f5f0] relative z-20">
+        <div className="w-full mx-auto rounded-t-[40px] px-6 pt-8 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)] bg-white">
           <div className="max-w-md mx-auto text-center">
             <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 leading-tight">
               Avocado builds a personal mental-health plan just for you
