@@ -71,38 +71,36 @@ export default function PersonalPlanPage() {
               src="/personal-plan-avocado.png"
               alt="Avocado Plan"
               fill
-              className="object-contain object-center scale-[1.5] portrait:translate-y-8 landscape:translate-y-4"
+              className="object-contain object-center scale-[1.8] portrait:translate-y-8 landscape:translate-y-4"
               priority
             />
           </div>
         </div>
-
-        {/* Bottom Card */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center z-10 pb-24">
-          <div className="bg-white w-full sm:max-w-[500px] rounded-t-[40px] sm:rounded-[40px] px-6 pt-8 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)]">
-            <div className="max-w-md mx-auto text-center">
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 leading-tight">
-                Avocado builds a personal mental-health plan just for you
-              </h1>
-              
-              <p className="text-gray-500 text-sm mb-4 leading-relaxed px-2 font-medium">
-                Reach your goal faster with your 3D AI companion built on the latest <span className="font-bold text-gray-800">psychological science</span>
-              </p>
-            </div>
-          </div>
-        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="px-4 pb-6 pt-3 bg-white relative z-20">
-        <div className="max-w-md mx-auto w-full flex justify-center">
-          <button
-            onClick={handleContinue}
-            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
-          >
-            Continue
-          </button>
+      {/* Bottom Card + Footer - unified white container */}
+      <footer className="bg-white relative z-20">
+        <div className="w-full sm:max-w-[500px] mx-auto rounded-t-[40px] sm:rounded-[40px] px-6 pt-8 pb-4 shadow-[0_-10px_60px_rgba(0,0,0,0.08)]">
+          <div className="max-w-md mx-auto text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-3 leading-tight">
+              Avocado builds a personal mental-health plan just for you
+            </h1>
+            
+            <p className="text-gray-500 text-sm mb-6 leading-relaxed px-2 font-medium">
+              Reach your goal faster with your 3D AI companion built on the latest <span className="font-bold text-gray-800">psychological science</span>
+            </p>
+
+            {/* Continue Button */}
+            <div className="px-0 pb-2">
+              <button
+                onClick={handleContinue}
+                onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+                className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
