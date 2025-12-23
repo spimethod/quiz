@@ -80,7 +80,7 @@ export default function SleepTroublePage() {
           </div>
 
           {/* Description */}
-          <div className="mb-4 text-center">
+          <div className="mb-12 text-center">
             <p className="text-gray-600 text-sm px-2">
               Getting enough rest is essential for mental well-being.<br />Let's check in on your sleep.
             </p>
