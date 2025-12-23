@@ -96,22 +96,20 @@ export default function Home() {
         position: 'relative'
       }}
     >
-      {/* Header with Logo - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 pt-6 pb-2 flex justify-center bg-[#f5f5f0] safe-area-top">
-        <div className="flex justify-center">
-          <Image
-            src="/avocado-logo.png"
-            alt="Avocado"
-            width={200}
-            height={64}
-            priority
-            className="h-10 md:h-12 lg:h-14 w-auto"
-          />
-        </div>
+      {/* Header with Logo - In flow, not fixed */}
+      <header className="flex-shrink-0 pt-3 sm:pt-4 pb-1 flex justify-center bg-[#f5f5f0] safe-area-top">
+        <Image
+          src="/avocado-logo.png"
+          alt="Avocado"
+          width={200}
+          height={64}
+          priority
+          className="h-8 sm:h-10 md:h-12 w-auto"
+        />
       </header>
 
       {/* Main Content - Responsive layout that fits screen */}
-      <main className="flex-1 flex flex-col items-center justify-between px-4 max-w-md sm:max-w-lg mx-auto w-full pt-[70px] pb-4 sm:pb-6 min-h-0">
+      <main className="flex-1 flex flex-col items-center justify-between px-4 max-w-md sm:max-w-lg mx-auto w-full pb-4 sm:pb-6 min-h-0">
         {/* Top Content */}
         <div className="flex flex-col items-center w-full">
           {/* Main Title */}
