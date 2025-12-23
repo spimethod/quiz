@@ -90,10 +90,10 @@ export default function Home() {
   return (
     <div 
       ref={containerRef}
-      className="h-[100dvh] flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-x-hidden overflow-y-auto" 
+      className="fixed inset-0 flex flex-col bg-[#f5f5f0] animate-fadeIn overflow-hidden" 
       style={{ 
-        overscrollBehaviorY: 'none',
-        WebkitOverflowScrolling: 'touch'
+        overscrollBehavior: 'none',
+        touchAction: 'none'
       }}
     >
       {/* Header with Logo - In flow, not fixed */}
@@ -128,8 +128,8 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* Illustration Row - Flexible height to fill available space without overflow */}
-        <div className="flex justify-center items-end w-full gap-0 flex-1 min-h-[160px] px-2 mt-1 mb-1">
+        {/* Illustration Row - Fixed height */}
+        <div className="flex justify-center items-end w-full gap-0 h-[38vh] px-2 mt-1 mb-1">
           {/* Female Door */}
           <div className="relative w-[30%] h-full max-h-[28vh] flex-shrink-0">
             <Image
