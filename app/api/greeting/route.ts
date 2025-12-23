@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import http from 'http';
+import https from 'https';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const API_HOST = 'api.avocadoaid.app';
 const API_PORT = 80;
@@ -16,7 +19,8 @@ export async function POST(request: NextRequest) {
     const result = await new Promise<{ ok: boolean; data: unknown; status: number }>((resolve, reject) => {
       const bodyString = JSON.stringify(body);
       
-      const options = {
+      const options: https.RequestOptions = {
+        protocol: 'https:',
         hostname: API_HOST,
         port: API_PORT,
         path: API_PATH,
@@ -25,12 +29,13 @@ export async function POST(request: NextRequest) {
           'Authorization': API_TOKEN,
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(bodyString),
+          'Accept': 'application/json, text/plain, */*',
         },
       };
 
-      console.log('Making request to:', `http://${API_HOST}:${API_PORT}${API_PATH}`);
+      console.log('Making request to:', `https://${API_HOST}:${API_PORT}${API_PATH}`);
 
-      const req = http.request(options, (res) => {
+      const req = https.request(options, (res) => {
         let data = '';
         
         res.on('data', (chunk) => {
