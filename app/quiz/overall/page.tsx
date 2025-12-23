@@ -130,14 +130,14 @@ export default function OverallPage() {
           </div>
 
           {/* Subtitle */}
-          <div className="mb-3 text-center">
+          <div className="mb-8 text-center">
             <p className="text-sm text-gray-600 px-2">
               Your answer helps me support you better. Be honest — there's no right or wrong way to feel!
             </p>
           </div>
 
           {/* Selected State */}
-          <div className="mb-4 text-center">
+          <div className="mb-3 text-center">
             <p className="text-base sm:text-lg text-gray-800 font-medium px-2">
               {feelingOptions.find(option => option.value === selectedValue)?.text}
             </p>
