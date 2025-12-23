@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 // Total steps before email capture
 const TOTAL_STEPS = 12;
@@ -374,14 +375,56 @@ export default function FeelingsPage() {
     </div>
   ) : null;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-feelings="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[660px] w-full mx-auto pt-[30px]">
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-feelings="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
+
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 portrait:overflow-y-auto portrait:overflow-x-hidden landscape:overflow-visible px-4 pb-32">
+        <div className="max-w-[660px] w-full mx-auto pt-2">
         {/* Title */}
         <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
           <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight [zoom:110%]:text-[min(4vw,2.5rem)] [zoom:125%]:text-[min(3.5vw,2rem)] [zoom:150%]:text-[min(3vw,1.75rem)]">
@@ -527,11 +570,21 @@ export default function FeelingsPage() {
             )}
           </div>
         </div>
-      </div>
+        </div>
+      </main>
+
+      {/* Footer - appears when NOT expanded */}
+      {footerContent && (
+        <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0] relative z-20">
+          <div className="max-w-md mx-auto w-full flex justify-center">
+            {footerContent}
+          </div>
+        </footer>
+      )}
 
       {/* Floating Continue Button - appears when custom field is expanded AND something is selected */}
       {isExpanded && (selectedOptions.length > 0 || customValue.trim()) && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-1 pt-2 bg-[#f5f5f0] animate-slide-up" id="continue-button-container">
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-6 pt-2 bg-[#f5f5f0] animate-slide-up" id="continue-button-container">
           <div className="max-w-sm mx-auto w-full">
             <button
               onClick={handleContinue}
@@ -545,6 +598,6 @@ export default function FeelingsPage() {
           </div>
         </div>
       )}
-    </QuizLayout>
+    </div>
   );
 }
