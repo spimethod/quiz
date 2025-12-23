@@ -319,7 +319,7 @@ export default function PersonalizingPage() {
     return questionnaire;
   }, []);
 
-  // Send quiz data to API
+  // Send quiz data to API using GET with body (via XMLHttpRequest for browser compatibility)
   const sendQuizDataToAPI = useCallback(async () => {
     const questionnaire = collectQuizData();
     
@@ -331,26 +331,44 @@ export default function PersonalizingPage() {
     setIsLoadingGreeting(true);
     
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': API_TOKEN,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ questionnaire }),
+      // Using XMLHttpRequest because fetch() doesn't allow body with GET in browsers
+      const result = await new Promise<{ok: boolean; data: Record<string, unknown>}>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', API_URL, true);
+        xhr.setRequestHeader('Authorization', API_TOKEN);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              resolve({ ok: true, data });
+            } catch {
+              resolve({ ok: true, data: { greeting: xhr.responseText } });
+            }
+          } else {
+            console.error('API request failed:', xhr.status, xhr.responseText);
+            resolve({ ok: false, data: {} });
+          }
+        };
+        
+        xhr.onerror = () => {
+          reject(new Error('Network error'));
+        };
+        
+        // Send with body (XMLHttpRequest allows this with GET)
+        xhr.send(JSON.stringify({ questionnaire }));
       });
       
-      if (response.ok) {
-        const data = await response.json();
+      if (result.ok) {
         // Assuming the response has a greeting or message field
-        const greeting = data.greeting || data.message || data.text || '';
+        const greeting = (result.data.greeting || result.data.message || result.data.text || '') as string;
         setApiGreeting(greeting);
         // Save to localStorage for persistence
         if (greeting) {
           localStorage.setItem('apiGreeting', greeting);
         }
       } else {
-        console.error('API request failed:', response.status);
         setApiGreeting('');
       }
     } catch (error) {
