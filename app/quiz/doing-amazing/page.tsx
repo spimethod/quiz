@@ -1,11 +1,14 @@
 'use client';
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 export default function DoingAmazingPage() {
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
   const CURRENT_STEP = 11;
   const TOTAL_STEPS = 12;
 
@@ -13,52 +16,96 @@ export default function DoingAmazingPage() {
     router.push('/quiz/sleep-trouble');
   };
 
-  const footerContent = (
-    <div className="max-w-sm mx-auto w-full">
-      <button
-        onClick={handleContinue}
-        onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-        className="w-full font-semibold text-base sm:text-lg md:text-xl py-3 px-12 sm:px-16 md:px-20 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
-      >
-        Keep going
-      </button>
-    </div>
-  );
-
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-amazing="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-[660px] w-full mx-auto flex flex-col items-center pt-[30px]">
-        {/* Title */}
-        <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 leading-tight">
-            You're doing amazing!
-          </h1>
-        </div>
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-amazing="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
 
-        {/* Description */}
-        <div className="mb-8 sm:mb-10 text-center">
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl">
-            Every step you take is helping you understand yourself better. Be proud of your progress — you've got this!
-          </p>
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
+        
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
         </div>
+      </header>
 
-        {/* Avocado Image */}
-        <div className="flex justify-center mt-4 mb-4">
-          <Image
-            src="/doing-amazing.png"
-            alt="Happy Avocado"
-            width={500}
-            height={500}
-            className="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-[400px] lg:h-[400px] max-w-[45vh] max-h-[45vh] object-contain"
-            priority
-          />
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Title */}
+          <div className="mb-2 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+              You're doing amazing!
+            </h1>
+          </div>
+
+          {/* Description */}
+          <div className="mb-4 text-center">
+            <p className="text-gray-600 text-sm sm:text-base px-2">
+              Every step you take is helping you understand yourself better. Be proud of your progress — you've got this!
+            </p>
+          </div>
+
+          {/* Avocado Image */}
+          <div className="flex justify-center mb-2">
+            <Image
+              src="/doing-amazing.png"
+              alt="Happy Avocado"
+              width={500}
+              height={500}
+              className="portrait:h-[40vh] landscape:h-[35vh] w-auto object-contain"
+              priority
+            />
+          </div>
+
         </div>
-      </div>
-    </QuizLayout>
+      </main>
+
+      {/* Footer */}
+      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+        <div className="max-w-md mx-auto w-full flex justify-center">
+          <button
+            onClick={handleContinue}
+            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+          >
+            Keep going
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 }
