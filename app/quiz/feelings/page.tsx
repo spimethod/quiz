@@ -419,19 +419,11 @@ export default function FeelingsPage() {
     <div
       ref={containerRef}
       data-feelings="true"
-      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
       style={{
         overscrollBehavior: 'none'
       }}
     >
-      {/* Portrait mode: disable touch scroll */}
-      <style jsx>{`
-        @media (orientation: portrait) {
-          div[data-feelings="true"] {
-            touch-action: none;
-          }
-        }
-      `}</style>
 
       {/* Header */}
       <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
