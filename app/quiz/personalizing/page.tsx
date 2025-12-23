@@ -332,7 +332,7 @@ export default function PersonalizingPage() {
     
     try {
       const response = await fetch(API_URL, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Authorization': API_TOKEN,
           'Content-Type': 'application/json',
