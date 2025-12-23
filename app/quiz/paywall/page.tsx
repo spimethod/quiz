@@ -627,7 +627,7 @@ export default function PaywallPage() {
         </div>
 
         {/* Reviews Cloud Section */}
-        <div className="w-full max-w-2xl mx-auto my-8">
+        <div className="w-full max-w-4xl mx-auto my-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] text-center mb-2 leading-tight px-4">
             Join the new era of psychotherapy
           </h2>
@@ -637,9 +637,9 @@ export default function PaywallPage() {
           <Image
             src="/reviews-cloud.png"
             alt="Customer Reviews"
-            width={800}
-            height={600}
-            className="w-full h-auto object-contain"
+            width={1200}
+            height={900}
+            className="w-full h-auto object-contain scale-110"
           />
         </div>
 
