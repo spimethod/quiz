@@ -125,7 +125,7 @@ export default function Home() {
           </h1>
 
           {/* Description Text */}
-          <p className="text-center text-gray-600 text-[clamp(0.65rem,2.5vw,0.875rem)] leading-relaxed mb-2 px-2 text-justify">
+          <p className="text-center text-gray-600 text-[clamp(0.875rem,3.5vw,1.125rem)] leading-relaxed mb-2 px-2 text-justify">
             Receive an <span className="font-bold text-gray-800">AI-powered</span> evaluation with <span className="font-bold text-gray-800">tailored advice</span> and a <span className="font-bold text-gray-800">clear improvement plan</span> — guided by <span className="font-bold text-gray-800">Avocado</span>, your <span className="font-bold text-gray-800">AI companion</span>.
           </p>
 
