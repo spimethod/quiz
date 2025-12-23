@@ -168,11 +168,9 @@ export default function PersonalizingPage() {
         } catch {}
       }
       
-      // Load saved API greeting from sessionStorage (persists for back navigation within session)
-      const savedGreeting = sessionStorage.getItem('apiGreeting');
-      if (savedGreeting) {
-        setApiGreeting(savedGreeting);
-      }
+      // Don't load from sessionStorage on mount - always fetch fresh data
+      // sessionStorage is only used for back navigation, not initial load
+      sessionStorage.removeItem('apiGreeting');
     }
   }, []);
 
@@ -323,28 +321,37 @@ export default function PersonalizingPage() {
   const sendQuizDataToAPI = useCallback(async () => {
     const questionnaire = collectQuizData();
     
+    console.log('=== API CALL START ===');
+    console.log('Questionnaire keys:', Object.keys(questionnaire));
+    console.log('Questionnaire:', questionnaire);
+    
     if (Object.keys(questionnaire).length === 0) {
-      console.log('No quiz data to send');
+      console.error('No quiz data to send - aborting API call');
       return;
     }
     
     // Clear old data before making new request
+    console.log('Clearing old greeting data');
     setApiGreeting('');
     sessionStorage.removeItem('apiGreeting');
     setIsLoadingGreeting(true);
     
     try {
-      console.log('Sending questionnaire to API:', questionnaire);
+      console.log('Fetching from:', API_URL);
       
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
         },
         body: JSON.stringify({ questionnaire }),
         cache: 'no-store',
       });
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
       
       const result = {
         ok: response.ok,
@@ -353,35 +360,43 @@ export default function PersonalizingPage() {
       
       if (response.ok) {
         try {
-          result.data = await response.json();
-        } catch {
+          const jsonData = await response.json();
+          console.log('Response JSON:', jsonData);
+          result.data = jsonData;
+        } catch (parseError) {
           const text = await response.text();
+          console.log('Response text (not JSON):', text);
           result.data = { greeting: text };
         }
       } else {
-        console.error('API request failed:', response.status);
+        const errorText = await response.text();
+        console.error('API request failed:', response.status, errorText);
       }
-      
-      console.log('API response:', result);
       
       if (result.ok) {
         // Assuming the response has a greeting or message field
         const greeting = (result.data.greeting || result.data.message || result.data.text || '') as string;
-        console.log('Setting greeting:', greeting);
-        setApiGreeting(greeting);
-        // Save to sessionStorage (persists for back navigation, clears on tab close)
-        if (greeting) {
+        console.log('Extracted greeting length:', greeting.length);
+        console.log('Extracted greeting preview:', greeting.substring(0, 100));
+        
+        if (greeting && greeting.trim().length > 0) {
+          setApiGreeting(greeting);
           sessionStorage.setItem('apiGreeting', greeting);
+          console.log('✅ Greeting set successfully');
+        } else {
+          console.error('❌ Empty greeting received');
+          setApiGreeting('');
         }
       } else {
-        console.log('API request failed, clearing greeting');
+        console.error('❌ API request failed, clearing greeting');
         setApiGreeting('');
       }
     } catch (error) {
-      console.error('Error sending quiz data:', error);
+      console.error('❌ Error sending quiz data:', error);
       setApiGreeting('');
     } finally {
       setIsLoadingGreeting(false);
+      console.log('=== API CALL END ===');
     }
   }, [collectQuizData]);
 
@@ -973,9 +988,11 @@ export default function PersonalizingPage() {
                <div className="max-w-md mx-auto">
                  <button
                    onClick={() => {
+                     console.log('Button clicked, current phase:', phase);
                      if (phase === 'ready') {
+                       console.log('Transitioning to insights phase, calling API...');
                        setPhase('insights');
-                       // Send quiz data to API when transitioning from ready to insights
+                       // Always send quiz data to API when transitioning from ready to insights
                        sendQuizDataToAPI();
                      } else {
                        setPhase('companion');
@@ -983,9 +1000,11 @@ export default function PersonalizingPage() {
                    }}
                    onTouchEnd={(e) => { 
                      e.preventDefault(); 
+                     console.log('Button touched, current phase:', phase);
                      if (phase === 'ready') {
+                       console.log('Transitioning to insights phase, calling API...');
                        setPhase('insights');
-                       // Send quiz data to API when transitioning from ready to insights
+                       // Always send quiz data to API when transitioning from ready to insights
                        sendQuizDataToAPI();
                      } else {
                        setPhase('companion');
