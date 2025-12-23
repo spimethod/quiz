@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const CURRENT_STEP = 31;
 const TOTAL_STEPS = 32;
 
-const API_URL = 'https://api.avocadoaid.app:80/generate_greeting/';
-const API_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcl9pZCI6IjlmYjRkM2FlLTY2NGUtNDA0Mi05YzU0LTkxOTRkN2QwYWM5NyIsImlhdCI6MTc1Mzk3NDI2Nn0.Sduj1C1_obiqcqhoE6A8vdJrQ81qbW_cuj313EnOQd4';
+// Use internal proxy to handle GET-with-body API requirement
+const API_URL = '/api/greeting';
 
 // Graph helpers from TimePage
 const getTforX = (targetX: number, p0x: number, p1x: number, p2x: number) => {
@@ -319,7 +319,7 @@ export default function PersonalizingPage() {
     return questionnaire;
   }, []);
 
-  // Send quiz data to API using POST
+  // Send quiz data to API via proxy (proxy handles GET-with-body requirement)
   const sendQuizDataToAPI = useCallback(async () => {
     const questionnaire = collectQuizData();
     
@@ -334,7 +334,6 @@ export default function PersonalizingPage() {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-          'Authorization': API_TOKEN,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ questionnaire }),
