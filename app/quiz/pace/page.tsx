@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import QuizLayout from '../../components/QuizLayout';
+import BackButton from '../../components/BackButton';
+import { getProgressPercentage } from '../../utils/progress';
 
 // Total steps before email capture
 const TOTAL_STEPS = 12;
@@ -22,137 +23,14 @@ export default function PacePage() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Очистка таймера при размонтировании компонента
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
-
-  // Scroll to bottom on initial load (when no option selected) - guaranteed approach
-  useEffect(() => {
-    if (!selectedPace) {
-      let scrollTimeout: NodeJS.Timeout | null = null;
-      let lastHeight = 0;
-      let stableCount = 0;
-      const STABLE_THRESHOLD = 3; // Number of consecutive stable measurements
-      
-      const performScroll = () => {
-        const optionsContainer = optionsRef.current;
-        const currentHeight = document.documentElement.scrollHeight;
-        
-        if (optionsContainer) {
-          const rect = optionsContainer.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const targetScroll = scrollTop + rect.bottom - window.innerHeight;
-          
-          window.scrollTo({
-            top: Math.max(0, targetScroll),
-            behavior: 'auto'
-          });
-        } else {
-          // Fallback: scroll to absolute bottom
-          window.scrollTo({
-            top: currentHeight - window.innerHeight,
-            behavior: 'auto'
-          });
-        }
-      };
-      
-      const checkAndScroll = () => {
-        const currentHeight = document.documentElement.scrollHeight;
-        
-        // Check if height is stable (not changing)
-        if (currentHeight === lastHeight) {
-          stableCount++;
-          if (stableCount >= STABLE_THRESHOLD) {
-            // Height is stable, perform scroll
-            performScroll();
-            return true; // Indicate we're done
-          }
-        } else {
-          // Height changed, reset counter
-          stableCount = 0;
-          lastHeight = currentHeight;
-        }
-        
-        return false; // Not stable yet, keep checking
-      };
-      
-      // Initial scroll attempts
-      const attemptScroll = () => {
-        if (!checkAndScroll()) {
-          // If not stable, schedule next check
-          scrollTimeout = setTimeout(attemptScroll, 100);
-        }
-      };
-      
-      // Start checking immediately
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          attemptScroll();
-        });
-      });
-      
-      // Use MutationObserver to detect DOM changes
-      const observer = new MutationObserver(() => {
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout);
-        }
-        attemptScroll();
-      });
-      
-      // Observe changes in the document body
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-      });
-      
-      // Use ResizeObserver to detect size changes
-      let resizeObserver: ResizeObserver | null = null;
-      if (window.ResizeObserver) {
-        resizeObserver = new ResizeObserver(() => {
-          if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-          }
-          attemptScroll();
-        });
-        
-        resizeObserver.observe(document.body);
-      }
-      
-      // Also listen to window load
-      const handleLoad = () => {
-        setTimeout(() => {
-          performScroll();
-        }, 200);
-      };
-      
-      if (document.readyState === 'complete') {
-        handleLoad();
-      } else {
-        window.addEventListener('load', handleLoad);
-      }
-      
-      // Final scroll after a longer delay as safety net
-      setTimeout(() => {
-        performScroll();
-      }, 1500);
-      
-      return () => {
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout);
-        }
-        observer.disconnect();
-        if (resizeObserver) {
-          resizeObserver.disconnect();
-        }
-        window.removeEventListener('load', handleLoad);
-      };
-    }
-  }, []); // Only on mount
 
   const handleSelect = (id: string) => {
     setSelectedPace(id);
@@ -179,29 +57,70 @@ export default function PacePage() {
   };
 
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    <div
+      ref={containerRef}
+      data-pace="true"
+      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      style={{
+        overscrollBehavior: 'none'
+      }}
     >
-      <div className="max-w-md w-full mx-auto pt-[30px] sm:pt-[30px]">
+      {/* Portrait mode: disable touch scroll */}
+      <style jsx>{`
+        @media (orientation: portrait) {
+          div[data-pace="true"] {
+            touch-action: none;
+          }
+        }
+      `}</style>
+
+      {/* Header */}
+      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+        <BackButton 
+          className="absolute left-8 top-3 z-10"
+        />
         
-        {/* Title */}
-        <div className="text-center mb-2 sm:mb-3">
-          <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] leading-tight">
-            How fast do you want to progress?
-          </h1>
+        <div className="flex flex-col items-center" style={{ marginLeft: '-30px' }}>
+          <div className="flex justify-center mb-1">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-8 w-auto"
+            />
+          </div>
+          {/* Progress Bar */}
+          <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+            <div 
+              className="h-full bg-[#6B9D47] transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${getProgressPercentage(CURRENT_STEP)}%` }}
+            />
+          </div>
         </div>
+      </header>
 
-        {/* Subtitle */}
-        <div className="text-center mb-6 sm:mb-8">
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed px-4">
-            We'll adjust the pace with your 3D Avocado companion
-          </p>
-        </div>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+        <div className="max-w-md w-full mx-auto flex flex-col items-center">
+          
+          {/* Title */}
+          <div className="text-center mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] leading-tight">
+              How fast do you want to progress?
+            </h1>
+          </div>
 
-        {/* Options List */}
-        <div ref={optionsRef} className="flex flex-col gap-3 sm:gap-4">
+          {/* Subtitle */}
+          <div className="text-center mb-4">
+            <p className="text-gray-600 text-sm leading-relaxed px-4">
+              We'll adjust the pace with your 3D Avocado companion
+            </p>
+          </div>
+
+          {/* Options List */}
+          <div ref={optionsRef} className="flex flex-col gap-3 w-full">
           {options.map((option) => {
             const isSelected = selectedPace === option.id;
             return (
@@ -243,10 +162,11 @@ export default function PacePage() {
               </div>
             );
           })}
-        </div>
+          </div>
 
-      </div>
-    </QuizLayout>
+        </div>
+      </main>
+    </div>
   );
 }
 
