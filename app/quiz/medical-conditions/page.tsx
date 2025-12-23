@@ -9,6 +9,7 @@ import { getProgressPercentage } from '../../utils/progress';
 export default function MedicalConditionsPage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
   const [showInput, setShowInput] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -91,12 +92,19 @@ export default function MedicalConditionsPage() {
     }
   }, [showInput]);
 
-  // Dynamically enable/disable touch scroll based on showInput state
+  // Dynamically enable/disable touch scroll and overflow based on showInput state
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const main = mainRef.current;
+    if (!container || !main) return;
 
-    container.style.touchAction = showInput ? 'auto' : 'none';
+    if (showInput) {
+      container.style.touchAction = 'auto';
+      main.style.overflowY = 'auto';
+    } else {
+      container.style.touchAction = 'none';
+      main.style.overflowY = 'hidden';
+    }
   }, [showInput]);
 
   const footerContent = !showInput ? (
@@ -176,7 +184,7 @@ export default function MedicalConditionsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col px-4 pt-4 pb-32 overflow-y-auto overflow-x-hidden">
+      <main ref={mainRef} className="flex-1 flex flex-col px-4 pt-4 pb-32 overflow-x-hidden">
         <div className="max-w-md w-full mx-auto">
           
           {/* Title */}
