@@ -64,13 +64,13 @@ export default function AgePage() {
           border-radius: 4px;
         }
         
-        /* Large touch area thumb with smaller visual circle */
+        /* Large touch area (44px) with small visual circle (18% = ~8px) */
         .slider::-webkit-slider-thumb {
           appearance: none;
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 45%, white 45%, white 50%, transparent 50%);
+          background: radial-gradient(circle, #6B9D47 18%, white 18%, white 23%, transparent 23%);
           cursor: pointer;
           border: none;
           margin-top: -18px;
@@ -82,18 +82,18 @@ export default function AgePage() {
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 45%, white 45%, white 50%, transparent 50%);
+          background: radial-gradient(circle, #6B9D47 18%, white 18%, white 23%, transparent 23%);
           cursor: pointer;
           border: none;
         }
 
         .slider:disabled::-webkit-slider-thumb {
-          background: radial-gradient(circle, #9ca3af 45%, white 45%, white 50%, transparent 50%);
+          background: radial-gradient(circle, #9ca3af 18%, white 18%, white 23%, transparent 23%);
           cursor: not-allowed;
         }
 
         .slider:disabled::-moz-range-thumb {
-          background: radial-gradient(circle, #9ca3af 45%, white 45%, white 50%, transparent 50%);
+          background: radial-gradient(circle, #9ca3af 18%, white 18%, white 23%, transparent 23%);
           cursor: not-allowed;
         }
 
