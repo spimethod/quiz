@@ -53,16 +53,27 @@ export default function AgePage() {
           }
         }
         
-        /* Large touch area with visual inner circle */
+        /* Thin track (the line) */
+        .slider::-webkit-slider-runnable-track {
+          height: 8px;
+          border-radius: 4px;
+        }
+        
+        .slider::-moz-range-track {
+          height: 8px;
+          border-radius: 4px;
+        }
+        
+        /* Large touch area thumb with smaller visual circle */
         .slider::-webkit-slider-thumb {
           appearance: none;
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 40%, transparent 40%);
+          background: radial-gradient(circle, #6B9D47 45%, white 45%, white 50%, transparent 50%);
           cursor: pointer;
           border: none;
-          box-shadow: 0 0 0 8px rgba(107, 157, 71, 0.15);
+          margin-top: -18px;
           touch-action: pan-x;
           -webkit-tap-highlight-color: transparent;
         }
@@ -71,21 +82,18 @@ export default function AgePage() {
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 40%, transparent 40%);
+          background: radial-gradient(circle, #6B9D47 45%, white 45%, white 50%, transparent 50%);
           cursor: pointer;
           border: none;
-          box-shadow: 0 0 0 8px rgba(107, 157, 71, 0.15);
         }
 
         .slider:disabled::-webkit-slider-thumb {
-          background: radial-gradient(circle, #9ca3af 40%, transparent 40%);
-          box-shadow: none;
+          background: radial-gradient(circle, #9ca3af 45%, white 45%, white 50%, transparent 50%);
           cursor: not-allowed;
         }
 
         .slider:disabled::-moz-range-thumb {
-          background: radial-gradient(circle, #9ca3af 40%, transparent 40%);
-          box-shadow: none;
+          background: radial-gradient(circle, #9ca3af 45%, white 45%, white 50%, transparent 50%);
           cursor: not-allowed;
         }
 
@@ -96,11 +104,11 @@ export default function AgePage() {
         .slider {
           touch-action: pan-x;
           height: 44px;
-          margin: -20px 0;
+          background: transparent !important;
         }
         
         .slider-container {
-          padding: 20px 0;
+          padding: 10px 0;
         }
       `}</style>
 
@@ -166,6 +174,15 @@ export default function AgePage() {
 
             {/* Slider with larger touch area */}
             <div className="relative px-2 slider-container">
+              {/* Track background */}
+              <div 
+                className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-2 rounded-lg pointer-events-none"
+                style={{
+                  background: preferNotToSay 
+                    ? '#d1d5db' 
+                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
+                }}
+              />
               <input
                 type="range"
                 min="16"
@@ -175,12 +192,7 @@ export default function AgePage() {
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 disabled={preferNotToSay}
-                className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: preferNotToSay 
-                    ? '#d1d5db' 
-                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
-                }}
+                className="w-full appearance-none cursor-pointer slider relative z-10"
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>16</span>
