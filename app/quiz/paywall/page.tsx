@@ -185,7 +185,7 @@ export default function PaywallPage() {
       </header>
 
       {/* Main Content */}
-      <main className={`flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 ${avatar === 'girl' ? 'pt-[105px]' : 'pt-20'}`}> {/* Large padding bottom for fixed footer */}
+      <main className="flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 pt-20"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
         <div className="w-full max-w-3xl mx-auto mb-2 px-2">
@@ -208,7 +208,7 @@ export default function PaywallPage() {
              </div>
 
              {/* Center Image */}
-             <div className={`w-[140px] sm:w-[200px] md:w-[280px] ${avatar === 'girl' ? 'pt-[25px]' : ''}`}>
+             <div className="w-[140px] sm:w-[200px] md:w-[280px]">
                <div className="relative w-full aspect-square">
                 <Image 
                   src={avatar === 'girl' ? "/before-after-avocado-girl.png" : "/before-after-avocado.png"}
