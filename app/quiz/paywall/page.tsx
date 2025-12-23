@@ -548,7 +548,7 @@ export default function PaywallPage() {
           </div>
           
           {/* Stats */}
-          <div className="space-y-6 text-center">
+          <div className="space-y-6 text-left pl-4">
             <div>
               <p className="text-3xl sm:text-4xl font-bold text-[#6B9D47] mb-2">91%</p>
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
