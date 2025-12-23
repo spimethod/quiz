@@ -53,35 +53,39 @@ export default function AgePage() {
           }
         }
         
+        /* Large touch area with visual inner circle */
         .slider::-webkit-slider-thumb {
           appearance: none;
-          width: 20px;
-          height: 20px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
-          background: #6B9D47;
+          background: radial-gradient(circle, #6B9D47 40%, transparent 40%);
           cursor: pointer;
-          border: 2.5px solid white;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          border: none;
+          box-shadow: 0 0 0 8px rgba(107, 157, 71, 0.15);
           touch-action: pan-x;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
-          background: #6B9D47;
+          background: radial-gradient(circle, #6B9D47 40%, transparent 40%);
           cursor: pointer;
-          border: 2.5px solid white;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          border: none;
+          box-shadow: 0 0 0 8px rgba(107, 157, 71, 0.15);
         }
 
         .slider:disabled::-webkit-slider-thumb {
-          background: #9ca3af;
+          background: radial-gradient(circle, #9ca3af 40%, transparent 40%);
+          box-shadow: none;
           cursor: not-allowed;
         }
 
         .slider:disabled::-moz-range-thumb {
-          background: #9ca3af;
+          background: radial-gradient(circle, #9ca3af 40%, transparent 40%);
+          box-shadow: none;
           cursor: not-allowed;
         }
 
@@ -91,6 +95,12 @@ export default function AgePage() {
         
         .slider {
           touch-action: pan-x;
+          height: 44px;
+          margin: -20px 0;
+        }
+        
+        .slider-container {
+          padding: 20px 0;
         }
       `}</style>
 
@@ -154,14 +164,16 @@ export default function AgePage() {
               <p className="text-3xl font-bold text-gray-900">{age}</p>
             </div>
 
-            {/* Slider */}
-            <div className="relative px-2">
+            {/* Slider with larger touch area */}
+            <div className="relative px-2 slider-container">
               <input
                 type="range"
                 min="16"
                 max="75"
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
                 disabled={preferNotToSay}
                 className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
                 style={{
