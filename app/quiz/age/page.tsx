@@ -53,62 +53,49 @@ export default function AgePage() {
           }
         }
         
-        /* Thin track (the line) */
-        .slider::-webkit-slider-runnable-track {
-          height: 8px;
-          border-radius: 4px;
-        }
-        
-        .slider::-moz-range-track {
-          height: 8px;
-          border-radius: 4px;
-        }
-        
-        /* 44px invisible touch area with 20px visual circle centered on track */
-        .slider::-webkit-slider-thumb {
+        .slider {
+          -webkit-appearance: none;
           appearance: none;
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 23%, transparent 23%);
-          cursor: pointer;
-          border: none;
-          margin-top: 0;
+          width: 100%;
+          height: 8px;
+          border-radius: 4px;
+          outline: none;
           touch-action: pan-x;
-          -webkit-tap-highlight-color: transparent;
+        }
+        
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #6B9D47;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          margin-top: 0;
         }
 
         .slider::-moz-range-thumb {
-          width: 44px;
-          height: 44px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
-          background: radial-gradient(circle, #6B9D47 23%, transparent 23%);
+          background: #6B9D47;
           cursor: pointer;
-          border: none;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .slider:disabled::-webkit-slider-thumb {
-          background: radial-gradient(circle, #9ca3af 23%, transparent 23%);
-          cursor: not-allowed;
+          background: #9ca3af;
         }
 
         .slider:disabled::-moz-range-thumb {
-          background: radial-gradient(circle, #9ca3af 23%, transparent 23%);
-          cursor: not-allowed;
+          background: #9ca3af;
         }
 
         .slider:disabled {
           cursor: not-allowed;
-        }
-        
-        .slider {
-          touch-action: pan-x;
-          height: 44px;
-          background: transparent !important;
-        }
-        
-        .slider-container {
-          padding: 10px 0;
         }
       `}</style>
 
@@ -172,19 +159,8 @@ export default function AgePage() {
               <p className="text-3xl font-bold text-gray-900">{age}</p>
             </div>
 
-            {/* Slider with larger touch area */}
-            <div className="relative px-2 slider-container h-[44px] flex items-center">
-              {/* Track background - centered vertically */}
-              <div 
-                className="absolute left-2 right-2 h-2 rounded-lg pointer-events-none"
-                style={{
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: preferNotToSay 
-                    ? '#d1d5db' 
-                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
-                }}
-              />
+            {/* Slider */}
+            <div className="px-2">
               <input
                 type="range"
                 min="16"
@@ -194,12 +170,17 @@ export default function AgePage() {
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 disabled={preferNotToSay}
-                className="w-full appearance-none cursor-pointer slider relative z-10"
+                className="slider"
+                style={{
+                  background: preferNotToSay 
+                    ? '#d1d5db' 
+                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
+                }}
               />
-            </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-1 px-2">
-              <span>16</span>
-              <span>75+</span>
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>16</span>
+                <span>75+</span>
+              </div>
             </div>
 
             {/* Age Comment */}
