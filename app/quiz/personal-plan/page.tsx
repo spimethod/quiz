@@ -63,7 +63,7 @@ export default function PersonalPlanPage() {
       </header>
 
       {/* Main Content - Image Area */}
-      <main className="flex-1 flex flex-col relative">
+      <main className="flex-1 flex flex-col relative bg-[#f5f5f0]">
         {/* Centered Image */}
         <div className="absolute inset-0 flex justify-center items-center">
           <div className="relative w-full h-full max-w-lg">
@@ -71,7 +71,7 @@ export default function PersonalPlanPage() {
               src="/personal-plan-avocado.png"
               alt="Avocado Plan"
               fill
-              className="object-contain object-center scale-[1.8] portrait:translate-y-44 landscape:translate-y-32"
+              className="object-contain object-center scale-[1.8] portrait:translate-y-52 landscape:translate-y-36"
               priority
             />
           </div>
