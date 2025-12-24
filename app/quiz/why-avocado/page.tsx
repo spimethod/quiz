@@ -58,7 +58,7 @@ export default function WhyAvocadoPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4">
+      <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4 pb-24">
         <div className="max-w-md w-full mx-auto flex flex-col items-center">
           
           {/* Title */}
@@ -90,8 +90,8 @@ export default function WhyAvocadoPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
+      {/* Fixed Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 px-4 pb-6 pt-3 bg-[#f5f5f0] z-20">
         <div className="max-w-md mx-auto w-full flex justify-center">
           <button
             onClick={handleContinue}
