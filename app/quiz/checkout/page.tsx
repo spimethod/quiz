@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -13,6 +13,14 @@ export default function CheckoutPage() {
   const [cvv, setCvv] = useState('');
   const [showCvvTooltip, setShowCvvTooltip] = useState(false);
   const [showDiscountModal, setShowDiscountModal] = useState(false);
+  const modalContentRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top when modal opens
+  useEffect(() => {
+    if (showDiscountModal && modalContentRef.current) {
+      modalContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showDiscountModal]);
 
   useEffect(() => {
     // Get selected plan from localStorage
@@ -77,53 +85,61 @@ export default function CheckoutPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative bg-white rounded-3xl p-8 sm:p-10 w-full max-w-md mx-auto shadow-2xl border border-gray-100 overflow-hidden"
+            className="relative bg-white rounded-3xl w-full max-w-md mx-auto shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[90vh]"
           >
-            {/* Title */}
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] text-center mb-5">
-              Did you know?
-            </h2>
-            
-            {/* Description */}
-            <p className="text-gray-600 text-center text-lg sm:text-xl leading-relaxed mb-8">
-              Many Avocado members who log their progress report a noticeable boost in well-being within the first month
-            </p>
-            
-            {/* Well-being level */}
-            <p className="text-center font-bold text-lg text-[#1a1a1a] mb-5">Well-being level</p>
-            
-            {/* Graph Image */}
-            <div className="flex justify-center mb-5">
-              <Image
-                src="/discount-graph.png"
-                alt="Well-being graph"
-                width={500}
-                height={375}
-                className="w-full max-w-[340px] h-auto object-contain"
-              />
-            </div>
-            
-            {/* Disclaimer */}
-            <p className="text-gray-400 text-sm text-center italic mb-8">
-              Based on self-reported check-ins of users who track progress in the app.
-            </p>
-            
-            {/* Discount message */}
-            <div className="bg-[#f5f5f0] rounded-xl p-4 mb-6">
-              <p className="text-center text-[#1a1a1a]">
-                We want you to succeed — here's an additional discount on your{' '}
-                <span className="text-[#6B9D47] font-semibold">Avocado Plan</span>
-              </p>
-            </div>
-            
-            {/* Got it button */}
-            <button
-              onClick={handleGotIt}
-              onTouchEnd={(e) => { e.preventDefault(); handleGotIt(); }}
-              className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center text-white font-bold text-lg hover:scale-105 active:scale-95 select-none"
+            {/* Scrollable Content */}
+            <div 
+              ref={modalContentRef}
+              className="flex-1 overflow-y-auto p-8 sm:p-10"
             >
-              Got it
-            </button>
+              {/* Title */}
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] text-center mb-5">
+                Did you know?
+              </h2>
+              
+              {/* Description */}
+              <p className="text-gray-600 text-center text-lg sm:text-xl leading-relaxed mb-8">
+                Many Avocado members who log their progress report a noticeable boost in well-being within the first month
+              </p>
+              
+              {/* Well-being level */}
+              <p className="text-center font-bold text-lg text-[#1a1a1a] mb-5">Well-being level</p>
+              
+              {/* Graph Image */}
+              <div className="flex justify-center mb-5">
+                <Image
+                  src="/discount-graph.png"
+                  alt="Well-being graph"
+                  width={500}
+                  height={375}
+                  className="w-full max-w-[340px] h-auto object-contain"
+                />
+              </div>
+              
+              {/* Disclaimer */}
+              <p className="text-gray-400 text-sm text-center italic mb-8">
+                Based on self-reported check-ins of users who track progress in the app.
+              </p>
+              
+              {/* Discount message */}
+              <div className="bg-[#f5f5f0] rounded-xl p-4 mb-6">
+                <p className="text-center text-[#1a1a1a]">
+                  We want you to succeed — here's an additional discount on your{' '}
+                  <span className="text-[#6B9D47] font-semibold">Avocado Plan</span>
+                </p>
+              </div>
+            </div>
+            
+            {/* Fixed Button at Bottom */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 sm:p-6 pt-4">
+              <button
+                onClick={handleGotIt}
+                onTouchEnd={(e) => { e.preventDefault(); handleGotIt(); }}
+                className="w-full h-14 rounded-full bg-[#6B9D47] hover:bg-[#5d8a3d] transition-all duration-300 flex items-center justify-center text-white font-bold text-lg hover:scale-105 active:scale-95 select-none"
+              >
+                Got it
+              </button>
+            </div>
           </motion.div>
         </div>
       )}
