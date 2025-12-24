@@ -74,7 +74,32 @@ export default function PaywallPage() {
     }
   }, []);
 
-  // Auto-scroll to show description just above the fixed footer
+  // Scroll to Before/After section on mount to ensure it's fully visible
+  useEffect(() => {
+    const scrollToBeforeAfter = () => {
+      const beforeAfterSection = document.getElementById('before-after-section');
+      if (beforeAfterSection) {
+        // Wait for layout to be ready
+        setTimeout(() => {
+          const headerHeight = 120; // Approximate header height
+          const sectionTop = beforeAfterSection.getBoundingClientRect().top + window.pageYOffset;
+          const targetScroll = sectionTop - headerHeight - 20; // 20px padding from top
+          
+          window.scrollTo({
+            top: Math.max(0, targetScroll),
+            behavior: 'auto'
+          });
+        }, 100);
+      }
+    };
+
+    // Try multiple times to ensure it works in all browsers
+    scrollToBeforeAfter();
+    setTimeout(scrollToBeforeAfter, 300);
+    setTimeout(scrollToBeforeAfter, 600);
+  }, []);
+
+  // Auto-scroll to show description just above the fixed footer (after initial scroll to Before/After)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const timer = setTimeout(() => {
@@ -89,7 +114,7 @@ export default function PaywallPage() {
             window.scrollTo({ top: targetScroll, behavior: 'smooth' });
           }
         }
-      }, 600);
+      }, 1000); // Increased delay to allow Before/After scroll to complete first
       return () => clearTimeout(timer);
     }
   }, []);
@@ -285,7 +310,7 @@ export default function PaywallPage() {
       <main className="flex-1 flex flex-col items-center px-4 pb-[420px] pt-24 sm:pt-28"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
-        <div className="w-full max-w-3xl mx-auto mb-8 px-2 overflow-x-hidden">
+        <div id="before-after-section" className="w-full max-w-3xl mx-auto mb-8 px-2 overflow-x-hidden">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 md:gap-6 items-center">
              {/* Left Column - Before (aligned to right/center) */}
              <div className="flex justify-end mr-[-4px] sm:mr-[-6px] md:mr-[-8px]">

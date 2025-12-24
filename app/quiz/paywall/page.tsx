@@ -91,9 +91,29 @@ export default function PaywallPage() {
     };
   }, []);
 
-  // Scroll to top on mount to ensure avatar is visible
+  // Scroll to Before/After section on mount to ensure it's fully visible
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    const scrollToBeforeAfter = () => {
+      const beforeAfterSection = document.getElementById('before-after-section');
+      if (beforeAfterSection) {
+        // Wait for layout to be ready
+        setTimeout(() => {
+          const headerHeight = 100; // Approximate header height
+          const sectionTop = beforeAfterSection.getBoundingClientRect().top + window.pageYOffset;
+          const targetScroll = sectionTop - headerHeight - 20; // 20px padding from top
+          
+          window.scrollTo({
+            top: Math.max(0, targetScroll),
+            behavior: 'auto'
+          });
+        }, 100);
+      }
+    };
+
+    // Try multiple times to ensure it works in all browsers
+    scrollToBeforeAfter();
+    setTimeout(scrollToBeforeAfter, 300);
+    setTimeout(scrollToBeforeAfter, 600);
   }, []);
 
   useEffect(() => {
@@ -193,7 +213,7 @@ export default function PaywallPage() {
       <main className="flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 pt-20"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
-        <div className="w-full max-w-3xl mx-auto mb-2 px-2 overflow-x-hidden">
+        <div id="before-after-section" className="w-full max-w-3xl mx-auto mb-2 px-2 overflow-x-hidden">
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 md:gap-6 items-center">
              {/* Left Column - Before (aligned to right/center) */}
              <div className="flex justify-end mr-[-4px] sm:mr-[-6px] md:mr-[-8px]">
