@@ -177,7 +177,7 @@ export default function QuizLayout({
       }}
     >
       {/* Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 pt-2 sm:pt-4 pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0] safe-area-top">
+      <header className="fixed top-0 left-0 right-0 z-50 pt-[12px] sm:pt-[20px] pb-0 px-8 sm:px-10 md:px-12 lg:px-6 bg-[#f5f5f0] safe-area-top">
         {!hideBackButton && (
         <BackButton 
           onClick={onBack}
