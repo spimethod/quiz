@@ -65,7 +65,7 @@ export default function PersonalPlanPage() {
       {/* Main Content - Image Area */}
       <main className="flex-1 flex flex-col relative bg-[#f5f5f0]">
         {/* Centered Image - positioned so belly is just above footer */}
-        <div className="absolute inset-0 flex justify-center items-end" style={{ bottom: 'clamp(440px, calc(38vh + 200px), 500px)' }}>
+        <div className="absolute inset-0 flex justify-center items-end" style={{ bottom: 'clamp(40px, calc(38vh - 200px), 100px)' }}>
           <div className="relative w-full max-w-lg" style={{ height: '60vh', minHeight: '450px', maxHeight: '650px' }}>
             <Image
               src="/personal-plan-avocado.png"
