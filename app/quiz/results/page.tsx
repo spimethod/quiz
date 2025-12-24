@@ -11,6 +11,7 @@ export default function ResultsPage() {
   const TOTAL_STEPS = 32;
 
   const [avatar, setAvatar] = useState<'girl' | 'boy'>('girl');
+  const [isPortrait, setIsPortrait] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -18,6 +19,46 @@ export default function ResultsPage() {
       if (savedAvatar) {
         setAvatar(savedAvatar);
       }
+
+      // Check initial orientation
+      const checkOrientation = () => {
+        const portrait = window.innerHeight > window.innerWidth;
+        setIsPortrait(portrait);
+        
+        // Apply overscroll behavior with a small delay to ensure elements are rendered
+        setTimeout(() => {
+          // Apply to main content area
+          const mainElement = document.querySelector('[data-results-container] main') as HTMLElement;
+          if (mainElement) {
+            mainElement.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
+          }
+          
+          // Apply to the root container
+          const container = document.querySelector('[data-results-container] > div') as HTMLElement;
+          if (container) {
+            container.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
+          }
+          
+          // Also apply to body/html for better control
+          document.body.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
+          document.documentElement.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
+        }, 100);
+      };
+      
+      checkOrientation();
+      
+      // Listen for orientation changes
+      window.addEventListener('resize', checkOrientation);
+      window.addEventListener('orientationchange', checkOrientation);
+      
+      return () => {
+        window.removeEventListener('resize', checkOrientation);
+        window.removeEventListener('orientationchange', checkOrientation);
+        
+        // Reset overscroll behavior on cleanup
+        document.body.style.overscrollBehaviorY = '';
+        document.documentElement.style.overscrollBehaviorY = '';
+      };
     }
   }, []);
 
@@ -42,12 +83,13 @@ export default function ResultsPage() {
   );
 
   return (
-    <QuizLayout
-      currentStep={CURRENT_STEP}
-      totalSteps={TOTAL_STEPS}
-      footer={footerContent}
-      className="px-4 sm:px-6 md:px-8 lg:px-10"
-    >
+    <div data-results-container>
+      <QuizLayout
+        currentStep={CURRENT_STEP}
+        totalSteps={TOTAL_STEPS}
+        footer={footerContent}
+        className="px-4 sm:px-6 md:px-8 lg:px-10"
+      >
       <div className="max-w-[660px] w-full mx-auto pt-[30px]">
         {/* Title */}
         <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
@@ -75,5 +117,6 @@ export default function ResultsPage() {
         </div>
       </div>
     </QuizLayout>
+    </div>
   );
 }
