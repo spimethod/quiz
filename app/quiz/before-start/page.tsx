@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BackButton from '../../components/BackButton';
@@ -13,6 +13,11 @@ export default function BeforeStartPage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
   const handleContinue = () => {
     router.push('/quiz/personal-plan');
   };
@@ -20,25 +25,11 @@ export default function BeforeStartPage() {
   return (
     <div
       ref={containerRef}
-      data-before-start="true"
-      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      className="flex flex-col bg-[#f5f5f0] min-h-screen overflow-y-auto overflow-x-hidden"
       style={{
         overscrollBehavior: 'none'
       }}
     >
-      {/* Orientation-based touch control */}
-      <style jsx>{`
-        @media (orientation: portrait) {
-          div[data-before-start="true"] {
-            touch-action: none;
-          }
-        }
-        @media (orientation: landscape) {
-          div[data-before-start="true"] {
-            touch-action: auto;
-          }
-        }
-      `}</style>
 
       {/* Header */}
       <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
