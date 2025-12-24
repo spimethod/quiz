@@ -91,6 +91,11 @@ export default function PaywallPage() {
     };
   }, []);
 
+  // Scroll to top on mount to ensure avatar is visible
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
   useEffect(() => {
     const savedAvatar = localStorage.getItem('avatarPreference');
     if (savedAvatar) {
