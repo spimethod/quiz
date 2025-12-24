@@ -37,11 +37,30 @@ export default function GoalsPage() {
     if (!option) return;
     
     setSelectedOptions(prev => {
-      if (prev.includes(option)) {
-        return prev.filter(item => item !== option);
-      } else {
-        return [...prev, option];
+      const newOptions = prev.includes(option)
+        ? prev.filter(item => item !== option)
+        : [...prev, option];
+      
+      // Auto-scroll up to show Continue button after selection
+      if (newOptions.length > 0 || customValue.trim()) {
+        setTimeout(() => {
+          const continueButton = continueBtnRef.current;
+          if (continueButton) {
+            continueButton.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end'
+            });
+          } else {
+            // If button is not rendered yet, scroll to bottom
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
       }
+      
+      return newOptions;
     });
   };
 
@@ -52,9 +71,21 @@ export default function GoalsPage() {
       setIsExpanded(false);
       setIsRecording(false);
       setShouldAutoFocus(false);
-      // Scroll down after closing to show the title
+      // Scroll to Continue button after closing
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const continueButton = continueBtnRef.current;
+        if (continueButton) {
+          continueButton.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        } else {
+          // If button is not rendered yet, scroll to bottom
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
       }, 100);
     }
   };
