@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BackButton from '../../components/BackButton';
@@ -12,6 +12,11 @@ export default function WhyAvocadoPage() {
   const CURRENT_STEP = 15;
   const TOTAL_STEPS = 32;
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
   const handleContinue = () => {
     router.push('/quiz/medications');
   };
@@ -19,20 +24,11 @@ export default function WhyAvocadoPage() {
   return (
     <div
       ref={containerRef}
-      data-why="true"
-      className="flex flex-col bg-[#f5f5f0] portrait:fixed portrait:inset-0 portrait:overflow-hidden landscape:min-h-screen landscape:overflow-y-auto landscape:overflow-x-hidden"
+      className="flex flex-col bg-[#f5f5f0] min-h-screen overflow-y-auto overflow-x-hidden"
       style={{
         overscrollBehavior: 'none'
       }}
     >
-      {/* Portrait mode: disable touch scroll */}
-      <style jsx>{`
-        @media (orientation: portrait) {
-          div[data-why="true"] {
-            touch-action: none;
-          }
-        }
-      `}</style>
 
       {/* Header */}
       <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
