@@ -47,46 +47,9 @@ export default function CustomizationPage() {
     localStorage.removeItem('commitmentSigned');
   };
 
-  // Swipe handling with drag follow
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-    setIsDragging(true);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-    
-    const currentTouch = e.targetTouches[0].clientX;
-    const diff = currentTouch - touchStart;
-    setDragOffset(diff);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || dragOffset === 0) {
-      setDragOffset(0);
-      setIsDragging(false);
-      return;
-    }
-    
-    const distance = -dragOffset; // Negative because left swipe = positive distance
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      handleNextSlide();
-    } else if (isRightSwipe) {
-      handlePrevSlide();
-    }
-    
-    setDragOffset(0);
-    setIsDragging(false);
-    setTouchStart(null);
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
   };
 
   const handleSelect = () => {
@@ -188,12 +151,9 @@ export default function CustomizationPage() {
               </svg>
             </button>
 
-            {/* Slide Image Container - with swipe support */}
+            {/* Slide Image Container - with Tinder-like swipe */}
             <div 
               className="relative w-full max-w-[280px] portrait:h-[35vh] landscape:h-[40vh] overflow-hidden"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
               style={{ touchAction: 'pan-x' }}
             >
               <AnimatePresence initial={false} custom={direction}>
@@ -205,15 +165,24 @@ export default function CustomizationPage() {
                   animate="center"
                   exit="exit"
                   transition={{
-                    x: { type: "tween", duration: 0.3, ease: "easeInOut" },
+                    x: { type: "spring", stiffness: 300, damping: 30 },
                     opacity: { duration: 0.2 }
                   }}
-                  className="absolute inset-0 w-full h-full"
-                  style={{
-                    transform: isDragging ? `translateX(${dragOffset}px)` : undefined
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipe = swipePower(offset.x, velocity.x);
+
+                    if (swipe < -swipeConfidenceThreshold) {
+                      handleNextSlide();
+                    } else if (swipe > swipeConfidenceThreshold) {
+                      handlePrevSlide();
+                    }
                   }}
+                  className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
                 >
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full pointer-events-none">
                     <Image
                       src={slides[currentSlide].src}
                       alt={slides[currentSlide].alt}
