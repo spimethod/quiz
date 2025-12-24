@@ -96,28 +96,23 @@ export default function PaywallPage() {
   useEffect(() => {
     const scrollToBeforeAfter = () => {
       const beforeAfterSection = document.getElementById('before-after-section');
-      const header = document.querySelector('header');
       
-      if (beforeAfterSection && header) {
+      if (beforeAfterSection) {
         // Use requestAnimationFrame for accurate layout calculation
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            // Calculate actual header height dynamically
-            const headerRect = header.getBoundingClientRect();
-            const headerHeight = headerRect.height;
-            
             // Get section position
             const sectionRect = beforeAfterSection.getBoundingClientRect();
             const sectionTop = sectionRect.top + window.pageYOffset;
             
-            // Calculate target scroll position with extra padding
+            // Calculate target scroll position with extra padding from top
             const extraPadding = 20; // Extra space from top
-            const targetScroll = sectionTop - headerHeight - extraPadding;
+            const targetScroll = sectionTop - extraPadding;
             
             // Check if section is already fully visible
             const viewportHeight = window.innerHeight;
             const sectionBottom = sectionRect.bottom;
-            const isFullyVisible = sectionRect.top >= headerHeight + extraPadding && 
+            const isFullyVisible = sectionRect.top >= extraPadding && 
                                    sectionBottom <= viewportHeight;
             
             if (!isFullyVisible) {
@@ -236,24 +231,24 @@ export default function PaywallPage() {
         position: 'relative'
       }}
     >
-      {/* Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 pb-2 bg-[#f5f5f0] z-50 safe-area-top safe-area-top-paywall">
-        <div className="flex justify-center items-center">
-          <div className="h-12 sm:h-14 md:h-16 w-auto relative">
-            <Image
-              src="/avocado-logo.png"
-              alt="Avocado"
-              width={280}
-              height={90}
-              priority
-              className="h-full w-auto object-contain"
-            />
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 pt-20"> {/* Large padding bottom for fixed footer */}
+      <main className="flex-1 flex flex-col items-center px-4 pb-[420px]"> {/* Large padding bottom for fixed footer */}
+        
+        {/* Header - Scrollable with content */}
+        <header className="w-full pb-2 pt-4 bg-[#f5f5f0] safe-area-top safe-area-top-paywall">
+          <div className="flex justify-center items-center">
+            <div className="h-12 sm:h-14 md:h-16 w-auto relative">
+              <Image
+                src="/avocado-logo.png"
+                alt="Avocado"
+                width={280}
+                height={90}
+                priority
+                className="h-full w-auto object-contain"
+              />
+            </div>
+          </div>
+        </header>
         
         {/* Before / After Section - Grid Layout */}
         <div 
