@@ -202,29 +202,31 @@ export default function GoalsPage() {
     }
   }, [isExpanded, customValue, selectedOptions]);
 
-  // Auto-scroll to Continue button when it appears
+  // Auto-scroll up to show options above Continue button when it appears
   useEffect(() => {
     if (!isExpanded && (selectedOptions.length > 0 || customValue.trim())) {
-      const scrollToContinue = () => {
+      const scrollUp = () => {
         const continueButton = continueBtnRef.current;
         if (continueButton) {
-          continueButton.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end'
-          });
-        } else {
-          // If button is not rendered yet, scroll to bottom
+          // Get button position
+          const buttonRect = continueButton.getBoundingClientRect();
+          const buttonTop = buttonRect.top + window.pageYOffset;
+          
+          // Calculate scroll position so options are visible above the button
+          // Footer height is approximately 100px, so we want options to be above that
+          const targetScroll = buttonTop - window.innerHeight + 100;
+          
           window.scrollTo({
-            top: document.documentElement.scrollHeight,
+            top: Math.max(0, targetScroll),
             behavior: 'smooth'
           });
         }
       };
 
       // Try multiple times to ensure button is rendered
-      setTimeout(scrollToContinue, 100);
-      setTimeout(scrollToContinue, 300);
-      setTimeout(scrollToContinue, 500);
+      setTimeout(scrollUp, 100);
+      setTimeout(scrollUp, 300);
+      setTimeout(scrollUp, 500);
     }
   }, [selectedOptions, customValue, isExpanded]);
 
