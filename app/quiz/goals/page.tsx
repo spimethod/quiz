@@ -270,7 +270,7 @@ export default function GoalsPage() {
 
         {/* Goal Options */}
         <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4 px-4 sm:px-6 md:px-8 lg:px-10">
           {goalOptions.map((option) => (
             <button
               key={option}
