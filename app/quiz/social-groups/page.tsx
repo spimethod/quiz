@@ -42,7 +42,7 @@ export default function SocialGroupsPage() {
       `}</style>
 
       {/* Header */}
-      <header className="pt-2 pb-0 px-8 bg-[#f5f5f0] relative z-10">
+      <header className="pt-[12px] pb-0 px-8 bg-[#f5f5f0] relative z-10">
         <BackButton 
           className="absolute left-8 top-3 z-10"
         />

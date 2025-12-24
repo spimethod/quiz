@@ -22,7 +22,7 @@ export default function SubscriptionPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f0] flex flex-col">
       {/* Header */}
-      <header className="px-7 sm:px-9 md:px-11 lg:px-13 pt-2 pb-2">
+      <header className="px-7 sm:px-9 md:px-11 lg:px-13 pt-[12px] pb-2">
         <div className="flex items-center justify-end">
           <button
             onClick={handleBack}

@@ -157,7 +157,7 @@ export default function AICompanionPage() {
       }}
     >
       {/* Header with Logo - Fixed */}
-      <header className="fixed top-0 left-0 right-0 pt-4 pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
+      <header className="fixed top-0 left-0 right-0 pt-[20px] pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
         <div className="h-12 sm:h-14 md:h-16 w-auto relative">
           <Image
             src="/avocado-logo.png"
