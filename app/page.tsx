@@ -104,7 +104,7 @@ export default function Home() {
       }}
     >
       {/* Header with Logo - In flow, not fixed */}
-      <header className="flex-shrink-0 pt-[16px] sm:pt-[20px] flex justify-center bg-[#f5f5f0] safe-area-top">
+      <header className="flex-shrink-0 flex justify-center bg-[#f5f5f0] safe-area-top">
         <Image
           src="/avocado-logo.png"
           alt="Avocado"

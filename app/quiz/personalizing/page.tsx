@@ -694,7 +694,7 @@ export default function PersonalizingPage() {
       }}
     >
       {/* Fixed Header with Logo - Exact match to QuizLayout */}
-      <header className="fixed top-0 left-0 right-0 pt-[20px] pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top">
+      <header className="fixed top-0 left-0 right-0 pb-2 px-4 flex items-center justify-center bg-[#f5f5f0] z-50 safe-area-top safe-area-top-personalizing">
         <div className="flex flex-col items-center">
           <div className="h-12 sm:h-14 md:h-16 w-auto relative">
             <Image

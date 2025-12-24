@@ -60,7 +60,57 @@ body {
 
 /* Safe area support for iOS devices */
 .safe-area-top {
-  padding-top: env(safe-area-inset-top);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
+}
+
+@media (min-width: 640px) {
+  .safe-area-top {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
+  }
+}
+
+.safe-area-top-layout {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
+}
+
+@media (min-width: 640px) {
+  .safe-area-top-layout {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 24px) !important;
+  }
+}
+
+.safe-area-top-paywall {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
+}
+
+@media (min-width: 640px) {
+  .safe-area-top-paywall {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 28px) !important;
+  }
+}
+
+.safe-area-top-paywall2 {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 28px) !important;
+}
+
+@media (min-width: 640px) {
+  .safe-area-top-paywall2 {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 36px) !important;
+  }
+}
+
+.safe-area-top-personalizing {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
+}
+
+.safe-area-top-results-final {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
+}
+
+@media (min-width: 640px) {
+  .safe-area-top-results-final {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 28px) !important;
+  }
 }
 
 /* Prevent overscroll bounce on iOS - but allow spring effect */

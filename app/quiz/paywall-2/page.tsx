@@ -266,7 +266,7 @@ export default function PaywallPage() {
       }}
     >
       {/* Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 pt-[28px] sm:pt-[36px] pb-2 bg-[#f5f5f0] z-50 safe-area-top">
+      <header className="fixed top-0 left-0 right-0 pb-2 bg-[#f5f5f0] z-50 safe-area-top safe-area-top-paywall2">
         <div className="flex justify-center items-center">
           <div className="h-12 sm:h-14 md:h-16 w-auto relative">
             <Image

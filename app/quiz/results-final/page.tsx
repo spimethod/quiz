@@ -94,7 +94,7 @@ export default function ResultsFinalPage() {
       }}
     >
       {/* Header - Fixed */}
-      <header className="fixed top-0 left-0 right-0 z-50 pt-4 sm:pt-6 pb-2 bg-[#f5f5f0] safe-area-top">
+      <header className="fixed top-0 left-0 right-0 z-50 pb-2 bg-[#f5f5f0] safe-area-top safe-area-top-results-final">
         <div className="flex justify-center items-center">
           <div className="flex items-center space-x-2" style={{ marginLeft: '-30px' }}>
             <Image
