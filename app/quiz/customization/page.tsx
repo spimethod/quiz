@@ -47,25 +47,34 @@ export default function CustomizationPage() {
     localStorage.removeItem('commitmentSigned');
   };
 
-  // Swipe handling
+  // Swipe handling with drag follow
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const minSwipeDistance = 50;
 
   const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    if (!touchStart) return;
+    
+    const currentTouch = e.targetTouches[0].clientX;
+    const diff = currentTouch - touchStart;
+    setDragOffset(diff);
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || dragOffset === 0) {
+      setDragOffset(0);
+      setIsDragging(false);
+      return;
+    }
     
-    const distance = touchStart - touchEnd;
+    const distance = -dragOffset; // Negative because left swipe = positive distance
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     
@@ -74,6 +83,10 @@ export default function CustomizationPage() {
     } else if (isRightSwipe) {
       handlePrevSlide();
     }
+    
+    setDragOffset(0);
+    setIsDragging(false);
+    setTouchStart(null);
   };
 
   const handleSelect = () => {
@@ -196,6 +209,9 @@ export default function CustomizationPage() {
                     opacity: { duration: 0.2 }
                   }}
                   className="absolute inset-0 w-full h-full"
+                  style={{
+                    transform: isDragging ? `translateX(${dragOffset}px)` : undefined
+                  }}
                 >
                   <div className="relative w-full h-full">
                     <Image
