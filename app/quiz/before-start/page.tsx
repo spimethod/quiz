@@ -26,11 +26,16 @@ export default function BeforeStartPage() {
         overscrollBehavior: 'none'
       }}
     >
-      {/* Portrait mode: disable touch scroll */}
+      {/* Orientation-based touch control */}
       <style jsx>{`
         @media (orientation: portrait) {
           div[data-before-start="true"] {
             touch-action: none;
+          }
+        }
+        @media (orientation: landscape) {
+          div[data-before-start="true"] {
+            touch-action: auto;
           }
         }
       `}</style>
