@@ -36,20 +36,43 @@ export default function CustomizationPage() {
   }, []);
 
   const handleNextSlide = () => {
-    if (currentSlide < slides.length - 1) {
-      setDirection(1);
-      setCurrentSlide(prev => prev + 1);
-      // Reset commitment flag when avatar changes
-      localStorage.removeItem('commitmentSigned');
-    }
+    setDirection(1);
+    setCurrentSlide(prev => (prev + 1) % slides.length); // Circular: wrap to 0 after last
+    localStorage.removeItem('commitmentSigned');
   };
 
   const handlePrevSlide = () => {
-    if (currentSlide > 0) {
-      setDirection(-1);
-      setCurrentSlide(prev => prev - 1);
-      // Reset commitment flag when avatar changes
-      localStorage.removeItem('commitmentSigned');
+    setDirection(-1);
+    setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length); // Circular: wrap to last from 0
+    localStorage.removeItem('commitmentSigned');
+  };
+
+  // Swipe handling
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
+      handleNextSlide();
+    } else if (isRightSwipe) {
+      handlePrevSlide();
     }
   };
 
@@ -143,13 +166,8 @@ export default function CustomizationPage() {
             {/* Left Arrow */}
             <button 
               onClick={handlePrevSlide}
-              onTouchEnd={(e) => { e.preventDefault(); if (currentSlide > 0) handlePrevSlide(); }}
-              disabled={currentSlide === 0}
-              className={`absolute left-0 z-20 p-2 rounded-full transition-all select-none ${
-                currentSlide === 0 
-                  ? 'text-gray-300 cursor-not-allowed' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]'
-              }`}
+              onTouchEnd={(e) => { e.preventDefault(); handlePrevSlide(); }}
+              className="absolute left-0 z-20 p-2 rounded-full transition-all select-none text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]"
               style={{ touchAction: 'manipulation' }}
             >
               <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,8 +175,14 @@ export default function CustomizationPage() {
               </svg>
             </button>
 
-            {/* Slide Image Container */}
-            <div className="relative w-full max-w-[280px] portrait:h-[35vh] landscape:h-[40vh] overflow-hidden">
+            {/* Slide Image Container - with swipe support */}
+            <div 
+              className="relative w-full max-w-[280px] portrait:h-[35vh] landscape:h-[40vh] overflow-hidden"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              style={{ touchAction: 'pan-x' }}
+            >
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                   key={currentSlide}
@@ -189,13 +213,8 @@ export default function CustomizationPage() {
             {/* Right Arrow */}
             <button 
               onClick={handleNextSlide}
-              onTouchEnd={(e) => { e.preventDefault(); if (currentSlide < slides.length - 1) handleNextSlide(); }}
-              disabled={currentSlide === slides.length - 1}
-              className={`absolute right-0 z-20 p-2 rounded-full transition-all select-none ${
-                currentSlide === slides.length - 1 
-                  ? 'text-gray-300 cursor-not-allowed' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]'
-              }`}
+              onTouchEnd={(e) => { e.preventDefault(); handleNextSlide(); }}
+              className="absolute right-0 z-20 p-2 rounded-full transition-all select-none text-gray-600 hover:bg-gray-100 hover:text-[#6B9D47]"
               style={{ touchAction: 'manipulation' }}
             >
               <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
