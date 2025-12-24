@@ -59,8 +59,17 @@ export default function CommitmentPage() {
 
   const handleMouseDown = () => setIsHolding(true);
   const handleMouseUp = () => setIsHolding(false);
-  const handleTouchStart = () => setIsHolding(true);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    setIsHolding(true);
+  };
   const handleTouchEnd = () => setIsHolding(false);
+  
+  // Prevent context menu on long press
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    return false;
+  };
 
   const handleContinue = () => {
     router.push('/quiz/personalizing');
@@ -142,18 +151,36 @@ export default function CommitmentPage() {
         </p>
 
         {/* Avocado Images - Based on Avatar Selection */}
-        <div className="flex justify-center mb-10 sm:mb-12">
+        <div 
+          className="flex justify-center mb-10 sm:mb-12"
+          onContextMenu={handleContextMenu}
+          style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
+        >
           {avatar === 'boy' ? (
             <>
               {/* Boy Version - Mobile & Tablet (< 1024px) */}
-              <div className="relative block lg:hidden -translate-y-[2px]">
+              <div 
+                className="relative block lg:hidden -translate-y-[2px]"
+                onContextMenu={handleContextMenu}
+                onTouchStart={(e) => {
+                  // Only prevent if not clicking on button
+                  const target = e.target as HTMLElement;
+                  if (!target.closest('button')) {
+                    e.preventDefault();
+                  }
+                }}
+                style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
+              >
                 <Image
                   src="/commitment-avocado.png"
                   alt="Commitment Avocado"
                   width={360}
                   height={460}
-                  className="w-68 h-auto max-w-[68vw] object-contain"
+                  className="w-68 h-auto max-w-[68vw] object-contain pointer-events-none"
                   priority
+                  draggable={false}
+                  onContextMenu={handleContextMenu}
+                  style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
                 />
 
                 {/* Soft pulsing glow around button */}
@@ -219,14 +246,21 @@ export default function CommitmentPage() {
               </div>
               
               {/* Boy Version - Web (>= 1024px) */}
-              <div className="relative hidden lg:block -translate-y-[5px]">
+              <div 
+                className="relative hidden lg:block -translate-y-[5px]"
+                onContextMenu={handleContextMenu}
+                style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
+              >
                 <Image
                   src="/commitment-avocado-web.png"
                   alt="Commitment Avocado Web"
                   width={360}
                   height={460}
-                  className="w-72 h-auto md:w-[22rem] object-contain"
+                  className="w-72 h-auto md:w-[22rem] object-contain pointer-events-none"
                   priority
+                  draggable={false}
+                  onContextMenu={handleContextMenu}
+                  style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
                 />
 
                 {/* Soft pulsing glow around button - Desktop */}
@@ -289,14 +323,28 @@ export default function CommitmentPage() {
             </>
           ) : (
             /* Girl Version - Universal (Mobile/Tablet/Web) - Using Aspect Ratio Container */
-            <div className="relative mx-auto w-72 sm:w-84 md:w-[26rem] max-w-[78vw] aspect-[4876/5396] translate-x-[30px]">
+            <div 
+              className="relative mx-auto w-72 sm:w-84 md:w-[26rem] max-w-[78vw] aspect-[4876/5396] translate-x-[30px]"
+              onContextMenu={handleContextMenu}
+              onTouchStart={(e) => {
+                // Only prevent if not clicking on button
+                const target = e.target as HTMLElement;
+                if (!target.closest('button')) {
+                  e.preventDefault();
+                }
+              }}
+              style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
+            >
               <div className="absolute inset-0 scale-108 -translate-x-[10.3%] -translate-y-[1.4%]">
                 <Image
                   src="/commitment-avocado-girl.png"
                   alt="Commitment Avocado Girl"
                   fill
-                  className="object-contain"
+                  className="object-contain pointer-events-none"
                   priority
+                  draggable={false}
+                  onContextMenu={handleContextMenu}
+                  style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none' }}
                 />
               </div>
 
