@@ -63,15 +63,30 @@ export default function PersonalPlanPage() {
       </header>
 
       {/* Main Content - Image Area */}
-      <main className="flex-1 flex flex-col relative bg-[#f5f5f0]">
-        {/* Centered Image */}
-        <div className="absolute inset-0 flex justify-center items-center">
-          <div className="relative w-full h-full max-w-lg">
+      <main className="flex-1 flex flex-col relative bg-[#f5f5f0] overflow-hidden">
+        {/* Centered Image - positioned so belly is just above footer */}
+        <div 
+          className="absolute inset-x-0 flex justify-center items-end"
+          style={{ 
+            bottom: 'clamp(280px, 42vh, 380px)',
+            paddingBottom: '20px'
+          }}
+        >
+          <div className="relative w-full max-w-lg" style={{ 
+            height: 'clamp(55vh, 65vh, 75vh)',
+            minHeight: '450px',
+            maxHeight: '750px'
+          }}>
             <Image
               src="/personal-plan-avocado.png"
               alt="Avocado Plan"
               fill
-              className="object-contain object-center scale-[1.8] portrait:translate-y-56 landscape:translate-y-40"
+              className="object-contain"
+              style={{
+                objectPosition: 'center bottom',
+                transform: 'scale(1.8)',
+                transformOrigin: 'center bottom'
+              }}
               priority
             />
           </div>
