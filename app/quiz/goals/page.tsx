@@ -207,14 +207,27 @@ export default function GoalsPage() {
     if (!isExpanded && (selectedOptions.length > 0 || customValue.trim())) {
       const scrollUp = () => {
         const continueButton = continueBtnRef.current;
-        if (continueButton) {
-          // Get button position
+        const optionsContainer = document.querySelector('[data-goal-options]');
+        
+        if (continueButton && optionsContainer) {
+          // Get button and options container positions
           const buttonRect = continueButton.getBoundingClientRect();
+          const optionsRect = optionsContainer.getBoundingClientRect();
           const buttonTop = buttonRect.top + window.pageYOffset;
           
-          // Calculate scroll position so options are visible above the button
-          // Footer height is approximately 100px, so we want options to be above that
-          const targetScroll = buttonTop - window.innerHeight + 100;
+          // Calculate scroll position so all options are visible above the button
+          // Add extra space (180px) to ensure bottom options are visible
+          const targetScroll = buttonTop - window.innerHeight + 180;
+          
+          window.scrollTo({
+            top: Math.max(0, targetScroll),
+            behavior: 'smooth'
+          });
+        } else if (continueButton) {
+          // Fallback: scroll based on button position with more space
+          const buttonRect = continueButton.getBoundingClientRect();
+          const buttonTop = buttonRect.top + window.pageYOffset;
+          const targetScroll = buttonTop - window.innerHeight + 180;
           
           window.scrollTo({
             top: Math.max(0, targetScroll),
@@ -279,7 +292,7 @@ export default function GoalsPage() {
 
         {/* Goal Options */}
         <div className={`mb-4 sm:mb-6 ${isExpanded ? 'mb-0' : ''}`}>
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4" data-goal-options>
           {goalOptions.map((option) => (
             <button
               key={option}
