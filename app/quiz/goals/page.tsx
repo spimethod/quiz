@@ -37,30 +37,11 @@ export default function GoalsPage() {
     if (!option) return;
     
     setSelectedOptions(prev => {
-      const newOptions = prev.includes(option)
-        ? prev.filter(item => item !== option)
-        : [...prev, option];
-      
-      // Auto-scroll up to show Continue button after selection
-      if (newOptions.length > 0 || customValue.trim()) {
-        setTimeout(() => {
-          const continueButton = continueBtnRef.current;
-          if (continueButton) {
-            continueButton.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end'
-            });
-          } else {
-            // If button is not rendered yet, scroll to bottom
-            window.scrollTo({
-              top: document.documentElement.scrollHeight,
-              behavior: 'smooth'
-            });
-          }
-        }, 100);
+      if (prev.includes(option)) {
+        return prev.filter(item => item !== option);
+      } else {
+        return [...prev, option];
       }
-      
-      return newOptions;
     });
   };
 
@@ -220,6 +201,32 @@ export default function GoalsPage() {
       };
     }
   }, [isExpanded, customValue, selectedOptions]);
+
+  // Auto-scroll to Continue button when it appears
+  useEffect(() => {
+    if (!isExpanded && (selectedOptions.length > 0 || customValue.trim())) {
+      const scrollToContinue = () => {
+        const continueButton = continueBtnRef.current;
+        if (continueButton) {
+          continueButton.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        } else {
+          // If button is not rendered yet, scroll to bottom
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
+      };
+
+      // Try multiple times to ensure button is rendered
+      setTimeout(scrollToContinue, 100);
+      setTimeout(scrollToContinue, 300);
+      setTimeout(scrollToContinue, 500);
+    }
+  }, [selectedOptions, customValue, isExpanded]);
 
   const footerContent = !isExpanded && (selectedOptions.length > 0 || customValue.trim()) ? (
     <div className="max-w-sm mx-auto w-full">
