@@ -92,28 +92,71 @@ export default function PaywallPage() {
   }, []);
 
   // Scroll to Before/After section on mount to ensure it's fully visible
+  // Using multiple approaches for maximum reliability
   useEffect(() => {
     const scrollToBeforeAfter = () => {
       const beforeAfterSection = document.getElementById('before-after-section');
-      if (beforeAfterSection) {
-        // Wait for layout to be ready
-        setTimeout(() => {
-          const headerHeight = 100; // Approximate header height
-          const sectionTop = beforeAfterSection.getBoundingClientRect().top + window.pageYOffset;
-          const targetScroll = sectionTop - headerHeight - 20; // 20px padding from top
-          
-          window.scrollTo({
-            top: Math.max(0, targetScroll),
-            behavior: 'auto'
+      const header = document.querySelector('header');
+      
+      if (beforeAfterSection && header) {
+        // Use requestAnimationFrame for accurate layout calculation
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // Calculate actual header height dynamically
+            const headerRect = header.getBoundingClientRect();
+            const headerHeight = headerRect.height;
+            
+            // Get section position
+            const sectionRect = beforeAfterSection.getBoundingClientRect();
+            const sectionTop = sectionRect.top + window.pageYOffset;
+            
+            // Calculate target scroll position with extra padding
+            const extraPadding = 20; // Extra space from top
+            const targetScroll = sectionTop - headerHeight - extraPadding;
+            
+            // Check if section is already fully visible
+            const viewportHeight = window.innerHeight;
+            const sectionBottom = sectionRect.bottom;
+            const isFullyVisible = sectionRect.top >= headerHeight + extraPadding && 
+                                   sectionBottom <= viewportHeight;
+            
+            if (!isFullyVisible) {
+              window.scrollTo({
+                top: Math.max(0, targetScroll),
+                behavior: 'auto'
+              });
+              
+              // Force scroll for Chrome compatibility
+              document.documentElement.scrollTop = Math.max(0, targetScroll);
+              document.body.scrollTop = Math.max(0, targetScroll);
+            }
           });
-        }, 100);
+        });
       }
     };
 
-    // Try multiple times to ensure it works in all browsers
+    // Try multiple times with increasing delays to ensure it works in all browsers
+    // Immediate attempt
     scrollToBeforeAfter();
+    
+    // After short delay (for initial render)
+    setTimeout(scrollToBeforeAfter, 100);
+    
+    // After medium delay (for images/assets loading)
     setTimeout(scrollToBeforeAfter, 300);
+    
+    // After longer delay (for all resources)
     setTimeout(scrollToBeforeAfter, 600);
+    
+    // Final attempt after everything should be loaded
+    setTimeout(scrollToBeforeAfter, 1000);
+    
+    // Also listen for load event
+    window.addEventListener('load', scrollToBeforeAfter);
+    
+    return () => {
+      window.removeEventListener('load', scrollToBeforeAfter);
+    };
   }, []);
 
   useEffect(() => {
@@ -213,7 +256,13 @@ export default function PaywallPage() {
       <main className="flex-1 flex flex-col items-center px-4 pb-[420px] sm:pt-24 pt-20"> {/* Large padding bottom for fixed footer */}
         
         {/* Before / After Section - Grid Layout */}
-        <div id="before-after-section" className="w-full max-w-3xl mx-auto mb-2 px-2 overflow-x-hidden">
+        <div 
+          id="before-after-section" 
+          className="w-full max-w-3xl mx-auto mb-2 px-2 overflow-x-hidden"
+          style={{ 
+            scrollMarginTop: 'calc(env(safe-area-inset-top, 0px) + 120px)'
+          }}
+        >
           <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 md:gap-6 items-center">
              {/* Left Column - Before (aligned to right/center) */}
              <div className="flex justify-end mr-[-4px] sm:mr-[-6px] md:mr-[-8px]">
