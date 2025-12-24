@@ -311,7 +311,12 @@ export default function PaywallPage() {
                   src={avatar === 'girl' ? "/before-after-avocado-girl.png" : "/before-after-avocado.png"}
                   alt="Before and After Avocado"
                   fill
-                  className={`object-contain ${avatar === 'girl' ? 'scale-100' : 'scale-125'}`}
+                  className="object-contain"
+                  style={{
+                    transform: avatar === 'girl' ? 'scale(1.0)' : 'scale(1.25)',
+                    transformOrigin: 'center',
+                    willChange: 'transform'
+                  }}
                   priority
                 />
                </div>
