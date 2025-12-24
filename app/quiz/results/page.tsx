@@ -25,23 +25,49 @@ export default function ResultsPage() {
         const portrait = window.innerHeight > window.innerWidth;
         setIsPortrait(portrait);
         
-        // Apply overscroll behavior with a small delay to ensure elements are rendered
+        // Apply scroll prevention with a small delay to ensure elements are rendered
         setTimeout(() => {
-          // Apply to main content area
-          const mainElement = document.querySelector('[data-results-container] main') as HTMLElement;
-          if (mainElement) {
-            mainElement.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
-          }
-          
-          // Apply to the root container
+          // Find the root container from QuizLayout (the div with h-screen)
           const container = document.querySelector('[data-results-container] > div') as HTMLElement;
-          if (container) {
-            container.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
-          }
+          const mainElement = document.querySelector('[data-results-container] main') as HTMLElement;
           
-          // Also apply to body/html for better control
-          document.body.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
-          document.documentElement.style.overscrollBehaviorY = portrait ? 'contain' : 'auto';
+          if (portrait) {
+            // Portrait: prevent scroll completely
+            if (container) {
+              container.style.overflow = 'hidden';
+              container.style.touchAction = 'none';
+              container.style.overscrollBehavior = 'none';
+              container.style.height = '100vh';
+              container.style.position = 'fixed';
+              container.style.top = '0';
+              container.style.left = '0';
+              container.style.right = '0';
+              container.style.bottom = '0';
+            }
+            if (mainElement) {
+              mainElement.style.overflow = 'hidden';
+              mainElement.style.touchAction = 'none';
+              mainElement.style.overscrollBehavior = 'none';
+            }
+          } else {
+            // Landscape: allow normal scroll
+            if (container) {
+              container.style.overflow = '';
+              container.style.touchAction = '';
+              container.style.overscrollBehavior = '';
+              container.style.height = '';
+              container.style.position = '';
+              container.style.top = '';
+              container.style.left = '';
+              container.style.right = '';
+              container.style.bottom = '';
+            }
+            if (mainElement) {
+              mainElement.style.overflow = '';
+              mainElement.style.touchAction = '';
+              mainElement.style.overscrollBehavior = '';
+            }
+          }
         }, 100);
       };
       
@@ -55,9 +81,26 @@ export default function ResultsPage() {
         window.removeEventListener('resize', checkOrientation);
         window.removeEventListener('orientationchange', checkOrientation);
         
-        // Reset overscroll behavior on cleanup
-        document.body.style.overscrollBehaviorY = '';
-        document.documentElement.style.overscrollBehaviorY = '';
+        // Reset styles on cleanup
+        const container = document.querySelector('[data-results-container] > div') as HTMLElement;
+        const mainElement = document.querySelector('[data-results-container] main') as HTMLElement;
+        
+        if (container) {
+          container.style.overflow = '';
+          container.style.touchAction = '';
+          container.style.overscrollBehavior = '';
+          container.style.height = '';
+          container.style.position = '';
+          container.style.top = '';
+          container.style.left = '';
+          container.style.right = '';
+          container.style.bottom = '';
+        }
+        if (mainElement) {
+          mainElement.style.overflow = '';
+          mainElement.style.touchAction = '';
+          mainElement.style.overscrollBehavior = '';
+        }
       };
     }
   }, []);
