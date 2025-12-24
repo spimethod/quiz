@@ -103,27 +103,25 @@ export default function BeforeStartPage() {
             </div>
           </div>
 
+          {/* Continue Button */}
+          <div className="w-full px-2 mb-6">
+            <button
+              onClick={handleContinue}
+              onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
+              className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
+            >
+              Continue
+            </button>
+          </div>
+
           {/* Disclaimer */}
-          <div className="flex justify-center">
+          <div className="flex justify-center pb-6">
             <p className="text-xs sm:text-sm text-gray-500 leading-relaxed text-justify w-full px-2">
               Avocado provides helpful tools for managing stress and supporting your mental health. However, it's not a substitute for professional therapy. If you ever feel overwhelmed, please reach out to a licensed professional.
             </p>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="px-4 pb-6 pt-3 bg-[#f5f5f0]">
-        <div className="max-w-md mx-auto w-full flex justify-center">
-          <button
-            onClick={handleContinue}
-            onTouchEnd={(e) => { e.preventDefault(); handleContinue(); }}
-            className="w-full font-semibold text-lg py-3 px-8 rounded-xl transition-all duration-300 bg-[#6B9D47] hover:bg-[#5d8a3d] text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer select-none"
-          >
-            Continue
-          </button>
-        </div>
-      </footer>
     </div>
   );
 }
