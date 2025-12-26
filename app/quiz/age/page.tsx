@@ -13,7 +13,6 @@ export default function AgePage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
@@ -58,12 +57,12 @@ export default function AgePage() {
   //   }
   // }, [age, preferNotToSay]);
 
-  // NEW SIMPLE FUNCTION - JUST PERCENTAGE, NO CALCULATIONS
-  const updateProgressLine = useCallback((currentAge?: number) => {
-    if (!sliderRef.current || !lineRef.current) return;
+  // NEW APPROACH: Use CSS gradient on slider background itself
+  const updateSliderProgress = useCallback((currentAge?: number) => {
+    if (!sliderRef.current) return;
     
     if (preferNotToSay) {
-      lineRef.current.style.display = 'none';
+      sliderRef.current.style.setProperty('--slider-progress', '0%');
       return;
     }
     
@@ -72,41 +71,14 @@ export default function AgePage() {
     const max = 75;
     const percentage = ((ageValue - min) / (max - min)) * 100;
     
-    // Get slider dimensions
-    const sliderRect = sliderRef.current.getBoundingClientRect();
-    const container = sliderRef.current.parentElement;
-    if (!container) return;
-    
-    const containerRect = container.getBoundingClientRect();
-    const sliderWidth = sliderRect.width;
-    
-    // SIMPLEST: Just use percentage directly - browser handles thumb positioning
-    const lineWidth = (percentage / 100) * sliderWidth;
-    
-    // Position line on track (8px high, centered)
-    const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
-    
-    lineRef.current.style.display = 'block';
-    lineRef.current.style.top = `${trackTop}px`;
-    lineRef.current.style.left = '0px';
-    lineRef.current.style.width = `${lineWidth}px`;
+    // Set CSS variable - browser will handle thumb positioning automatically
+    sliderRef.current.style.setProperty('--slider-progress', `${percentage}%`);
   }, [age, preferNotToSay]);
 
-  // Update progress line on mount and when age/preferNotToSay changes
+  // Update slider progress CSS variable
   useEffect(() => {
-    const update = () => {
-      requestAnimationFrame(() => {
-        updateProgressLine();
-      });
-    };
-    
-    update();
-    window.addEventListener('resize', update);
-    
-    return () => {
-      window.removeEventListener('resize', update);
-    };
-  }, [age, preferNotToSay, updateProgressLine]);
+    updateSliderProgress();
+  }, [age, preferNotToSay, updateSliderProgress]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -156,7 +128,7 @@ export default function AgePage() {
           touch-action: pan-x !important;
           cursor: pointer;
           pointer-events: auto;
-          background: #d1d5db;
+          background: linear-gradient(to right, #6B9D47 0%, #6B9D47 var(--slider-progress, 0%), #d1d5db var(--slider-progress, 0%), #d1d5db 100%);
         }
         
         .slider::-webkit-slider-thumb {
@@ -262,16 +234,6 @@ export default function AgePage() {
               style={{ touchAction: 'pan-x' }}
             >
               <div className="px-2 relative">
-                {/* Green line overlay */}
-                {!preferNotToSay && (
-                  <div
-                    ref={lineRef}
-                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-[1]"
-                    style={{
-                      display: 'none'
-                    }}
-                  />
-                )}
                 <input
                   type="range"
                   min="16"
@@ -280,12 +242,12 @@ export default function AgePage() {
                   onChange={(e) => {
                     const newAge = Number(e.target.value);
                     setAge(newAge);
-                    updateProgressLine(newAge);
+                    updateSliderProgress(newAge);
                   }}
                   onInput={(e) => {
                     const newAge = Number((e.target as HTMLInputElement).value);
                     setAge(newAge);
-                    updateProgressLine(newAge);
+                    updateSliderProgress(newAge);
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
@@ -294,7 +256,7 @@ export default function AgePage() {
                     e.stopPropagation();
                     if (sliderRef.current) {
                       const currentValue = Number(sliderRef.current.value);
-                      updateProgressLine(currentValue);
+                      updateSliderProgress(currentValue);
                     }
                   }}
                   onMouseDown={(e) => {
@@ -305,7 +267,7 @@ export default function AgePage() {
                       e.stopPropagation();
                       if (sliderRef.current) {
                         const currentValue = Number(sliderRef.current.value);
-                        updateProgressLine(currentValue);
+                        updateSliderProgress(currentValue);
                       }
                     }
                   }}
