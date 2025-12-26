@@ -13,81 +13,32 @@ export default function AgePage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const trackBgRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
-  // Function to update line position - follows thumb in real-time
-  const updateLinePosition = useCallback((currentAge?: number) => {
+  // Function to update slider progress via CSS variable
+  const updateSliderProgress = useCallback((currentAge?: number) => {
     if (sliderRef.current) {
-      const slider = sliderRef.current;
-      const ageValue = currentAge !== undefined ? currentAge : age;
-      
-      // Get slider track position relative to parent container (px-2 div)
-      const sliderRect = slider.getBoundingClientRect();
-      const container = slider.parentElement; // This is the px-2 div
-      
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
-        // Track is 8px high, centered vertically in slider
-        const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
-        
-        // Update gray track background position
-        if (trackBgRef.current) {
-          trackBgRef.current.style.top = `${trackTop}px`;
-        }
-        
-        if (preferNotToSay) {
-          if (lineRef.current) {
-            lineRef.current.style.display = 'none';
-          }
-          return;
-        }
-        
-        if (lineRef.current) {
-          const line = lineRef.current;
-          const min = 16;
-          const max = 75;
-          const percentage = ((ageValue - min) / (max - min)) * 100;
-          
-          const sliderWidth = sliderRect.width;
-          // Range inputs position thumb center with padding to keep thumb within track bounds
-          // Adjusted padding value to ensure line aligns with thumb center at all positions
-          const thumbWidth = 44;
-          // Using slightly larger padding (24px) to account for browser's actual thumb positioning
-          const thumbPadding = 24; // Adjusted to match actual browser behavior
-          
-          // Thumb center ranges from thumbPadding to sliderWidth - thumbPadding
-          // This ensures at 100% the line reaches the thumb center at the right edge
-          const thumbCenterPosition = thumbPadding + (percentage / 100) * (sliderWidth - thumbPadding * 2);
-          
-          line.style.display = 'block';
-          line.style.top = `${trackTop}px`;
-          line.style.left = '0px';
-          line.style.width = `${thumbCenterPosition}px`;
-        }
+      if (preferNotToSay) {
+        sliderRef.current.style.setProperty('--progress', '0%');
+        return;
       }
+      const ageValue = currentAge !== undefined ? currentAge : age;
+      const min = 16;
+      const max = 75;
+      const percentage = ((ageValue - min) / (max - min)) * 100;
+      
+      // Set CSS variable for percentage - browser will handle thumb positioning
+      sliderRef.current.style.setProperty('--progress', `${percentage}%`);
     }
   }, [age, preferNotToSay]);
 
-  // Update line position on mount and when age/preferNotToSay changes
+  // Update slider progress on mount and when age/preferNotToSay changes
   useEffect(() => {
-    const update = () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          updateLinePosition();
-        });
-      });
-    };
-    
-    update();
-    window.addEventListener('resize', update);
-    
-    return () => {
-      window.removeEventListener('resize', update);
-    };
-  }, [age, preferNotToSay, updateLinePosition]);
+    if (!preferNotToSay) {
+      updateSliderProgress();
+    }
+  }, [age, preferNotToSay, updateSliderProgress]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -137,6 +88,7 @@ export default function AgePage() {
           touch-action: pan-x !important;
           cursor: pointer;
           pointer-events: auto;
+          background: linear-gradient(to right, #6B9D47 0%, #6B9D47 var(--progress, 0%), #d1d5db var(--progress, 0%), #d1d5db 100%);
         }
         
         .slider::-webkit-slider-thumb {
@@ -172,6 +124,7 @@ export default function AgePage() {
 
         .slider:disabled {
           cursor: not-allowed;
+          background: #d1d5db !important;
         }
       `}</style>
 
@@ -241,38 +194,20 @@ export default function AgePage() {
               style={{ touchAction: 'pan-x' }}
             >
               <div className="px-2 relative">
-                {/* Gray track background */}
-                <div 
-                  ref={trackBgRef}
-                  className="absolute h-[8px] bg-[#d1d5db] rounded-[4px] w-full pointer-events-none z-0 left-0"
-                  style={{
-                    display: 'block'
-                  }}
-                />
-                {/* Green line overlay that follows thumb - positioned exactly on track */}
-                {!preferNotToSay && (
-                  <div
-                    ref={lineRef}
-                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-[1]"
-                    style={{
-                      display: 'none'
-                    }}
-                  />
-                )}
-              <input
-                type="range"
-                min="16"
-                max="75"
-                value={age}
+                <input
+                  type="range"
+                  min="16"
+                  max="75"
+                  value={age}
                   onChange={(e) => {
                     const newAge = Number(e.target.value);
                     setAge(newAge);
-                    requestAnimationFrame(() => updateLinePosition(newAge));
+                    updateSliderProgress(newAge);
                   }}
                   onInput={(e) => {
                     const newAge = Number((e.target as HTMLInputElement).value);
                     setAge(newAge);
-                    requestAnimationFrame(() => updateLinePosition(newAge));
+                    updateSliderProgress(newAge);
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
@@ -281,7 +216,7 @@ export default function AgePage() {
                     e.stopPropagation();
                     if (sliderRef.current) {
                       const currentValue = Number(sliderRef.current.value);
-                      requestAnimationFrame(() => updateLinePosition(currentValue));
+                      updateSliderProgress(currentValue);
                     }
                   }}
                   onMouseDown={(e) => {
@@ -292,15 +227,14 @@ export default function AgePage() {
                       e.stopPropagation();
                       if (sliderRef.current) {
                         const currentValue = Number(sliderRef.current.value);
-                        requestAnimationFrame(() => updateLinePosition(currentValue));
+                        updateSliderProgress(currentValue);
                       }
                     }
                   }}
-                disabled={preferNotToSay}
+                  disabled={preferNotToSay}
                   className="slider relative z-10"
                   ref={sliderRef}
-                style={{
-                    background: 'transparent',
+                  style={{
                     touchAction: 'pan-x',
                     WebkitTouchCallout: 'none',
                     WebkitUserSelect: 'none',
