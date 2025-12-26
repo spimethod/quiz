@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
+import { useVoiceRecorder } from '../../utils/useVoiceRecorder';
 
 // Total steps before email capture
 const TOTAL_STEPS = 12;
@@ -22,9 +23,19 @@ export default function MainGoalPage() {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
   const [customValue, setCustomValue] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
+
+  // Voice recorder hook
+  const { 
+    isRecording, 
+    isProcessing, 
+    startRecording, 
+    stopRecording, 
+    error: recorderError 
+  } = useVoiceRecorder((text) => {
+    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+  });
 
   const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -36,11 +47,13 @@ export default function MainGoalPage() {
     setSelectedGoal(optionId);
     // Текст в кастомном поле сохраняется, но не используется при выборе другой опции
     setIsExpanded(false); // Закрыть кастомное поле
-    setIsRecording(false);
+    if (isRecording) {
+      stopRecording();
+    }
     setShouldAutoFocus(false);
   };
 
-  const handleCustomSelect = ({
+  const handleCustomSelect = async ({
     autoFocus = true,
     startRecording = false,
   }: {
@@ -50,19 +63,27 @@ export default function MainGoalPage() {
     setSelectedGoal('custom');
     setIsExpanded(true);
     setShouldAutoFocus(autoFocus);
-    setIsRecording(startRecording);
+    if (startRecording) {
+      await startRecording();
+    }
   };
 
   const handleAddCustom = () => {
     if (customValue.trim()) {
       // Оставляем поле открытым, выбор уже на custom
-      setIsRecording(false);
+      if (isRecording) {
+        stopRecording();
+      }
       setShouldAutoFocus(false);
     }
   };
 
-  const handleMicClick = () => {
-    setIsRecording(!isRecording);
+  const handleMicClick = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
   };
 
   const handleContinue = () => {
@@ -287,25 +308,33 @@ export default function MainGoalPage() {
                 value={customValue}
                 onChange={(e) => {
                   setCustomValue(e.target.value);
-                  if (isRecording) setIsRecording(false);
                 }}
                 onFocus={(e) => {
                   // Prevent zoom on iOS
                   if (e.target instanceof HTMLTextAreaElement) {
                     e.target.style.fontSize = '16px';
                   }
-                  if (isRecording) setIsRecording(false);
                 }}
-                placeholder={isRecording ? "Speak please..." : "Type please..."}
+                placeholder={
+                  isProcessing 
+                    ? "Processing..." 
+                    : isRecording 
+                    ? "Speak please..." 
+                    : "Type please..."
+                }
                 className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
                 style={{ fontSize: '16px' }}
+                disabled={isProcessing}
               />
               {/* Microphone button - top right corner */}
               <button
                 onClick={handleMicClick}
+                disabled={isProcessing}
                 className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                  isRecording 
+                  isProcessing
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : isRecording 
                     ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                     : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
                 }`}
@@ -326,6 +355,12 @@ export default function MainGoalPage() {
                 </svg>
               </button>
             </div>
+            {/* Error message */}
+            {recorderError && (
+              <div className="mt-2 text-sm text-red-500 text-center">
+                {recorderError}
+              </div>
+            )}
           )}
         </div>
 

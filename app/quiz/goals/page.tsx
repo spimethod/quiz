@@ -4,16 +4,27 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QuizLayout from '../../components/QuizLayout';
+import { useVoiceRecorder } from '../../utils/useVoiceRecorder';
 
 export default function GoalsPage() {
   const router = useRouter();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [customValue, setCustomValue] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Voice recorder hook
+  const { 
+    isRecording, 
+    isProcessing, 
+    startRecording, 
+    stopRecording, 
+    error: recorderError 
+  } = useVoiceRecorder((text) => {
+    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+  });
   const CURRENT_STEP = 23;
   const TOTAL_STEPS = 32;
 
@@ -50,7 +61,9 @@ export default function GoalsPage() {
       setSelectedOptions([...selectedOptions, customValue.trim()]);
       setCustomValue('');
       setIsExpanded(false);
-      setIsRecording(false);
+      if (isRecording) {
+        stopRecording();
+      }
       setShouldAutoFocus(false);
       // Scroll to Continue button after closing
       setTimeout(() => {
@@ -71,8 +84,12 @@ export default function GoalsPage() {
     }
   };
 
-  const handleMicClick = () => {
-    setIsRecording(!isRecording);
+  const handleMicClick = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
   };
 
   const handleContinue = () => {
@@ -99,11 +116,13 @@ export default function GoalsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       // Check if clicked on an option button
       const clickedOption = (target as HTMLElement).closest?.('[data-option]');
-      if (!clickedInsideInput && !clickedContinue && !clickedOption) {
-        setIsExpanded(false);
-        setIsRecording(false);
-        setShouldAutoFocus(false);
-      }
+        if (!clickedInsideInput && !clickedContinue && !clickedOption) {
+          setIsExpanded(false);
+          if (isRecording) {
+            stopRecording();
+          }
+          setShouldAutoFocus(false);
+        }
     };
 
     if (isExpanded) {
@@ -112,7 +131,7 @@ export default function GoalsPage() {
         document.removeEventListener('click', handleClickOutside);
       };
     }
-  }, [isExpanded]);
+  }, [isExpanded, isRecording, stopRecording]);
 
   // Hide footer when expanded
   useEffect(() => {
@@ -128,7 +147,7 @@ export default function GoalsPage() {
     return () => {
       footer.style.display = '';
     };
-  }, [isExpanded]);
+  }, [isExpanded, isRecording, stopRecording]);
 
   // Simple scroll: just scroll input container to top of screen when expanded
   useEffect(() => {
@@ -162,7 +181,7 @@ export default function GoalsPage() {
     }
 
     return () => clearTimeout(timeoutId);
-  }, [isExpanded]);
+  }, [isExpanded, isRecording, stopRecording]);
 
   // Reduce padding under Continue button when keyboard is open
   useEffect(() => {
@@ -336,21 +355,19 @@ export default function GoalsPage() {
                   }
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  setIsRecording(false);
                 }}
                 onClick={() => {
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  setIsRecording(false);
                 }}
                 placeholder="+ Add Your Own"
                 className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
                 style={{ fontSize: '16px' }}
               />
               <button
-                onClick={() => {
+                onClick={async () => {
                   setIsExpanded(true);
-                  setIsRecording(true);
+                  await startRecording();
                   setShouldAutoFocus(false);
                 }}
                 className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold transition-all shadow-sm hover:shadow-md flex-shrink-0"
@@ -365,19 +382,24 @@ export default function GoalsPage() {
                 value={customValue}
                 onChange={(e) => {
                   setCustomValue(e.target.value);
-                  if (isRecording) setIsRecording(false);
                 }}
                 onFocus={(e) => {
                   // Prevent zoom on iOS
                   if (e.target instanceof HTMLTextAreaElement) {
                     e.target.style.fontSize = '16px';
                   }
-                  if (isRecording) setIsRecording(false);
                 }}
-                placeholder={isRecording ? "Speak please..." : "Type please..."}
+                placeholder={
+                  isProcessing 
+                    ? "Processing..." 
+                    : isRecording 
+                    ? "Speak please..." 
+                    : "Type please..."
+                }
                 className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
                 style={{ fontSize: '16px' }}
+                disabled={isProcessing}
               />
               {/* Microphone button - top right corner */}
               <button
@@ -404,6 +426,12 @@ export default function GoalsPage() {
                 </svg>
               </button>
             </div>
+            {/* Error message */}
+            {recorderError && (
+              <div className="mt-2 text-sm text-red-500 text-center">
+                {recorderError}
+              </div>
+            )}
           )}
         </div>
         </div>

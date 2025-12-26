@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BackButton from '../../components/BackButton';
 import { getProgressPercentage } from '../../utils/progress';
+import { useVoiceRecorder } from '../../utils/useVoiceRecorder';
 
 export default function PsychiatricConditionsPage() {
   const router = useRouter();
@@ -12,13 +13,23 @@ export default function PsychiatricConditionsPage() {
   const mainRef = useRef<HTMLElement>(null);
   const [showInput, setShowInput] = useState(false);
   const [customValue, setCustomValue] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const [selectedButton, setSelectedButton] = useState<'yes' | 'no' | null>(null);
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
   const CURRENT_STEP = 19;
   const TOTAL_STEPS = 32;
+
+  // Voice recorder hook
+  const { 
+    isRecording, 
+    isProcessing, 
+    startRecording, 
+    stopRecording, 
+    error: recorderError 
+  } = useVoiceRecorder((text) => {
+    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+  });
 
   const handleNo = () => {
     setSelectedButton('no');
@@ -39,8 +50,12 @@ export default function PsychiatricConditionsPage() {
     }, 300);
   };
 
-  const handleMicClick = () => {
-    setIsRecording(!isRecording);
+  const handleMicClick = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
   };
 
   const handleContinue = () => {
@@ -61,7 +76,9 @@ export default function PsychiatricConditionsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       if (!clickedInsideInput && !clickedContinue) {
         setShowInput(false);
-        setIsRecording(false);
+        if (isRecording) {
+          stopRecording();
+        }
         setShouldAutoFocus(false);
       }
     };
@@ -221,24 +238,32 @@ export default function PsychiatricConditionsPage() {
                   value={customValue}
                   onChange={(e) => {
                     setCustomValue(e.target.value);
-                    if (isRecording) setIsRecording(false);
                   }}
                   onFocus={(e) => {
                     if (e.target instanceof HTMLTextAreaElement) {
                       e.target.style.fontSize = '16px';
                     }
-                    if (isRecording) setIsRecording(false);
                   }}
-                  placeholder={isRecording ? "Speak please..." : "Tell us about your conditions..."}
+                  placeholder={
+                    isProcessing 
+                      ? "Processing..." 
+                      : isRecording 
+                      ? "Speak please..." 
+                      : "Tell us about your conditions..."
+                  }
                   className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                   autoFocus={shouldAutoFocus}
                   style={{ fontSize: '16px' }}
+                  disabled={isProcessing}
                 />
                 {/* Microphone button */}
                 <button
                   onClick={handleMicClick}
+                  disabled={isProcessing}
                   className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                    isRecording 
+                    isProcessing
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : isRecording 
                       ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                       : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
                   }`}
@@ -259,6 +284,12 @@ export default function PsychiatricConditionsPage() {
                   </svg>
                 </button>
               </div>
+              {/* Error message */}
+              {recorderError && (
+                <div className="mt-2 text-sm text-red-500 text-center">
+                  {recorderError}
+                </div>
+              )}
             </div>
           )}
         </div>

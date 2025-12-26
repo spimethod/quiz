@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BackButton from '../../components/BackButton';
 import { getProgressPercentage } from '../../utils/progress';
+import { useVoiceRecorder } from '../../utils/useVoiceRecorder';
 
 // Total steps before email capture
 const TOTAL_STEPS = 12;
@@ -28,10 +29,20 @@ export default function FeelingsPage() {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [customValue, setCustomValue] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const customInputRef = useRef<HTMLDivElement>(null);
   const continueBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Voice recorder hook
+  const { 
+    isRecording, 
+    isProcessing, 
+    startRecording, 
+    stopRecording, 
+    error: recorderError 
+  } = useVoiceRecorder((text) => {
+    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+  });
 
   const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -53,14 +64,19 @@ export default function FeelingsPage() {
     if (customValue.trim()) {
       setSelectedOptions([...selectedOptions, customValue.trim()]);
       setCustomValue('');
-      setIsRecording(false);
+      if (isRecording) {
+        stopRecording();
+      }
       setShouldAutoFocus(false);
     }
   };
 
-  const handleMicClick = () => {
-    setIsRecording(!isRecording);
-    // Здесь будет логика голосового ввода
+  const handleMicClick = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
   };
 
   const handleContinue = () => {
@@ -83,7 +99,9 @@ export default function FeelingsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       if (!clickedInsideInput && !clickedContinue) {
         setIsExpanded(false);
-        setIsRecording(false);
+        if (isRecording) {
+          stopRecording();
+        }
         setShouldAutoFocus(false);
       }
     };
@@ -94,7 +112,7 @@ export default function FeelingsPage() {
         document.removeEventListener('click', handleClickOutside);
       };
     }
-  }, [isExpanded]);
+  }, [isExpanded, isRecording, stopRecording]);
 
   // Scroll to bottom on initial load (when no options selected) - guaranteed approach
   useEffect(() => {
@@ -522,21 +540,19 @@ export default function FeelingsPage() {
                   }
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  setIsRecording(false);
                 }}
                 onClick={() => {
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
-                  setIsRecording(false);
                 }}
                   placeholder="+ Add Your Own"
                   className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
                   style={{ fontSize: '16px' }}
                 />
                 <button
-                onClick={() => {
+                onClick={async () => {
                   setIsExpanded(true);
-                  setIsRecording(true);
+                  await startRecording();
                   setShouldAutoFocus(false);
                   }}
                   className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold transition-all shadow-sm hover:shadow-md flex-shrink-0"
@@ -551,25 +567,33 @@ export default function FeelingsPage() {
                   value={customValue}
                   onChange={(e) => {
                     setCustomValue(e.target.value);
-                    if (isRecording) setIsRecording(false);
                   }}
                 onFocus={(e) => {
                   // Prevent zoom on iOS
                   if (e.target instanceof HTMLTextAreaElement) {
                     e.target.style.fontSize = '16px';
                   }
-                  if (isRecording) setIsRecording(false);
                 }}
-                  placeholder={isRecording ? "Speak please..." : "Type please..."}
+                  placeholder={
+                    isProcessing 
+                      ? "Processing..." 
+                      : isRecording 
+                      ? "Speak please..." 
+                      : "Type please..."
+                  }
                   className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                 autoFocus={shouldAutoFocus}
                 style={{ fontSize: '16px' }}
+                disabled={isProcessing}
                 />
                 {/* Microphone button - top right corner */}
                 <button
                   onClick={handleMicClick}
+                  disabled={isProcessing}
                   className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                    isRecording 
+                    isProcessing
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : isRecording 
                       ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                       : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
                   }`}
