@@ -614,15 +614,18 @@ export default function FeelingsPage() {
             )}
             {/* Clear button */}
             {isExpanded && customValue.trim() && (
-              <div className="mt-2 flex justify-center">
+              <div className="mt-3 flex justify-center">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setCustomValue('');
                     clearTranscription();
                   }}
-                  className="text-xs text-gray-500 hover:text-gray-700 underline"
+                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95"
+                  style={{ touchAction: 'manipulation' }}
                 >
-                  clear
+                  Clear
                 </button>
               </div>
             )}
