@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const audioBlobForAPI = new Blob([audioBlob], { type: audioFile.type || 'audio/webm' });
     openAIFormData.append('file', audioBlobForAPI, audioFile.name || 'audio.webm');
     openAIFormData.append('model', 'whisper-1');
-    openAIFormData.append('language', 'en'); // Можно сделать динамическим если нужны другие языки
+    // Язык определяется автоматически Whisper
 
     // Call OpenAI Whisper API
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {

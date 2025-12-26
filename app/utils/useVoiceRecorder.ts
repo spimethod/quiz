@@ -8,6 +8,14 @@ interface UseVoiceRecorderReturn {
   error: string | null;
 }
 
+// Типы для Web Speech API
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 export function useVoiceRecorder(
   onTranscription: (text: string) => void
 ): UseVoiceRecorderReturn {
@@ -15,14 +23,84 @@ export function useVoiceRecorder(
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const realtimeTextRef = useRef<string>('');
+  const streamRef = useRef<MediaStream | null>(null);
 
   const startRecording = useCallback(async () => {
     try {
       setError(null);
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      realtimeTextRef.current = '';
       
-      // Use WebM format for better browser support
+      // Проверяем поддержку Web Speech API
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        // Fallback на старый способ, если Web Speech API не поддерживается
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
+        
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: MediaRecorder.isTypeSupported('audio/webm') 
+            ? 'audio/webm' 
+            : MediaRecorder.isTypeSupported('audio/mp4')
+            ? 'audio/mp4'
+            : 'audio/ogg'
+        });
+
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = async () => {
+          stream.getTracks().forEach(track => track.stop());
+          
+          const audioBlob = new Blob(audioChunksRef.current, { 
+            type: mediaRecorder.mimeType 
+          });
+          
+          setIsProcessing(true);
+          try {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+
+            const response = await fetch('/api/transcribe', {
+              method: 'POST',
+              body: formData,
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to transcribe audio');
+            }
+
+            const data = await response.json();
+            if (data.text) {
+              onTranscription(data.text);
+            }
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to transcribe audio');
+            console.error('Transcription error:', err);
+          } finally {
+            setIsProcessing(false);
+          }
+        };
+
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.start();
+        setIsRecording(true);
+        return;
+      }
+
+      // Получаем доступ к микрофону
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      
+      // Настраиваем MediaRecorder для записи (для финальной обработки через Whisper)
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: MediaRecorder.isTypeSupported('audio/webm') 
           ? 'audio/webm' 
@@ -40,17 +118,15 @@ export function useVoiceRecorder(
       };
 
       mediaRecorder.onstop = async () => {
-        // Stop all tracks to release microphone
         stream.getTracks().forEach(track => track.stop());
         
-        // Create audio blob
-        const audioBlob = new Blob(audioChunksRef.current, { 
-          type: mediaRecorder.mimeType 
-        });
-        
-        // Send to server for transcription
+        // Отправляем на Whisper для финальной обработки
         setIsProcessing(true);
         try {
+          const audioBlob = new Blob(audioChunksRef.current, { 
+            type: mediaRecorder.mimeType 
+          });
+          
           const formData = new FormData();
           formData.append('audio', audioBlob, 'recording.webm');
 
@@ -66,7 +142,17 @@ export function useVoiceRecorder(
 
           const data = await response.json();
           if (data.text) {
-            onTranscription(data.text);
+            // Используем финальный результат от Whisper только если real-time текст был очень коротким
+            // или пустым (fallback если Web Speech API не сработал)
+            const finalText = data.text.trim();
+            const realtimeText = realtimeTextRef.current.trim();
+            
+            // Заменяем только если real-time текст был очень коротким (меньше 3 слов)
+            // Это означает, что Web Speech API не смог нормально распознать речь
+            if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
+              onTranscription(finalText);
+            }
+            // Иначе оставляем real-time текст - он уже был показан пользователю
           }
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Failed to transcribe audio');
@@ -77,21 +163,89 @@ export function useVoiceRecorder(
       };
 
       mediaRecorderRef.current = mediaRecorder;
+
+      // Настраиваем SpeechRecognition для real-time транскрипции
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = ''; // Автоопределение языка
+
+      recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        // Обновляем текст в реальном времени
+        if (finalTranscript) {
+          realtimeTextRef.current += finalTranscript;
+          onTranscription(realtimeTextRef.current.trim() + (interimTranscript ? ' ' + interimTranscript : ''));
+        } else if (interimTranscript) {
+          // Показываем промежуточный текст
+          onTranscription(realtimeTextRef.current.trim() + ' ' + interimTranscript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        if (event.error !== 'no-speech') {
+          setError(`Speech recognition error: ${event.error}`);
+        }
+      };
+
+      recognition.onend = () => {
+        // Если запись все еще идет, перезапускаем recognition
+        if (isRecording && mediaRecorderRef.current?.state === 'recording') {
+          try {
+            recognition.start();
+          } catch (e) {
+            // Игнорируем ошибки перезапуска
+          }
+        }
+      };
+
+      recognitionRef.current = recognition;
+      
+      // Запускаем оба процесса
+      recognition.start();
       mediaRecorder.start();
       setIsRecording(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to access microphone');
       console.error('Recording error:', err);
     }
-  }, [onTranscription]);
+  }, [onTranscription, isRecording]);
 
   const stopRecording = useCallback(async (): Promise<string | null> => {
+    // Останавливаем SpeechRecognition
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        // Игнорируем ошибки
+      }
+      recognitionRef.current = null;
+    }
+
+    // Останавливаем MediaRecorder (обработка через Whisper произойдет в onstop)
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      // The transcription will be handled in onstop callback
-      return null;
     }
+
+    // Останавливаем поток
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+
     return null;
   }, [isRecording]);
 
@@ -103,4 +257,3 @@ export function useVoiceRecorder(
     error,
   };
 }
-
