@@ -16,6 +16,41 @@ declare global {
   }
 }
 
+// Функция для правильной расстановки заглавных букв
+function formatTextWithCapitalization(text: string): string {
+  if (!text) return text;
+  
+  // Приводим весь текст к нижнему регистру сначала
+  let lowerText = text.toLowerCase();
+  let result = '';
+  let shouldCapitalize = true;
+  
+  for (let i = 0; i < lowerText.length; i++) {
+    const char = lowerText[i];
+    const prevChar = i > 0 ? lowerText[i - 1] : '';
+    const prevPrevChar = i > 1 ? lowerText[i - 2] : '';
+    
+    // Если это начало или после точки/восклицательного/вопросительного знака + пробел
+    if (shouldCapitalize && /[а-яa-z]/.test(char)) {
+      result += char.toUpperCase();
+      shouldCapitalize = false;
+    } else {
+      result += char;
+    }
+    
+    // После точки, восклицательного или вопросительного знака (и опционально пробела) следующую букву делаем заглавной
+    if ((char === '.' || char === '!' || char === '?') && (prevPrevChar !== '.' || prevChar !== '.')) {
+      shouldCapitalize = true;
+    }
+    // Если после знака препинания идет пробел, следующую букву тоже делаем заглавной
+    if (shouldCapitalize && char === ' ') {
+      // Продолжаем искать следующую букву для заглавной
+    }
+  }
+  
+  return result;
+}
+
 export function useVoiceRecorder(
   onTranscription: (text: string) => void
 ): UseVoiceRecorderReturn {
@@ -189,13 +224,17 @@ export function useVoiceRecorder(
 
         // Обновляем текст в реальном времени
         if (newFinalText) {
-          // Добавляем только новый финальный текст
-          realtimeTextRef.current += newFinalText;
-          // Передаем полный текст (включая накопленный) для замены в компоненте
-          onTranscription(realtimeTextRef.current.trim() + (interimTranscript ? ' ' + interimTranscript : ''));
+          // Добавляем новый финальный текст (приводим к нижнему регистру, чтобы убрать автоматические заглавные)
+          // Проверяем, нужно ли добавить пробел перед новым текстом
+          const needsSpace = realtimeTextRef.current && !realtimeTextRef.current.match(/\s$/);
+          realtimeTextRef.current += (needsSpace ? ' ' : '') + newFinalText.trim().toLowerCase() + ' ';
+          // Форматируем весь текст с правильными заглавными буквами
+          const fullText = realtimeTextRef.current.trim() + (interimTranscript ? ' ' + interimTranscript.toLowerCase() : '');
+          onTranscription(formatTextWithCapitalization(fullText));
         } else if (interimTranscript) {
-          // Для interim текста показываем накопленный + текущий interim
-          onTranscription(realtimeTextRef.current.trim() + ' ' + interimTranscript);
+          // Для interim текста показываем накопленный + текущий interim (в нижнем регистре)
+          const fullText = realtimeTextRef.current.trim() + ' ' + interimTranscript.toLowerCase();
+          onTranscription(formatTextWithCapitalization(fullText));
         }
       };
 

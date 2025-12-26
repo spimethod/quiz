@@ -282,14 +282,16 @@ export default function PsychiatricConditionsPage() {
                 </button>
               </div>
               {/* Clear button */}
-              <div className="mt-2 flex justify-center">
-                <button
-                  onClick={() => setCustomValue('')}
-                  className="text-xs text-gray-500 hover:text-gray-700 underline"
-                >
-                  clear
-                </button>
-              </div>
+              {customValue.trim() && (
+                <div className="mt-2 flex justify-center">
+                  <button
+                    onClick={() => setCustomValue('')}
+                    className="text-xs text-gray-500 hover:text-gray-700 underline"
+                  >
+                    clear
+                  </button>
+                </div>
+              )}
               {/* Error message */}
               {recorderError && (
                 <div className="mt-2 text-sm text-red-500 text-center">

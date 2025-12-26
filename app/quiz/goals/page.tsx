@@ -428,7 +428,7 @@ export default function GoalsPage() {
             </div>
           )}
           {/* Clear button */}
-          {isExpanded && (
+          {isExpanded && customValue.trim() && (
             <div className="mt-2 flex justify-center">
               <button
                 onClick={() => setCustomValue('')}
