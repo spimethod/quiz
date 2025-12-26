@@ -117,8 +117,8 @@ export default function GoalsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       // Check if clicked on an option button
       const clickedOption = (target as HTMLElement).closest?.('[data-option]');
-      // Check if clicked on Clear button (it's inside the input container)
-      const clickedClear = (target as HTMLElement).closest?.('button')?.textContent?.trim() === 'Clear';
+      // Check if clicked on Clear button
+      const clickedClear = (target as HTMLElement).closest?.('[data-clear-button]');
         if (!clickedInsideInput && !clickedContinue && !clickedOption && !clickedClear) {
           setIsExpanded(false);
           if (isRecording) {
@@ -431,6 +431,7 @@ export default function GoalsPage() {
               {/* Clear button - inside field, below microphone */}
               {customValue.trim() && (
                 <button
+                  data-clear-button
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

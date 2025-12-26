@@ -354,6 +354,7 @@ export default function MainGoalPage() {
               {/* Clear button - inside field, below microphone */}
               {customValue.trim() && (
                 <button
+                  data-clear-button
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

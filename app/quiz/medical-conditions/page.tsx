@@ -75,8 +75,8 @@ export default function MedicalConditionsPage() {
       const target = event.target as Node;
       const clickedInsideInput = customInputRef.current?.contains(target);
       const clickedContinue = continueBtnRef.current?.contains(target);
-      // Check if clicked on Clear button (it's inside the input container)
-      const clickedClear = (target as HTMLElement).closest?.('button')?.textContent?.trim() === 'Clear';
+      // Check if clicked on Clear button
+      const clickedClear = (target as HTMLElement).closest?.('[data-clear-button]');
       if (!clickedInsideInput && !clickedContinue && !clickedClear) {
         setShowInput(false);
         if (isRecording) {
@@ -285,6 +285,7 @@ export default function MedicalConditionsPage() {
                 {/* Clear button - inside field, below microphone */}
                 {customValue.trim() && (
                   <button
+                    data-clear-button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
