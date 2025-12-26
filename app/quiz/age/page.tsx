@@ -15,32 +15,36 @@ export default function AgePage() {
   const sliderRef = useRef<HTMLInputElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
-  const [sliderWidth, setSliderWidth] = useState(400); // Default width
+  const [thumbPosition, setThumbPosition] = useState(0); // Position in pixels
 
-  // Calculate gradient percentage accounting for thumb center
-  const getGradientPercentage = () => {
-    if (preferNotToSay) return 0;
-    const percentage = ((age - 16) / (75 - 16)) * 100;
-    // Thumb is 44px wide, adjust to reach its center
-    const thumbWidthPercent = (44 / sliderWidth) * 100;
-    return Math.min(100, percentage + (thumbWidthPercent / 2));
-  };
-
-  // Update slider width on mount and resize
+  // Calculate thumb position based on age value
   useEffect(() => {
-    const updateSliderWidth = () => {
-      if (sliderRef.current) {
-        setSliderWidth(sliderRef.current.offsetWidth);
+    const updateThumbPosition = () => {
+      if (sliderRef.current && !preferNotToSay) {
+        const slider = sliderRef.current;
+        const min = 16;
+        const max = 75;
+        const percentage = ((age - min) / (max - min)) * 100;
+        const sliderWidth = slider.offsetWidth;
+        // Calculate position of thumb center (accounting for padding px-2 = 8px on each side)
+        const thumbCenterPosition = (percentage / 100) * sliderWidth;
+        setThumbPosition(thumbCenterPosition);
+      } else {
+        setThumbPosition(0);
       }
     };
     
-    updateSliderWidth();
-    window.addEventListener('resize', updateSliderWidth);
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      updateThumbPosition();
+    });
+    
+    window.addEventListener('resize', updateThumbPosition);
     
     return () => {
-      window.removeEventListener('resize', updateSliderWidth);
+      window.removeEventListener('resize', updateThumbPosition);
     };
-  }, []);
+  }, [age, preferNotToSay]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -189,7 +193,22 @@ export default function AgePage() {
             </div>
 
             {/* Slider - 44px touch area, 20px visual thumb */}
-            <div className="px-2 py-5" style={{ touchAction: 'pan-x' }}>
+            <div 
+              className="px-2 py-5 relative" 
+              style={{ touchAction: 'pan-x' }}
+            >
+              {/* Green line overlay that follows thumb */}
+              {!preferNotToSay && thumbPosition > 0 && (
+                <div
+                  className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
+                  style={{
+                    top: 'calc(50% + 18px)',
+                    left: '8px',
+                    width: `${thumbPosition}px`,
+                    maxWidth: 'calc(100% - 16px)'
+                  }}
+                />
+              )}
               <input
                 type="range"
                 min="16"
@@ -212,12 +231,10 @@ export default function AgePage() {
                   }
                 }}
                 disabled={preferNotToSay}
-                className="slider"
+                className="slider relative z-10"
                 ref={sliderRef}
                 style={{
-                  background: preferNotToSay 
-                    ? '#d1d5db' 
-                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${getGradientPercentage()}%, #d1d5db ${getGradientPercentage()}%, #d1d5db 100%)`,
+                  background: '#d1d5db',
                   touchAction: 'pan-x',
                   WebkitTouchCallout: 'none',
                   WebkitUserSelect: 'none',
