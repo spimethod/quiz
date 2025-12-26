@@ -163,6 +163,12 @@ export function useVoiceRecorder(
       mediaRecorder.onstop = async () => {
         stream.getTracks().forEach(track => track.stop());
         
+        // Если текст был очищен, НЕ делаем ничего - полностью игнорируем обработку
+        if (wasClearedRef.current) {
+          setIsProcessing(false);
+          return; // Выходим полностью без обработки Whisper
+        }
+        
         // Отправляем на Whisper для финальной обработки
         setIsProcessing(true);
         try {
@@ -185,15 +191,13 @@ export function useVoiceRecorder(
 
           const data = await response.json();
           if (data.text) {
-            // Используем финальный результат от Whisper только если real-time текст был очень коротким
-            // и НЕ был очищен во время записи (fallback если Web Speech API не сработал)
-            const finalText = data.text.trim();
-            const realtimeText = realtimeTextRef.current.trim();
-            
-            // Если текст был очищен во время записи, НЕ используем Whisper вообще
+            // Проверяем еще раз флаг очистки (на случай если очистка произошла во время обработки)
             if (wasClearedRef.current) {
               return; // Выходим без вызова onTranscription
             }
+            
+            const finalText = data.text.trim();
+            const realtimeText = realtimeTextRef.current.trim();
             
             // Проверяем, что Whisper вернул не мусорный текст (не пустой, не очень короткий мусор)
             // Типичные мусорные результаты Whisper: ".", "Thanks for watching!", "[Music]", "[Silence]" и т.д.
