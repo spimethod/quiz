@@ -117,7 +117,9 @@ export default function GoalsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       // Check if clicked on an option button
       const clickedOption = (target as HTMLElement).closest?.('[data-option]');
-        if (!clickedInsideInput && !clickedContinue && !clickedOption) {
+      // Check if clicked on Clear button (it's inside the input container)
+      const clickedClear = (target as HTMLElement).closest?.('button')?.textContent?.trim() === 'Clear';
+        if (!clickedInsideInput && !clickedContinue && !clickedOption && !clickedClear) {
           setIsExpanded(false);
           if (isRecording) {
             stopRecording();

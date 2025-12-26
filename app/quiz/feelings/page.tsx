@@ -98,7 +98,9 @@ export default function FeelingsPage() {
       const target = event.target as Node;
       const clickedInsideInput = customInputRef.current?.contains(target);
       const clickedContinue = continueBtnRef.current?.contains(target);
-      if (!clickedInsideInput && !clickedContinue) {
+      // Check if clicked on Clear button (it's inside the input container)
+      const clickedClear = (target as HTMLElement).closest?.('button')?.textContent?.trim() === 'Clear';
+      if (!clickedInsideInput && !clickedContinue && !clickedClear) {
         setIsExpanded(false);
         if (isRecording) {
           stopRecording();
