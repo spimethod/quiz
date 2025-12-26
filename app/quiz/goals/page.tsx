@@ -426,12 +426,12 @@ export default function GoalsPage() {
                 </svg>
               </button>
             </div>
-            {/* Error message */}
-            {recorderError && (
-              <div className="mt-2 text-sm text-red-500 text-center">
-                {recorderError}
-              </div>
-            )}
+          )}
+          {/* Error message */}
+          {recorderError && (
+            <div className="mt-2 text-sm text-red-500 text-center">
+              {recorderError}
+            </div>
           )}
         </div>
         </div>
