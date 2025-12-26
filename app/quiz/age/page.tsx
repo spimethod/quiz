@@ -57,7 +57,7 @@ export default function AgePage() {
   //   }
   // }, [age, preferNotToSay]);
 
-  // NEW APPROACH: Use CSS gradient on slider background itself
+  // NEW APPROACH: Use CSS gradient on slider background itself, calculated to reach thumb center
   const updateSliderProgress = useCallback((currentAge?: number) => {
     if (!sliderRef.current) return;
     
@@ -69,10 +69,26 @@ export default function AgePage() {
     const ageValue = currentAge !== undefined ? currentAge : age;
     const min = 16;
     const max = 75;
-    const percentage = ((ageValue - min) / (max - min)) * 100;
+    const rawPercentage = ((ageValue - min) / (max - min)) * 100;
     
-    // Set CSS variable - browser will handle thumb positioning automatically
-    sliderRef.current.style.setProperty('--slider-progress', `${percentage}%`);
+    // Calculate thumb center position
+    // Browser adds padding (22px on each side for 44px thumb) to keep thumb within bounds
+    const sliderWidth = sliderRef.current.offsetWidth;
+    const thumbPadding = 22; // Browser padding to keep thumb within bounds (half of 44px thumb)
+    
+    // Thumb center moves from thumbPadding to (sliderWidth - thumbPadding)
+    const thumbCenterMin = thumbPadding;
+    const thumbCenterMax = sliderWidth - thumbPadding;
+    const thumbCenterRange = thumbCenterMax - thumbCenterMin;
+    
+    // Calculate thumb center position for current percentage
+    const thumbCenterPos = thumbCenterMin + (rawPercentage / 100) * thumbCenterRange;
+    
+    // Line should reach the center of the thumb
+    // Convert to percentage of slider width
+    const progressPercentage = (thumbCenterPos / sliderWidth) * 100;
+    
+    sliderRef.current.style.setProperty('--slider-progress', `${progressPercentage}%`);
   }, [age, preferNotToSay]);
 
   // Update slider progress CSS variable
