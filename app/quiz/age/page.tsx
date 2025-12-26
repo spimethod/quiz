@@ -28,8 +28,16 @@ export default function AgePage() {
       const max = 75;
       const percentage = ((ageValue - min) / (max - min)) * 100;
       
-      // Set CSS variable for percentage - browser will handle thumb positioning
-      sliderRef.current.style.setProperty('--progress', `${percentage}%`);
+      // Calculate position accounting for thumb padding
+      // Use smaller padding value to account for visible thumb center (not the full touch area)
+      const sliderWidth = sliderRef.current.offsetWidth;
+      const thumbPadding = 20; // Adjusted to match visible thumb center, not the full 44px touch area
+      const trackWidth = sliderWidth - (thumbPadding * 2);
+      const thumbCenterPosition = thumbPadding + (percentage / 100) * trackWidth;
+      const progressPercentage = (thumbCenterPosition / sliderWidth) * 100;
+      
+      // Set CSS variable for percentage position of thumb center
+      sliderRef.current.style.setProperty('--progress', `${progressPercentage}%`);
     }
   }, [age, preferNotToSay]);
 
