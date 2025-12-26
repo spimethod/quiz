@@ -544,6 +544,10 @@ export default function FeelingsPage() {
                   if (e.target instanceof HTMLInputElement) {
                     e.target.style.fontSize = '16px';
                   }
+                  // Если микрофон записывает, останавливаем его при фокусе на поле
+                  if (isRecording) {
+                    stopRecording();
+                  }
                   setIsExpanded(true);
                   setShouldAutoFocus(true);
                 }}
