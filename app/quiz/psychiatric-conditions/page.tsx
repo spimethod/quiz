@@ -238,6 +238,10 @@ export default function PsychiatricConditionsPage() {
                   value={customValue}
                   onChange={(e) => {
                     setCustomValue(e.target.value);
+                    // Если микрофон записывает, останавливаем его при ручном редактировании
+                    if (isRecording) {
+                      stopRecording();
+                    }
                   }}
                   onFocus={(e) => {
                     if (e.target instanceof HTMLTextAreaElement) {
