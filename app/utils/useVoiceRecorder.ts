@@ -347,6 +347,77 @@ export function useVoiceRecorder(
     
     // Немедленно очищаем текст в компоненте
     onTranscription('');
+    
+    // Если запись всё ещё идёт, перезапускаем recognition для нового текста (с чистого листа)
+    // Используем setTimeout чтобы дать время старому recognition полностью остановиться
+    if (isRecordingRef.current && mediaRecorderRef.current?.state === 'recording') {
+      setTimeout(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition && streamRef.current && !recognitionRef.current) {
+          try {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = navigator.language || 'ru-RU';
+            
+            // Используем ту же логику обработки результатов, что и в startRecording
+            recognition.onresult = (event: any) => {
+              // После перезапуска recognition начинаем с чистого листа
+              let interimTranscript = '';
+              let newFinalText = '';
+
+              for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript.trim();
+                if (event.results[i].isFinal) {
+                  newFinalText += transcript + ' ';
+                } else {
+                  interimTranscript = transcript;
+                }
+              }
+
+              if (newFinalText) {
+                const needsSpace = realtimeTextRef.current && !realtimeTextRef.current.match(/\s$/);
+                realtimeTextRef.current += (needsSpace ? ' ' : '') + newFinalText.trim().toLowerCase() + ' ';
+                const baseText = baseTextRef.current.trim();
+                const newText = realtimeTextRef.current.trim();
+                const fullText = baseText ? (baseText + ' ' + newText) : newText;
+                const finalText = fullText + (interimTranscript ? ' ' + interimTranscript.toLowerCase() : '');
+                onTranscription(formatTextWithCapitalization(finalText));
+              } else if (interimTranscript) {
+                const baseText = baseTextRef.current.trim();
+                const newText = realtimeTextRef.current.trim();
+                const fullText = baseText ? (baseText + ' ' + newText + ' ' + interimTranscript.toLowerCase()) : (newText + ' ' + interimTranscript.toLowerCase());
+                onTranscription(formatTextWithCapitalization(fullText));
+              }
+            };
+
+            recognition.onerror = (event: any) => {
+              console.error('Speech recognition error:', event.error);
+              if (event.error !== 'no-speech') {
+                setError(`Speech recognition error: ${event.error}`);
+              }
+            };
+
+            recognition.onend = () => {
+              if (isRecordingRef.current && mediaRecorderRef.current?.state === 'recording') {
+                try {
+                  recognition.start();
+                } catch (e) {
+                  // Игнорируем ошибки
+                }
+              }
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start();
+            // Сбрасываем флаг очистки после перезапуска recognition (новый recognition не имеет старых результатов)
+            wasClearedRef.current = false;
+          } catch (e) {
+            console.error('Failed to restart recognition:', e);
+          }
+        }
+      }, 100);
+    }
   }, [onTranscription]);
 
   return {
