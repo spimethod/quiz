@@ -194,7 +194,7 @@ export default function AgePage() {
 
             {/* Slider - 44px touch area, 20px visual thumb */}
             <div 
-              className="px-2 py-5 relative" 
+              className="py-5 relative" 
               style={{ touchAction: 'pan-x' }}
             >
               {/* Green line overlay that follows thumb */}
@@ -203,44 +203,45 @@ export default function AgePage() {
                   className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
                   style={{
                     top: 'calc(50% + 18px)',
-                    left: '8px',
-                    width: `${thumbPosition + 8}px`,
-                    maxWidth: 'calc(100% - 8px)'
+                    left: '0',
+                    width: `${thumbPosition}px`
                   }}
                 />
               )}
-              <input
-                type="range"
-                min="16"
-                max="75"
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
-                onInput={(e) => setAge(Number((e.target as HTMLInputElement).value))}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                }}
-                onTouchMove={(e) => {
-                  e.stopPropagation();
-                }}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-                onMouseMove={(e) => {
-                  if (e.buttons === 1) {
+              <div className="px-2">
+                <input
+                  type="range"
+                  min="16"
+                  max="75"
+                  value={age}
+                  onChange={(e) => setAge(Number(e.target.value))}
+                  onInput={(e) => setAge(Number((e.target as HTMLInputElement).value))}
+                  onTouchStart={(e) => {
                     e.stopPropagation();
-                  }
-                }}
-                disabled={preferNotToSay}
-                className="slider relative z-10"
-                ref={sliderRef}
-                style={{
-                  background: '#d1d5db',
-                  touchAction: 'pan-x',
-                  WebkitTouchCallout: 'none',
-                  WebkitUserSelect: 'none',
-                  userSelect: 'none'
-                }}
-              />
+                  }}
+                  onTouchMove={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onMouseMove={(e) => {
+                    if (e.buttons === 1) {
+                      e.stopPropagation();
+                    }
+                  }}
+                  disabled={preferNotToSay}
+                  className="slider relative z-10"
+                  ref={sliderRef}
+                  style={{
+                    background: '#d1d5db',
+                    touchAction: 'pan-x',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none'
+                  }}
+                />
+              </div>
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>16</span>
                 <span>75+</span>
