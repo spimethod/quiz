@@ -172,7 +172,6 @@ export default function AgePage() {
                 onInput={(e) => setAge(Number((e.target as HTMLInputElement).value))}
                 onTouchStart={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
                 }}
                 onTouchMove={(e) => {
                   e.stopPropagation();
