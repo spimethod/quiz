@@ -17,53 +17,90 @@ export default function AgePage() {
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
+  // OLD FUNCTION - COMMENTED OUT
   // Function to update line position - simple approach with separate element
-  const updateLinePosition = useCallback((currentAge?: number) => {
-    if (sliderRef.current && lineRef.current) {
-      if (preferNotToSay) {
-        lineRef.current.style.display = 'none';
-        return;
-      }
-      
-      const ageValue = currentAge !== undefined ? currentAge : age;
-      const min = 16;
-      const max = 75;
-      const percentage = ((ageValue - min) / (max - min)) * 100;
-      
-      const sliderRect = sliderRef.current.getBoundingClientRect();
-      const container = sliderRef.current.parentElement;
-      
-      if (container) {
-        const containerRect = container.getBoundingClientRect();
-        const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
-        
-        const sliderWidth = sliderRect.width;
-        const thumbTouchArea = 44;
-        const thumbPadding = thumbTouchArea / 2; // 22px
-        const thumbVisibleRadius = 12;
-        
-        // Calculate thumb center position
-        const trackWidth = sliderWidth - (thumbPadding * 2);
-        const thumbCenterPos = thumbPadding + (percentage / 100) * trackWidth;
-        
-        // Line should reach right edge of visible thumb
-        const lineWidth = thumbCenterPos + thumbVisibleRadius;
-        
-        lineRef.current.style.display = 'block';
-        lineRef.current.style.top = `${trackTop}px`;
-        lineRef.current.style.left = '0px';
-        lineRef.current.style.width = `${lineWidth}px`;
-      }
+  // const updateLinePosition = useCallback((currentAge?: number) => {
+  //   if (sliderRef.current && lineRef.current) {
+  //     if (preferNotToSay) {
+  //       lineRef.current.style.display = 'none';
+  //       return;
+  //     }
+  //     
+  //     const ageValue = currentAge !== undefined ? currentAge : age;
+  //     const min = 16;
+  //     const max = 75;
+  //     const percentage = ((ageValue - min) / (max - min)) * 100;
+  //     
+  //     const sliderRect = sliderRef.current.getBoundingClientRect();
+  //     const container = sliderRef.current.parentElement;
+  //     
+  //     if (container) {
+  //       const containerRect = container.getBoundingClientRect();
+  //       const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
+  //       
+  //       const sliderWidth = sliderRect.width;
+  //       const thumbTouchArea = 44;
+  //       const thumbPadding = thumbTouchArea / 2; // 22px
+  //       const thumbVisibleRadius = 12;
+  //       
+  //       // Calculate thumb center position
+  //       const trackWidth = sliderWidth - (thumbPadding * 2);
+  //       const thumbCenterPos = thumbPadding + (percentage / 100) * trackWidth;
+  //       
+  //       // Line should reach right edge of visible thumb
+  //       const lineWidth = thumbCenterPos + thumbVisibleRadius;
+  //       
+  //       lineRef.current.style.display = 'block';
+  //       lineRef.current.style.top = `${trackTop}px`;
+  //       lineRef.current.style.left = '0px';
+  //       lineRef.current.style.width = `${lineWidth}px`;
+  //     }
+  //   }
+  // }, [age, preferNotToSay]);
+
+  // NEW SIMPLE FUNCTION
+  const updateProgressLine = useCallback((currentAge?: number) => {
+    if (!sliderRef.current || !lineRef.current) return;
+    
+    if (preferNotToSay) {
+      lineRef.current.style.display = 'none';
+      return;
     }
+    
+    const ageValue = currentAge !== undefined ? currentAge : age;
+    const min = 16;
+    const max = 75;
+    const percentage = ((ageValue - min) / (max - min)) * 100;
+    
+    // Get slider dimensions
+    const sliderRect = sliderRef.current.getBoundingClientRect();
+    const container = sliderRef.current.parentElement;
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const sliderWidth = sliderRect.width;
+    
+    // Simple calculation: use percentage directly, with small offset for visible thumb edge
+    // Thumb is 44px, visible radius is ~12px, so add ~12px to reach visible edge
+    const offsetPx = 12; // Visible thumb radius
+    const offsetPercent = (offsetPx / sliderWidth) * 100;
+    const linePercent = Math.min(percentage + offsetPercent, 100);
+    const lineWidth = (linePercent / 100) * sliderWidth;
+    
+    // Position line on track (8px high, centered)
+    const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
+    
+    lineRef.current.style.display = 'block';
+    lineRef.current.style.top = `${trackTop}px`;
+    lineRef.current.style.left = '0px';
+    lineRef.current.style.width = `${lineWidth}px`;
   }, [age, preferNotToSay]);
 
-  // Update line position on mount and when age/preferNotToSay changes
+  // Update progress line on mount and when age/preferNotToSay changes
   useEffect(() => {
     const update = () => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          updateLinePosition();
-        });
+        updateProgressLine();
       });
     };
     
@@ -73,7 +110,7 @@ export default function AgePage() {
     return () => {
       window.removeEventListener('resize', update);
     };
-  }, [age, preferNotToSay, updateLinePosition]);
+  }, [age, preferNotToSay, updateProgressLine]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -247,12 +284,12 @@ export default function AgePage() {
                   onChange={(e) => {
                     const newAge = Number(e.target.value);
                     setAge(newAge);
-                    requestAnimationFrame(() => updateLinePosition(newAge));
+                    updateProgressLine(newAge);
                   }}
                   onInput={(e) => {
                     const newAge = Number((e.target as HTMLInputElement).value);
                     setAge(newAge);
-                    requestAnimationFrame(() => updateLinePosition(newAge));
+                    updateProgressLine(newAge);
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
@@ -261,7 +298,7 @@ export default function AgePage() {
                     e.stopPropagation();
                     if (sliderRef.current) {
                       const currentValue = Number(sliderRef.current.value);
-                      requestAnimationFrame(() => updateLinePosition(currentValue));
+                      updateProgressLine(currentValue);
                     }
                   }}
                   onMouseDown={(e) => {
@@ -272,7 +309,7 @@ export default function AgePage() {
                       e.stopPropagation();
                       if (sliderRef.current) {
                         const currentValue = Number(sliderRef.current.value);
-                        requestAnimationFrame(() => updateLinePosition(currentValue));
+                        updateProgressLine(currentValue);
                       }
                     }
                   }}
