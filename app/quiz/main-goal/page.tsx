@@ -36,7 +36,7 @@ export default function MainGoalPage() {
     error: recorderError 
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
-  });
+  }, () => customValue);
 
   const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();

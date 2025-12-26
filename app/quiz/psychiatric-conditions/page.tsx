@@ -30,7 +30,7 @@ export default function PsychiatricConditionsPage() {
     error: recorderError
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
-  });
+  }, () => customValue);
 
   const handleNo = () => {
     setSelectedButton('no');

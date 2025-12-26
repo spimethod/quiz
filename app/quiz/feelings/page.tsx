@@ -43,7 +43,7 @@ export default function FeelingsPage() {
     error: recorderError
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
-  });
+  }, () => customValue);
 
   const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

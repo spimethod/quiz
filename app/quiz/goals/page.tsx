@@ -25,7 +25,7 @@ export default function GoalsPage() {
     error: recorderError
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
-  });
+  }, () => customValue);
   const CURRENT_STEP = 23;
   const TOTAL_STEPS = 32;
 

@@ -47,7 +47,8 @@ function formatTextWithCapitalization(text: string): string {
 }
 
 export function useVoiceRecorder(
-  onTranscription: (text: string) => void
+  onTranscription: (text: string) => void,
+  getCurrentText?: () => string // Функция для получения текущего текста из компонента
 ): UseVoiceRecorderReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -57,12 +58,23 @@ export function useVoiceRecorder(
   const audioChunksRef = useRef<Blob[]>([]);
   const realtimeTextRef = useRef<string>('');
   const streamRef = useRef<MediaStream | null>(null);
+  const wasClearedRef = useRef<boolean>(false); // Флаг для отслеживания очистки во время записи
+  const baseTextRef = useRef<string>(''); // Базовый текст (написанный до начала записи)
 
   const startRecording = useCallback(async () => {
     try {
       setError(null);
-      // Не сбрасываем realtimeTextRef - он должен сохранять текст между сессиями
-      // realtimeTextRef.current = '';
+      // Сбрасываем флаг очистки и сохраняем текущий текст как базовый
+      wasClearedRef.current = false;
+      // Сохраняем текущий текст как базовый (если есть функция для его получения)
+      if (getCurrentText) {
+        const currentText = getCurrentText();
+        // Сохраняем текущий текст как базовый (написанный до начала записи)
+        baseTextRef.current = currentText.trim();
+      } else {
+        baseTextRef.current = '';
+      }
+      realtimeTextRef.current = ''; // Сбрасываем наговоренный текст для новой записи
       
       // Проверяем поддержку Web Speech API
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -174,17 +186,30 @@ export function useVoiceRecorder(
           const data = await response.json();
           if (data.text) {
             // Используем финальный результат от Whisper только если real-time текст был очень коротким
-            // или пустым (fallback если Web Speech API не сработал)
+            // и НЕ был очищен во время записи (fallback если Web Speech API не сработал)
             const finalText = data.text.trim();
             const realtimeText = realtimeTextRef.current.trim();
             
-            // Если real-time текст был очень коротким, заменяем его на результат Whisper
-            if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
-              // Очищаем и заменяем весь текст на результат Whisper
-              realtimeTextRef.current = finalText + ' ';
-              onTranscription(finalText);
+            // Если текст был очищен во время записи, не используем Whisper - используем только то, что было наговорено после очистки
+            if (wasClearedRef.current) {
+              // Используем только real-time текст (то, что было наговорено после очистки)
+              const baseText = baseTextRef.current.trim();
+              const combinedText = baseText ? (baseText + ' ' + realtimeText) : realtimeText;
+              if (combinedText.trim()) {
+                onTranscription(formatTextWithCapitalization(combinedText));
+              }
+            } else if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
+              // Если real-time текст был очень коротким и не был очищен, используем Whisper
+              realtimeTextRef.current = finalText.toLowerCase() + ' ';
+              const baseText = baseTextRef.current.trim();
+              const combinedText = baseText ? (baseText + ' ' + finalText) : finalText;
+              onTranscription(formatTextWithCapitalization(combinedText));
+            } else {
+              // Real-time текст достаточно длинный, комбинируем с базовым
+              const baseText = baseTextRef.current.trim();
+              const combinedText = baseText ? (baseText + ' ' + realtimeText) : realtimeText;
+              onTranscription(formatTextWithCapitalization(combinedText));
             }
-            // Иначе не делаем ничего - real-time текст уже был добавлен
           }
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Failed to transcribe audio');
@@ -223,12 +248,17 @@ export function useVoiceRecorder(
           // Проверяем, нужно ли добавить пробел перед новым текстом
           const needsSpace = realtimeTextRef.current && !realtimeTextRef.current.match(/\s$/);
           realtimeTextRef.current += (needsSpace ? ' ' : '') + newFinalText.trim().toLowerCase() + ' ';
-          // Форматируем весь текст с правильными заглавными буквами
-          const fullText = realtimeTextRef.current.trim() + (interimTranscript ? ' ' + interimTranscript.toLowerCase() : '');
-          onTranscription(formatTextWithCapitalization(fullText));
+          // Комбинируем базовый текст (написанный) + новый текст (наговоренный)
+          const baseText = baseTextRef.current.trim();
+          const newText = realtimeTextRef.current.trim();
+          const fullText = baseText ? (baseText + ' ' + newText) : newText;
+          const finalText = fullText + (interimTranscript ? ' ' + interimTranscript.toLowerCase() : '');
+          onTranscription(formatTextWithCapitalization(finalText));
         } else if (interimTranscript) {
-          // Для interim текста показываем накопленный + текущий interim (в нижнем регистре)
-          const fullText = realtimeTextRef.current.trim() + ' ' + interimTranscript.toLowerCase();
+          // Для interim текста показываем базовый + накопленный + текущий interim
+          const baseText = baseTextRef.current.trim();
+          const newText = realtimeTextRef.current.trim();
+          const fullText = baseText ? (baseText + ' ' + newText + ' ' + interimTranscript.toLowerCase()) : (newText + ' ' + interimTranscript.toLowerCase());
           onTranscription(formatTextWithCapitalization(fullText));
         }
       };
@@ -261,7 +291,7 @@ export function useVoiceRecorder(
       setError(err instanceof Error ? err.message : 'Failed to access microphone');
       console.error('Recording error:', err);
     }
-  }, [onTranscription, isRecording]);
+  }, [onTranscription, isRecording, getCurrentText]);
 
   const stopRecording = useCallback(async (): Promise<string | null> => {
     // Останавливаем SpeechRecognition
@@ -286,14 +316,17 @@ export function useVoiceRecorder(
       streamRef.current = null;
     }
 
-    // НЕ сбрасываем накопленный текст при остановке - он может понадобиться для продолжения
+    // Сбрасываем флаг очистки после остановки (для следующей записи)
+    // Но сохраняем baseTextRef и realtimeTextRef - они нужны для финальной обработки
 
     return null;
   }, [isRecording]);
 
   const clearTranscription = useCallback(() => {
-    // Очищаем накопленный текст
+    // Очищаем весь текст (и базовый, и наговоренный) и устанавливаем флаг очистки
     realtimeTextRef.current = '';
+    baseTextRef.current = '';
+    wasClearedRef.current = true;
   }, []);
 
   return {
