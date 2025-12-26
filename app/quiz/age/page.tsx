@@ -51,17 +51,16 @@ export default function AgePage() {
           const max = 75;
           const percentage = ((ageValue - min) / (max - min)) * 100;
           
-          // Calculate thumb center position
-          // Range inputs have internal padding (typically half thumb width) to keep thumb within bounds
-          const thumbWidth = 44; // thumb is 44px wide
-          const thumbPadding = thumbWidth / 2; // 22px padding on each side
           const sliderWidth = sliderRect.width;
-          const trackWidth = sliderWidth - (thumbPadding * 2); // actual track width without thumb padding
+          // Range inputs position thumb center with padding to keep thumb within track bounds
+          // Adjusted padding value to ensure line aligns with thumb center at all positions
+          const thumbWidth = 44;
+          // Using slightly larger padding (24px) to account for browser's actual thumb positioning
+          const thumbPadding = 24; // Adjusted to match actual browser behavior
           
-          // Calculate position from the start of the track (after padding)
-          const thumbCenterOnTrack = (percentage / 100) * trackWidth;
-          // Add padding to get absolute position from left edge of slider
-          const thumbCenterPosition = thumbPadding + thumbCenterOnTrack;
+          // Thumb center ranges from thumbPadding to sliderWidth - thumbPadding
+          // This ensures at 100% the line reaches the thumb center at the right edge
+          const thumbCenterPosition = thumbPadding + (percentage / 100) * (sliderWidth - thumbPadding * 2);
           
           line.style.display = 'block';
           line.style.top = `${trackTop}px`;
