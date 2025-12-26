@@ -168,7 +168,7 @@ export function useVoiceRecorder(
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      recognition.lang = ''; // Автоопределение языка
+      // Не устанавливаем lang - браузер будет использовать язык системы или автоопределять
 
       recognition.onresult = (event: any) => {
         let interimTranscript = '';
