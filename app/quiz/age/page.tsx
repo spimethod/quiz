@@ -26,7 +26,7 @@ export default function AgePage() {
         const max = 75;
         const percentage = ((age - min) / (max - min)) * 100;
         const sliderWidth = slider.offsetWidth;
-        // Calculate position of thumb center (accounting for padding px-2 = 8px on each side)
+        // Calculate position of thumb center
         const thumbCenterPosition = (percentage / 100) * sliderWidth;
         setThumbPosition(thumbCenterPosition);
       } else {
@@ -197,18 +197,19 @@ export default function AgePage() {
               className="py-5 relative" 
               style={{ touchAction: 'pan-x' }}
             >
-              {/* Green line overlay that follows thumb */}
-              {!preferNotToSay && thumbPosition > 0 && (
-                <div
-                  className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
-                  style={{
-                    top: 'calc(50% + 18px)',
-                    left: '0',
-                    width: `${thumbPosition}px`
-                  }}
-                />
-              )}
-              <div className="px-2">
+              <div className="px-2 relative">
+                {/* Green line overlay that follows thumb - positioned exactly on track */}
+                {!preferNotToSay && thumbPosition > 0 && (
+                  <div
+                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
+                    style={{
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      left: '0',
+                      width: `${thumbPosition}px`
+                    }}
+                  />
+                )}
                 <input
                   type="range"
                   min="16"
