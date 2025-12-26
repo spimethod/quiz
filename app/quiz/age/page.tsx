@@ -26,24 +26,27 @@ export default function AgePage() {
       const ageValue = currentAge !== undefined ? currentAge : age;
       const min = 16;
       const max = 75;
-      const percentage = ((ageValue - min) / (max - min)) * 100;
+      const rawPercentage = ((ageValue - min) / (max - min)) * 100;
       
-      // Calculate position to reach the right edge of visible thumb (not center or touch area)
-      // Thumb has 44px touch area, but visible part is a circle with radius 12px
+      // Calculate position considering browser's thumb padding (22px for 44px thumb)
+      // and visible thumb radius (12px) - we want line to reach visible edge
       const sliderWidth = sliderRef.current.offsetWidth;
-      const thumbTouchArea = 44; // Full touch area size
-      const thumbVisibleRadius = 12; // Radius of visible circle (where white ends)
-      const thumbPadding = thumbTouchArea / 2; // Browser padding (22px) to keep thumb within bounds
+      const thumbPadding = 22; // Browser padding to keep thumb within bounds
+      const thumbVisibleRadius = 12; // Visible circle radius
+      
+      // Thumb center moves from thumbPadding to (sliderWidth - thumbPadding)
+      const thumbCenterMin = thumbPadding;
+      const thumbCenterMax = sliderWidth - thumbPadding;
+      const thumbCenterRange = thumbCenterMax - thumbCenterMin;
       
       // Calculate thumb center position
-      const trackWidth = sliderWidth - (thumbPadding * 2);
-      const thumbCenterPosition = thumbPadding + (percentage / 100) * trackWidth;
+      const thumbCenterPos = thumbCenterMin + (rawPercentage / 100) * thumbCenterRange;
       
-      // Line should reach the right edge of visible thumb = center + visible radius
-      const visibleThumbRightEdge = thumbCenterPosition + thumbVisibleRadius;
-      const progressPercentage = Math.min((visibleThumbRightEdge / sliderWidth) * 100, 100);
+      // Line should reach right edge of visible thumb = center + radius
+      // Convert to percentage of slider width
+      const lineEndPos = thumbCenterPos + thumbVisibleRadius;
+      const progressPercentage = Math.min((lineEndPos / sliderWidth) * 100, 100);
       
-      // Set CSS variable for percentage position of thumb center
       sliderRef.current.style.setProperty('--progress', `${progressPercentage}%`);
     }
   }, [age, preferNotToSay]);
