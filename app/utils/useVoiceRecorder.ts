@@ -60,12 +60,11 @@ export function useVoiceRecorder(
   const streamRef = useRef<MediaStream | null>(null);
   const wasClearedRef = useRef<boolean>(false); // Флаг для отслеживания очистки во время записи
   const baseTextRef = useRef<string>(''); // Базовый текст (написанный до начала записи)
+  const isRecordingRef = useRef<boolean>(false); // Ref для отслеживания состояния записи
 
   const startRecording = useCallback(async () => {
     try {
       setError(null);
-      // Сбрасываем флаг очистки и сохраняем текущий текст как базовый
-      wasClearedRef.current = false;
       // Сохраняем текущий текст как базовый (если есть функция для его получения)
       if (getCurrentText) {
         const currentText = getCurrentText();
@@ -75,6 +74,7 @@ export function useVoiceRecorder(
         baseTextRef.current = '';
       }
       realtimeTextRef.current = ''; // Сбрасываем наговоренный текст для новой записи
+      wasClearedRef.current = false; // Сбрасываем флаг очистки при начале новой записи
       
       // Проверяем поддержку Web Speech API
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -190,13 +190,13 @@ export function useVoiceRecorder(
             const finalText = data.text.trim();
             const realtimeText = realtimeTextRef.current.trim();
             
-            // Если текст был очищен во время записи, не используем Whisper - используем только то, что было наговорено после очистки
+            // Если текст был очищен во время записи, НЕ используем Whisper вообще
+            // Используем только то, что было наговорено после очистки через real-time recognition
             if (wasClearedRef.current) {
-              // Используем только real-time текст (то, что было наговорено после очистки)
-              // baseTextRef уже очищен в clearTranscription, так что используем только realtimeText
-              if (realtimeText.trim()) {
-                onTranscription(formatTextWithCapitalization(realtimeText));
-              }
+              // Игнорируем результат Whisper полностью - используем только real-time текст
+              // Если real-time текст пустой, не вызываем onTranscription вообще
+              // (текст уже был очищен через clearTranscription -> onTranscription(''))
+              return; // Выходим без вызова onTranscription
             } else if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
               // Если real-time текст был очень коротким и не был очищен, используем Whisper
               realtimeTextRef.current = finalText.toLowerCase() + ' ';
@@ -228,6 +228,12 @@ export function useVoiceRecorder(
       recognition.lang = navigator.language || 'ru-RU';
 
       recognition.onresult = (event: any) => {
+        // Если текст был очищен, игнорируем ВСЕ результаты до перезапуска recognition
+        // (recognition будет перезапущен в startRecording, если нужно)
+        if (wasClearedRef.current) {
+          return; // Полностью игнорируем все результаты
+        }
+
         let interimTranscript = '';
         let newFinalText = '';
 
@@ -238,20 +244,6 @@ export function useVoiceRecorder(
             newFinalText += transcript + ' ';
           } else {
             interimTranscript = transcript; // Только последний interim результат
-          }
-        }
-
-        // Если текст был очищен, игнорируем старые результаты и начинаем накапливать заново
-        // Но только если есть новые результаты для обработки
-        if (wasClearedRef.current) {
-          if (newFinalText || interimTranscript) {
-            // Есть новые результаты после очистки - начинаем заново
-            realtimeTextRef.current = '';
-            baseTextRef.current = '';
-            wasClearedRef.current = false; // Сбрасываем флаг, так как начинаем новую запись
-          } else {
-            // Нет новых результатов - игнорируем это событие
-            return;
           }
         }
 
@@ -300,6 +292,7 @@ export function useVoiceRecorder(
       recognition.start();
       mediaRecorder.start();
       setIsRecording(true);
+      isRecordingRef.current = true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to access microphone');
       console.error('Recording error:', err);
@@ -321,6 +314,7 @@ export function useVoiceRecorder(
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      isRecordingRef.current = false;
     }
 
     // Останавливаем поток
@@ -340,6 +334,17 @@ export function useVoiceRecorder(
     realtimeTextRef.current = '';
     baseTextRef.current = '';
     wasClearedRef.current = true;
+    
+    // Останавливаем recognition, чтобы очистить все накопленные результаты
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      } catch (e) {
+        // Игнорируем ошибки
+      }
+    }
+    
     // Немедленно очищаем текст в компоненте
     onTranscription('');
   }, [onTranscription]);
