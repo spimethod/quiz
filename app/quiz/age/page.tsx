@@ -204,8 +204,8 @@ export default function AgePage() {
                   style={{
                     top: 'calc(50% + 18px)',
                     left: '8px',
-                    width: `${thumbPosition}px`,
-                    maxWidth: 'calc(100% - 16px)'
+                    width: `${thumbPosition + 8}px`,
+                    maxWidth: 'calc(100% - 8px)'
                   }}
                 />
               )}
