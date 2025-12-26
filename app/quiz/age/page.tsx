@@ -32,7 +32,6 @@ export default function AgePage() {
       const min = 16;
       const max = 75;
       const percentage = ((ageValue - min) / (max - min)) * 100;
-      const sliderWidth = slider.offsetWidth;
       
       // Get slider track position relative to parent container (px-2 div)
       const sliderRect = slider.getBoundingClientRect();
@@ -42,7 +41,18 @@ export default function AgePage() {
         const containerRect = container.getBoundingClientRect();
         // Track is 8px high, centered vertically in slider
         const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
-        const thumbCenterPosition = (percentage / 100) * sliderWidth;
+        
+        // Calculate thumb center position
+        // Range inputs have internal padding (typically half thumb width) to keep thumb within bounds
+        const thumbWidth = 44; // thumb is 44px wide
+        const thumbPadding = thumbWidth / 2; // 22px padding on each side
+        const sliderWidth = sliderRect.width;
+        const trackWidth = sliderWidth - (thumbPadding * 2); // actual track width without thumb padding
+        
+        // Calculate position from the start of the track (after padding)
+        const thumbCenterOnTrack = (percentage / 100) * trackWidth;
+        // Add padding to get absolute position from left edge of slider
+        const thumbCenterPosition = thumbPadding + thumbCenterOnTrack;
         
         line.style.display = 'block';
         line.style.top = `${trackTop}px`;
