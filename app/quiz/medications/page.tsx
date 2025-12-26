@@ -26,7 +26,6 @@ export default function MedicationsPage() {
     isProcessing, 
     startRecording, 
     stopRecording,
-    clearTranscription,
     error: recorderError 
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
@@ -69,15 +68,13 @@ export default function MedicationsPage() {
     router.push('/quiz/therapy-history');
   };
 
-  // Click outside handler (except Continue button and Clear button)
+  // Click outside handler (except Continue button)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const clickedInsideInput = customInputRef.current?.contains(target);
       const clickedContinue = continueBtnRef.current?.contains(target);
-      // Check if clicked on Clear button
-      const clickedClear = (target as HTMLElement).closest?.('[data-clear-button]');
-      if (!clickedInsideInput && !clickedContinue && !clickedClear) {
+      if (!clickedInsideInput && !clickedContinue) {
         setShowInput(false);
         if (isRecording) {
           stopRecording();
@@ -284,22 +281,6 @@ export default function MedicationsPage() {
                   />
                 </svg>
               </button>
-              {/* Clear button - inside field, below microphone */}
-              {customValue.trim() && (
-                <button
-                  data-clear-button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setCustomValue('');
-                    clearTranscription();
-                  }}
-                  className="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95 z-10"
-                  style={{ touchAction: 'manipulation' }}
-                >
-                  Clear
-                </button>
-              )}
             </div>
             {/* Error message */}
             {recorderError && (

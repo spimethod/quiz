@@ -32,7 +32,6 @@ export default function MainGoalPage() {
     isProcessing, 
     startRecording, 
     stopRecording,
-    clearTranscription,
     error: recorderError 
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
@@ -351,22 +350,6 @@ export default function MainGoalPage() {
                   />
                 </svg>
               </button>
-              {/* Clear button - inside field, below microphone */}
-              {customValue.trim() && (
-                <button
-                  data-clear-button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setCustomValue('');
-                    clearTranscription();
-                  }}
-                  className="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95 z-10"
-                  style={{ touchAction: 'manipulation' }}
-                >
-                  Clear
-                </button>
-              )}
             </div>
           )}
           {/* Error message */}

@@ -21,7 +21,6 @@ export default function GoalsPage() {
     isProcessing,
     startRecording,
     stopRecording,
-    clearTranscription,
     error: recorderError
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
@@ -117,9 +116,7 @@ export default function GoalsPage() {
       const clickedContinue = continueBtnRef.current?.contains(target);
       // Check if clicked on an option button
       const clickedOption = (target as HTMLElement).closest?.('[data-option]');
-      // Check if clicked on Clear button
-      const clickedClear = (target as HTMLElement).closest?.('[data-clear-button]');
-        if (!clickedInsideInput && !clickedContinue && !clickedOption && !clickedClear) {
+        if (!clickedInsideInput && !clickedContinue && !clickedOption) {
           setIsExpanded(false);
           if (isRecording) {
             stopRecording();
@@ -428,22 +425,6 @@ export default function GoalsPage() {
                   />
                 </svg>
               </button>
-              {/* Clear button - inside field, below microphone */}
-              {customValue.trim() && (
-                <button
-                  data-clear-button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setCustomValue('');
-                    clearTranscription();
-                  }}
-                  className="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95 z-10"
-                  style={{ touchAction: 'manipulation' }}
-                >
-                  Clear
-                </button>
-              )}
             </div>
           )}
           {/* Error message */}
