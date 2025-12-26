@@ -241,6 +241,20 @@ export function useVoiceRecorder(
           }
         }
 
+        // Если текст был очищен, игнорируем старые результаты и начинаем накапливать заново
+        // Но только если есть новые результаты для обработки
+        if (wasClearedRef.current) {
+          if (newFinalText || interimTranscript) {
+            // Есть новые результаты после очистки - начинаем заново
+            realtimeTextRef.current = '';
+            baseTextRef.current = '';
+            wasClearedRef.current = false; // Сбрасываем флаг, так как начинаем новую запись
+          } else {
+            // Нет новых результатов - игнорируем это событие
+            return;
+          }
+        }
+
         // Обновляем текст в реальном времени
         if (newFinalText) {
           // Добавляем новый финальный текст (приводим к нижнему регистру, чтобы убрать автоматические заглавные)
@@ -326,7 +340,9 @@ export function useVoiceRecorder(
     realtimeTextRef.current = '';
     baseTextRef.current = '';
     wasClearedRef.current = true;
-  }, []);
+    // Немедленно очищаем текст в компоненте
+    onTranscription('');
+  }, [onTranscription]);
 
   return {
     isRecording,
