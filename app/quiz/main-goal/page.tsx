@@ -31,7 +31,8 @@ export default function MainGoalPage() {
     isRecording, 
     isProcessing, 
     startRecording, 
-    stopRecording, 
+    stopRecording,
+    clearTranscription,
     error: recorderError 
   } = useVoiceRecorder((text) => {
     setCustomValue(text);
@@ -356,7 +357,10 @@ export default function MainGoalPage() {
           {isExpanded && customValue.trim() && (
             <div className="mt-2 flex justify-center">
               <button
-                onClick={() => setCustomValue('')}
+                onClick={() => {
+                  setCustomValue('');
+                  clearTranscription();
+                }}
                 className="text-xs text-gray-500 hover:text-gray-700 underline"
               >
                 clear

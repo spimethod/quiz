@@ -5,6 +5,7 @@ interface UseVoiceRecorderReturn {
   isProcessing: boolean;
   startRecording: () => Promise<void>;
   stopRecording: () => Promise<string | null>;
+  clearTranscription: () => void;
   error: string | null;
 }
 
@@ -285,17 +286,22 @@ export function useVoiceRecorder(
       streamRef.current = null;
     }
 
-    // Сбрасываем накопленный текст
-    realtimeTextRef.current = '';
+    // НЕ сбрасываем накопленный текст при остановке - он может понадобиться для продолжения
 
     return null;
   }, [isRecording]);
+
+  const clearTranscription = useCallback(() => {
+    // Очищаем накопленный текст
+    realtimeTextRef.current = '';
+  }, []);
 
   return {
     isRecording,
     isProcessing,
     startRecording,
     stopRecording,
+    clearTranscription,
     error,
   };
 }
