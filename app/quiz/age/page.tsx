@@ -14,24 +14,15 @@ export default function AgePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const trackBgRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
   // Function to update line position - follows thumb in real-time
   const updateLinePosition = useCallback((currentAge?: number) => {
-    if (sliderRef.current && lineRef.current) {
+    if (sliderRef.current) {
       const slider = sliderRef.current;
-      const line = lineRef.current;
       const ageValue = currentAge !== undefined ? currentAge : age;
-      
-      if (preferNotToSay) {
-        line.style.display = 'none';
-        return;
-      }
-      
-      const min = 16;
-      const max = 75;
-      const percentage = ((ageValue - min) / (max - min)) * 100;
       
       // Get slider track position relative to parent container (px-2 div)
       const sliderRect = slider.getBoundingClientRect();
@@ -42,22 +33,41 @@ export default function AgePage() {
         // Track is 8px high, centered vertically in slider
         const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
         
-        // Calculate thumb center position
-        // Range inputs have internal padding (typically half thumb width) to keep thumb within bounds
-        const thumbWidth = 44; // thumb is 44px wide
-        const thumbPadding = thumbWidth / 2; // 22px padding on each side
-        const sliderWidth = sliderRect.width;
-        const trackWidth = sliderWidth - (thumbPadding * 2); // actual track width without thumb padding
+        // Update gray track background position
+        if (trackBgRef.current) {
+          trackBgRef.current.style.top = `${trackTop}px`;
+        }
         
-        // Calculate position from the start of the track (after padding)
-        const thumbCenterOnTrack = (percentage / 100) * trackWidth;
-        // Add padding to get absolute position from left edge of slider
-        const thumbCenterPosition = thumbPadding + thumbCenterOnTrack;
+        if (preferNotToSay) {
+          if (lineRef.current) {
+            lineRef.current.style.display = 'none';
+          }
+          return;
+        }
         
-        line.style.display = 'block';
-        line.style.top = `${trackTop}px`;
-        line.style.left = '0px';
-        line.style.width = `${thumbCenterPosition}px`;
+        if (lineRef.current) {
+          const line = lineRef.current;
+          const min = 16;
+          const max = 75;
+          const percentage = ((ageValue - min) / (max - min)) * 100;
+          
+          // Calculate thumb center position
+          // Range inputs have internal padding (typically half thumb width) to keep thumb within bounds
+          const thumbWidth = 44; // thumb is 44px wide
+          const thumbPadding = thumbWidth / 2; // 22px padding on each side
+          const sliderWidth = sliderRect.width;
+          const trackWidth = sliderWidth - (thumbPadding * 2); // actual track width without thumb padding
+          
+          // Calculate position from the start of the track (after padding)
+          const thumbCenterOnTrack = (percentage / 100) * trackWidth;
+          // Add padding to get absolute position from left edge of slider
+          const thumbCenterPosition = thumbPadding + thumbCenterOnTrack;
+          
+          line.style.display = 'block';
+          line.style.top = `${trackTop}px`;
+          line.style.left = '0px';
+          line.style.width = `${thumbCenterPosition}px`;
+        }
       }
     }
   }, [age, preferNotToSay]);
@@ -232,11 +242,19 @@ export default function AgePage() {
               style={{ touchAction: 'pan-x' }}
             >
               <div className="px-2 relative">
+                {/* Gray track background */}
+                <div 
+                  ref={trackBgRef}
+                  className="absolute h-[8px] bg-[#d1d5db] rounded-[4px] w-full pointer-events-none z-0 left-0"
+                  style={{
+                    display: 'block'
+                  }}
+                />
                 {/* Green line overlay that follows thumb - positioned exactly on track */}
                 {!preferNotToSay && (
                   <div
                     ref={lineRef}
-                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
+                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-[1]"
                     style={{
                       display: 'none'
                     }}
@@ -283,7 +301,7 @@ export default function AgePage() {
                   className="slider relative z-10"
                   ref={sliderRef}
                 style={{
-                    background: '#d1d5db',
+                    background: 'transparent',
                     touchAction: 'pan-x',
                     WebkitTouchCallout: 'none',
                     WebkitUserSelect: 'none',
