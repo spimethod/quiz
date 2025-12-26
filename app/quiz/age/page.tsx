@@ -58,7 +58,7 @@ export default function AgePage() {
   //   }
   // }, [age, preferNotToSay]);
 
-  // NEW SIMPLE FUNCTION
+  // NEW SIMPLE FUNCTION - JUST PERCENTAGE, NO CALCULATIONS
   const updateProgressLine = useCallback((currentAge?: number) => {
     if (!sliderRef.current || !lineRef.current) return;
     
@@ -80,12 +80,8 @@ export default function AgePage() {
     const containerRect = container.getBoundingClientRect();
     const sliderWidth = sliderRect.width;
     
-    // Simple calculation: use percentage directly, with small offset for visible thumb edge
-    // Thumb is 44px, visible radius is ~12px, so add ~12px to reach visible edge
-    const offsetPx = 12; // Visible thumb radius
-    const offsetPercent = (offsetPx / sliderWidth) * 100;
-    const linePercent = Math.min(percentage + offsetPercent, 100);
-    const lineWidth = (linePercent / 100) * sliderWidth;
+    // SIMPLEST: Just use percentage directly - browser handles thumb positioning
+    const lineWidth = (percentage / 100) * sliderWidth;
     
     // Position line on track (8px high, centered)
     const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
