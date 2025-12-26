@@ -281,10 +281,8 @@ export default function PsychiatricConditionsPage() {
                     />
                   </svg>
                 </button>
-              </div>
-              {/* Clear button */}
-              {customValue.trim() && (
-                <div className="mt-3 flex justify-center">
+                {/* Clear button - inside field, below microphone */}
+                {customValue.trim() && (
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -292,13 +290,13 @@ export default function PsychiatricConditionsPage() {
                       setCustomValue('');
                       clearTranscription();
                     }}
-                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95"
+                    className="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95 z-10"
                     style={{ touchAction: 'manipulation' }}
                   >
                     Clear
                   </button>
-                </div>
-              )}
+                )}
+              </div>
               {/* Error message */}
               {recorderError && (
                 <div className="mt-2 text-sm text-red-500 text-center">
