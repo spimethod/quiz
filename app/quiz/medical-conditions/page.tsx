@@ -28,7 +28,7 @@ export default function MedicalConditionsPage() {
     stopRecording, 
     error: recorderError 
   } = useVoiceRecorder((text) => {
-    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+    setCustomValue(text);
   });
 
   const handleNo = () => {
@@ -254,16 +254,12 @@ export default function MedicalConditionsPage() {
                   className="w-full h-32 bg-transparent outline-none resize-none overflow-y-auto pr-14 text-sm sm:text-base text-gray-700 placeholder-gray-400"
                   autoFocus={shouldAutoFocus}
                   style={{ fontSize: '16px' }}
-                  disabled={isProcessing}
                 />
                 {/* Microphone button */}
                 <button
                   onClick={handleMicClick}
-                  disabled={isProcessing}
                   className={`absolute top-3 right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                    isProcessing
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : isRecording 
+                    isRecording 
                       ? 'bg-[#6B9D47] animate-pulse shadow-lg' 
                       : 'bg-[#6B9D47] hover:bg-[#5d8a3d] shadow-md'
                   }`}
@@ -282,6 +278,15 @@ export default function MedicalConditionsPage() {
                       d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" 
                     />
                   </svg>
+                </button>
+              </div>
+              {/* Clear button */}
+              <div className="mt-2 flex justify-center">
+                <button
+                  onClick={() => setCustomValue('')}
+                  className="text-xs text-gray-500 hover:text-gray-700 underline"
+                >
+                  clear
                 </button>
               </div>
               {/* Error message */}

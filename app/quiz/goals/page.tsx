@@ -23,7 +23,7 @@ export default function GoalsPage() {
     stopRecording, 
     error: recorderError 
   } = useVoiceRecorder((text) => {
-    setCustomValue(prev => prev + (prev ? ' ' : '') + text);
+    setCustomValue(text);
   });
   const CURRENT_STEP = 23;
   const TOTAL_STEPS = 32;
@@ -424,6 +424,17 @@ export default function GoalsPage() {
                     d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" 
                   />
                 </svg>
+              </button>
+            </div>
+          )}
+          {/* Clear button */}
+          {isExpanded && (
+            <div className="mt-2 flex justify-center">
+              <button
+                onClick={() => setCustomValue('')}
+                className="text-xs text-gray-500 hover:text-gray-700 underline"
+              >
+                clear
               </button>
             </div>
           )}

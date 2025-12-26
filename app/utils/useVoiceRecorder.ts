@@ -31,7 +31,8 @@ export function useVoiceRecorder(
   const startRecording = useCallback(async () => {
     try {
       setError(null);
-      realtimeTextRef.current = '';
+      // Не сбрасываем realtimeTextRef - он должен сохранять текст между сессиями
+      // realtimeTextRef.current = '';
       
       // Проверяем поддержку Web Speech API
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -147,12 +148,13 @@ export function useVoiceRecorder(
             const finalText = data.text.trim();
             const realtimeText = realtimeTextRef.current.trim();
             
-            // Заменяем только если real-time текст был очень коротким (меньше 3 слов)
-            // Это означает, что Web Speech API не смог нормально распознать речь
+            // Если real-time текст был очень коротким, заменяем его на результат Whisper
             if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
+              // Очищаем и заменяем весь текст на результат Whisper
+              realtimeTextRef.current = finalText + ' ';
               onTranscription(finalText);
             }
-            // Иначе оставляем real-time текст - он уже был показан пользователю
+            // Иначе не делаем ничего - real-time текст уже был добавлен
           }
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Failed to transcribe audio');
@@ -168,27 +170,31 @@ export function useVoiceRecorder(
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      // Не устанавливаем lang - браузер будет использовать язык системы или автоопределять
+      // Используем несколько языков для лучшего распознавания
+      recognition.lang = navigator.language || 'ru-RU';
 
       recognition.onresult = (event: any) => {
         let interimTranscript = '';
-        let finalTranscript = '';
+        let newFinalText = '';
 
+        // Обрабатываем только новые результаты, начиная с resultIndex
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
+          const transcript = event.results[i][0].transcript.trim();
           if (event.results[i].isFinal) {
-            finalTranscript += transcript + ' ';
+            newFinalText += transcript + ' ';
           } else {
-            interimTranscript += transcript;
+            interimTranscript = transcript; // Только последний interim результат
           }
         }
 
         // Обновляем текст в реальном времени
-        if (finalTranscript) {
-          realtimeTextRef.current += finalTranscript;
+        if (newFinalText) {
+          // Добавляем только новый финальный текст
+          realtimeTextRef.current += newFinalText;
+          // Передаем полный текст (включая накопленный) для замены в компоненте
           onTranscription(realtimeTextRef.current.trim() + (interimTranscript ? ' ' + interimTranscript : ''));
         } else if (interimTranscript) {
-          // Показываем промежуточный текст
+          // Для interim текста показываем накопленный + текущий interim
           onTranscription(realtimeTextRef.current.trim() + ' ' + interimTranscript);
         }
       };
@@ -245,6 +251,9 @@ export function useVoiceRecorder(
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
+
+    // Сбрасываем накопленный текст
+    realtimeTextRef.current = '';
 
     return null;
   }, [isRecording]);
