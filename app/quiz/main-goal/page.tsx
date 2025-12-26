@@ -318,6 +318,10 @@ export default function MainGoalPage() {
                   if (e.target instanceof HTMLTextAreaElement) {
                     e.target.style.fontSize = '16px';
                   }
+                  // Если микрофон записывает, останавливаем его при фокусе на поле
+                  if (isRecording) {
+                    stopRecording();
+                  }
                 }}
                 placeholder={
                   isProcessing 
