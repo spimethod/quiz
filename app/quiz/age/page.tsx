@@ -26,28 +26,20 @@ export default function AgePage() {
       const ageValue = currentAge !== undefined ? currentAge : age;
       const min = 16;
       const max = 75;
-      const rawPercentage = ((ageValue - min) / (max - min)) * 100;
+      const percentage = ((ageValue - min) / (max - min)) * 100;
       
-      // Calculate position considering browser's thumb padding (22px for 44px thumb)
-      // and visible thumb radius (12px) - we want line to reach visible edge
-      const sliderWidth = sliderRef.current.offsetWidth;
-      const thumbPadding = 22; // Browser padding to keep thumb within bounds
-      const thumbVisibleRadius = 12; // Visible circle radius
+      // Use direct percentage - browser positions thumb center at this percentage
+      // To reach visible thumb edge (radius 12px), we need to add a small offset
+      // Convert 12px to percentage based on slider width
+      const sliderRect = sliderRef.current.getBoundingClientRect();
+      const sliderWidth = sliderRect.width;
+      const thumbVisibleRadius = 12; // Visible thumb radius
+      const radiusPercentage = (thumbVisibleRadius / sliderWidth) * 100;
       
-      // Thumb center moves from thumbPadding to (sliderWidth - thumbPadding)
-      const thumbCenterMin = thumbPadding;
-      const thumbCenterMax = sliderWidth - thumbPadding;
-      const thumbCenterRange = thumbCenterMax - thumbCenterMin;
+      // Add radius percentage to reach visible edge instead of center
+      const adjustedPercentage = Math.min(percentage + radiusPercentage, 100);
       
-      // Calculate thumb center position
-      const thumbCenterPos = thumbCenterMin + (rawPercentage / 100) * thumbCenterRange;
-      
-      // Line should reach right edge of visible thumb = center + radius
-      // Convert to percentage of slider width
-      const lineEndPos = thumbCenterPos + thumbVisibleRadius;
-      const progressPercentage = Math.min((lineEndPos / sliderWidth) * 100, 100);
-      
-      sliderRef.current.style.setProperty('--progress', `${progressPercentage}%`);
+      sliderRef.current.style.setProperty('--progress', `${adjustedPercentage}%`);
     }
   }, [age, preferNotToSay]);
 
