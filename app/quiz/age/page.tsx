@@ -13,36 +13,59 @@ export default function AgePage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
-  const [thumbPosition, setThumbPosition] = useState(0); // Position in pixels
 
-  // Calculate thumb position based on age value
+  // Update line position to match slider track exactly
   useEffect(() => {
-    const updateThumbPosition = () => {
-      if (sliderRef.current && !preferNotToSay) {
+    const updateLinePosition = () => {
+      if (sliderRef.current && lineRef.current) {
         const slider = sliderRef.current;
+        const line = lineRef.current;
+        
+        if (preferNotToSay) {
+          line.style.display = 'none';
+          return;
+        }
+        
         const min = 16;
         const max = 75;
         const percentage = ((age - min) / (max - min)) * 100;
         const sliderWidth = slider.offsetWidth;
-        // Calculate position of thumb center
-        const thumbCenterPosition = (percentage / 100) * sliderWidth;
-        setThumbPosition(thumbCenterPosition);
-      } else {
-        setThumbPosition(0);
+        
+        // Get slider track position relative to parent container (px-2 div)
+        const sliderRect = slider.getBoundingClientRect();
+        const container = slider.parentElement; // This is the px-2 div
+        
+        if (container) {
+          const containerRect = container.getBoundingClientRect();
+          // Track is 8px high, centered vertically in slider
+          // sliderRect.height includes the thumb area, so we need to find the track center
+          const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
+          const thumbCenterPosition = (percentage / 100) * sliderWidth;
+          
+          line.style.display = 'block';
+          line.style.top = `${trackTop}px`;
+          line.style.left = '0px';
+          line.style.width = `${thumbCenterPosition}px`;
+        }
       }
     };
     
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
-      updateThumbPosition();
-    });
+    const update = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateLinePosition();
+        });
+      });
+    };
     
-    window.addEventListener('resize', updateThumbPosition);
+    update();
+    window.addEventListener('resize', update);
     
     return () => {
-      window.removeEventListener('resize', updateThumbPosition);
+      window.removeEventListener('resize', update);
     };
   }, [age, preferNotToSay]);
 
@@ -199,14 +222,12 @@ export default function AgePage() {
             >
               <div className="px-2 relative">
                 {/* Green line overlay that follows thumb - positioned exactly on track */}
-                {!preferNotToSay && thumbPosition > 0 && (
+                {!preferNotToSay && (
                   <div
+                    ref={lineRef}
                     className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-0"
                     style={{
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      left: '0',
-                      width: `${thumbPosition}px`
+                      display: 'none'
                     }}
                   />
                 )}
