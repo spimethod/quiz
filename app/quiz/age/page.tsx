@@ -28,13 +28,20 @@ export default function AgePage() {
       const max = 75;
       const percentage = ((ageValue - min) / (max - min)) * 100;
       
-      // Calculate position accounting for thumb padding
-      // Use smaller padding value to account for visible thumb center (not the full touch area)
+      // Calculate position to reach the right edge of visible thumb (not center or touch area)
+      // Thumb has 44px touch area, but visible part is a circle with radius 12px
       const sliderWidth = sliderRef.current.offsetWidth;
-      const thumbPadding = 20; // Adjusted to match visible thumb center, not the full 44px touch area
+      const thumbTouchArea = 44; // Full touch area size
+      const thumbVisibleRadius = 12; // Radius of visible circle (where white ends)
+      const thumbPadding = thumbTouchArea / 2; // Browser padding (22px) to keep thumb within bounds
+      
+      // Calculate thumb center position
       const trackWidth = sliderWidth - (thumbPadding * 2);
       const thumbCenterPosition = thumbPadding + (percentage / 100) * trackWidth;
-      const progressPercentage = (thumbCenterPosition / sliderWidth) * 100;
+      
+      // Line should reach the right edge of visible thumb = center + visible radius
+      const visibleThumbRightEdge = thumbCenterPosition + thumbVisibleRadius;
+      const progressPercentage = Math.min((visibleThumbRightEdge / sliderWidth) * 100, 100);
       
       // Set CSS variable for percentage position of thumb center
       sliderRef.current.style.setProperty('--progress', `${progressPercentage}%`);
