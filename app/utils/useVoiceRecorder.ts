@@ -193,10 +193,9 @@ export function useVoiceRecorder(
             // Если текст был очищен во время записи, не используем Whisper - используем только то, что было наговорено после очистки
             if (wasClearedRef.current) {
               // Используем только real-time текст (то, что было наговорено после очистки)
-              const baseText = baseTextRef.current.trim();
-              const combinedText = baseText ? (baseText + ' ' + realtimeText) : realtimeText;
-              if (combinedText.trim()) {
-                onTranscription(formatTextWithCapitalization(combinedText));
+              // baseTextRef уже очищен в clearTranscription, так что используем только realtimeText
+              if (realtimeText.trim()) {
+                onTranscription(formatTextWithCapitalization(realtimeText));
               }
             } else if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
               // Если real-time текст был очень коротким и не был очищен, используем Whisper
