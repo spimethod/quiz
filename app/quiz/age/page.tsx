@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BackButton from '../../components/BackButton';
@@ -17,42 +17,43 @@ export default function AgePage() {
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
-  // Update line position to match slider track exactly
-  useEffect(() => {
-    const updateLinePosition = () => {
-      if (sliderRef.current && lineRef.current) {
-        const slider = sliderRef.current;
-        const line = lineRef.current;
-        
-        if (preferNotToSay) {
-          line.style.display = 'none';
-          return;
-        }
-        
-        const min = 16;
-        const max = 75;
-        const percentage = ((age - min) / (max - min)) * 100;
-        const sliderWidth = slider.offsetWidth;
-        
-        // Get slider track position relative to parent container (px-2 div)
-        const sliderRect = slider.getBoundingClientRect();
-        const container = slider.parentElement; // This is the px-2 div
-        
-        if (container) {
-          const containerRect = container.getBoundingClientRect();
-          // Track is 8px high, centered vertically in slider
-          // sliderRect.height includes the thumb area, so we need to find the track center
-          const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
-          const thumbCenterPosition = (percentage / 100) * sliderWidth;
-          
-          line.style.display = 'block';
-          line.style.top = `${trackTop}px`;
-          line.style.left = '0px';
-          line.style.width = `${thumbCenterPosition}px`;
-        }
+  // Function to update line position - follows thumb in real-time
+  const updateLinePosition = useCallback((currentAge?: number) => {
+    if (sliderRef.current && lineRef.current) {
+      const slider = sliderRef.current;
+      const line = lineRef.current;
+      const ageValue = currentAge !== undefined ? currentAge : age;
+      
+      if (preferNotToSay) {
+        line.style.display = 'none';
+        return;
       }
-    };
-    
+      
+      const min = 16;
+      const max = 75;
+      const percentage = ((ageValue - min) / (max - min)) * 100;
+      const sliderWidth = slider.offsetWidth;
+      
+      // Get slider track position relative to parent container (px-2 div)
+      const sliderRect = slider.getBoundingClientRect();
+      const container = slider.parentElement; // This is the px-2 div
+      
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        // Track is 8px high, centered vertically in slider
+        const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
+        const thumbCenterPosition = (percentage / 100) * sliderWidth;
+        
+        line.style.display = 'block';
+        line.style.top = `${trackTop}px`;
+        line.style.left = '0px';
+        line.style.width = `${thumbCenterPosition}px`;
+      }
+    }
+  }, [age, preferNotToSay]);
+
+  // Update line position on mount and when age/preferNotToSay changes
+  useEffect(() => {
     const update = () => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -67,7 +68,7 @@ export default function AgePage() {
     return () => {
       window.removeEventListener('resize', update);
     };
-  }, [age, preferNotToSay]);
+  }, [age, preferNotToSay, updateLinePosition]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -231,18 +232,30 @@ export default function AgePage() {
                     }}
                   />
                 )}
-                <input
-                  type="range"
-                  min="16"
-                  max="75"
-                  value={age}
-                  onChange={(e) => setAge(Number(e.target.value))}
-                  onInput={(e) => setAge(Number((e.target as HTMLInputElement).value))}
+              <input
+                type="range"
+                min="16"
+                max="75"
+                value={age}
+                  onChange={(e) => {
+                    const newAge = Number(e.target.value);
+                    setAge(newAge);
+                    requestAnimationFrame(() => updateLinePosition(newAge));
+                  }}
+                  onInput={(e) => {
+                    const newAge = Number((e.target as HTMLInputElement).value);
+                    setAge(newAge);
+                    requestAnimationFrame(() => updateLinePosition(newAge));
+                  }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
                   }}
                   onTouchMove={(e) => {
                     e.stopPropagation();
+                    if (sliderRef.current) {
+                      const currentValue = Number(sliderRef.current.value);
+                      requestAnimationFrame(() => updateLinePosition(currentValue));
+                    }
                   }}
                   onMouseDown={(e) => {
                     e.stopPropagation();
@@ -250,12 +263,16 @@ export default function AgePage() {
                   onMouseMove={(e) => {
                     if (e.buttons === 1) {
                       e.stopPropagation();
+                      if (sliderRef.current) {
+                        const currentValue = Number(sliderRef.current.value);
+                        requestAnimationFrame(() => updateLinePosition(currentValue));
+                      }
                     }
                   }}
-                  disabled={preferNotToSay}
+                disabled={preferNotToSay}
                   className="slider relative z-10"
                   ref={sliderRef}
-                  style={{
+                style={{
                     background: '#d1d5db',
                     touchAction: 'pan-x',
                     WebkitTouchCallout: 'none',
