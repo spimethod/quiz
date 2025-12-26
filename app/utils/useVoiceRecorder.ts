@@ -341,7 +341,7 @@ export function useVoiceRecorder(
     }
 
     // Сбрасываем флаг очистки после остановки (для следующей записи)
-    // Но сохраняем baseTextRef и realtimeTextRef - они нужны для финальной обработки
+    wasClearedRef.current = false;
 
     return null;
   }, [isRecording]);
@@ -427,8 +427,8 @@ export function useVoiceRecorder(
 
             recognitionRef.current = recognition;
             recognition.start();
-            // Сбрасываем флаг очистки после перезапуска recognition (новый recognition не имеет старых результатов)
-            wasClearedRef.current = false;
+            // НЕ сбрасываем флаг очистки здесь - он должен оставаться true до остановки записи
+            // чтобы предотвратить восстановление текста из Whisper
           } catch (e) {
             console.error('Failed to restart recognition:', e);
           }
