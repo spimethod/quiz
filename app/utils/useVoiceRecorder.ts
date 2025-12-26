@@ -191,17 +191,30 @@ export function useVoiceRecorder(
             const realtimeText = realtimeTextRef.current.trim();
             
             // Если текст был очищен во время записи, НЕ используем Whisper вообще
-            // Используем только то, что было наговорено после очистки через real-time recognition
             if (wasClearedRef.current) {
-              // Игнорируем результат Whisper полностью - используем только real-time текст
-              // Если real-time текст пустой, не вызываем onTranscription вообще
-              // (текст уже был очищен через clearTranscription -> onTranscription(''))
               return; // Выходим без вызова onTranscription
+            }
+            
+            // Проверяем, что Whisper вернул не мусорный текст (не пустой, не очень короткий мусор)
+            // Типичные мусорные результаты Whisper: ".", "Thanks for watching!", "[Music]", "[Silence]" и т.д.
+            const isJunkText = !finalText || 
+              finalText.length < 2 || 
+              /^(\.|,|…|…|thanks for watching|thanks for watching!|\[music\]|\[silence\]|\[noise\]|you|the)$/i.test(finalText);
+            
+            // Если real-time текст пустой или очень короткий
+            if (!realtimeText || realtimeText.length < 5) {
+              // Используем Whisper только если он вернул не мусорный текст
+              if (!isJunkText) {
+                realtimeTextRef.current = finalText.toLowerCase() + ' ';
+                const baseText = baseTextRef.current.trim();
+                const combinedText = baseText ? (baseText + ' ' + finalText) : finalText;
+                onTranscription(formatTextWithCapitalization(combinedText));
+              }
+              // Если Whisper вернул мусор, ничего не делаем - текст остается пустым
             } else if (realtimeText.length < 10 || realtimeText.split(/\s+/).length < 3) {
-              // Если real-time текст был очень коротким и не был очищен, используем Whisper
-              realtimeTextRef.current = finalText.toLowerCase() + ' ';
+              // Real-time текст короткий, но есть - используем его
               const baseText = baseTextRef.current.trim();
-              const combinedText = baseText ? (baseText + ' ' + finalText) : finalText;
+              const combinedText = baseText ? (baseText + ' ' + realtimeText) : realtimeText;
               onTranscription(formatTextWithCapitalization(combinedText));
             } else {
               // Real-time текст достаточно длинный, комбинируем с базовым
