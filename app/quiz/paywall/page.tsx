@@ -236,19 +236,19 @@ export default function PaywallPage() {
         
         {/* Header - Scrollable with content */}
         <header className="w-full pb-2 pt-4 bg-[#f5f5f0] safe-area-top safe-area-top-paywall">
-          <div className="flex justify-center items-center">
-            <div className="h-12 sm:h-14 md:h-16 w-auto relative">
-              <Image
-                src="/avocado-logo.png"
-                alt="Avocado"
-                width={280}
-                height={90}
-                priority
-                className="h-full w-auto object-contain"
-              />
-            </div>
+        <div className="flex justify-center items-center">
+          <div className="h-12 sm:h-14 md:h-16 w-auto relative">
+            <Image
+              src="/avocado-logo.png"
+              alt="Avocado"
+              width={280}
+              height={90}
+              priority
+              className="h-full w-auto object-contain"
+            />
           </div>
-        </header>
+        </div>
+      </header>
         
         {/* Before / After Section - Grid Layout */}
         <div 

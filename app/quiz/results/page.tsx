@@ -127,12 +127,12 @@ export default function ResultsPage() {
 
   return (
     <div data-results-container>
-      <QuizLayout
-        currentStep={CURRENT_STEP}
-        totalSteps={TOTAL_STEPS}
-        footer={footerContent}
-        className="px-4 sm:px-6 md:px-8 lg:px-10"
-      >
+    <QuizLayout
+      currentStep={CURRENT_STEP}
+      totalSteps={TOTAL_STEPS}
+      footer={footerContent}
+      className="px-4 sm:px-6 md:px-8 lg:px-10"
+    >
       <div className="max-w-[660px] w-full mx-auto pt-[30px]">
         {/* Title */}
         <div className="mb-3 sm:mb-4 mt-4 sm:mt-6 text-center">
