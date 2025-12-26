@@ -60,8 +60,9 @@ export default function AgePage() {
           height: 8px;
           border-radius: 4px;
           outline: none;
-          touch-action: pan-x;
+          touch-action: pan-x !important;
           cursor: pointer;
+          pointer-events: auto;
         }
         
         .slider::-webkit-slider-thumb {
@@ -74,7 +75,8 @@ export default function AgePage() {
           cursor: pointer;
           border: none;
           margin-top: -4px;
-          touch-action: pan-x;
+          touch-action: pan-x !important;
+          pointer-events: auto;
         }
 
         .slider::-moz-range-thumb {
@@ -160,21 +162,39 @@ export default function AgePage() {
             </div>
 
             {/* Slider - 44px touch area, 20px visual thumb */}
-            <div className="px-2 py-5">
+            <div className="px-2 py-5" style={{ touchAction: 'pan-x' }}>
               <input
                 type="range"
                 min="16"
                 max="75"
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
-                onTouchStart={(e) => e.stopPropagation()}
-                onTouchMove={(e) => e.stopPropagation()}
+                onInput={(e) => setAge(Number((e.target as HTMLInputElement).value))}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+                onTouchMove={(e) => {
+                  e.stopPropagation();
+                }}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onMouseMove={(e) => {
+                  if (e.buttons === 1) {
+                    e.stopPropagation();
+                  }
+                }}
                 disabled={preferNotToSay}
                 className="slider"
                 style={{
                   background: preferNotToSay 
                     ? '#d1d5db' 
-                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`
+                    : `linear-gradient(to right, #6B9D47 0%, #6B9D47 ${((age - 16) / (75 - 16)) * 100}%, #d1d5db ${((age - 16) / (75 - 16)) * 100}%, #d1d5db 100%)`,
+                  touchAction: 'pan-x',
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none'
                 }}
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
