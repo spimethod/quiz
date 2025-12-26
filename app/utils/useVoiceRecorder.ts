@@ -27,10 +27,8 @@ function formatTextWithCapitalization(text: string): string {
   
   for (let i = 0; i < lowerText.length; i++) {
     const char = lowerText[i];
-    const prevChar = i > 0 ? lowerText[i - 1] : '';
-    const prevPrevChar = i > 1 ? lowerText[i - 2] : '';
     
-    // Если это начало или после точки/восклицательного/вопросительного знака + пробел
+    // Если это начало или после точки/восклицательного/вопросительного знака
     if (shouldCapitalize && /[а-яa-z]/.test(char)) {
       result += char.toUpperCase();
       shouldCapitalize = false;
@@ -38,13 +36,9 @@ function formatTextWithCapitalization(text: string): string {
       result += char;
     }
     
-    // После точки, восклицательного или вопросительного знака (и опционально пробела) следующую букву делаем заглавной
-    if ((char === '.' || char === '!' || char === '?') && (prevPrevChar !== '.' || prevChar !== '.')) {
+    // После точки, восклицательного или вопросительного знака следующую букву делаем заглавной
+    if (char === '.' || char === '!' || char === '?') {
       shouldCapitalize = true;
-    }
-    // Если после знака препинания идет пробел, следующую букву тоже делаем заглавной
-    if (shouldCapitalize && char === ' ') {
-      // Продолжаем искать следующую букву для заглавной
     }
   }
   
