@@ -13,42 +13,67 @@ export default function AgePage() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const [age, setAge] = useState(25);
   const [preferNotToSay, setPreferNotToSay] = useState(false);
 
-  // Function to update slider progress via CSS variable
-  const updateSliderProgress = useCallback((currentAge?: number) => {
-    if (sliderRef.current) {
+  // Function to update line position - simple approach with separate element
+  const updateLinePosition = useCallback((currentAge?: number) => {
+    if (sliderRef.current && lineRef.current) {
       if (preferNotToSay) {
-        sliderRef.current.style.setProperty('--progress', '0%');
+        lineRef.current.style.display = 'none';
         return;
       }
+      
       const ageValue = currentAge !== undefined ? currentAge : age;
       const min = 16;
       const max = 75;
       const percentage = ((ageValue - min) / (max - min)) * 100;
       
-      // Use direct percentage - browser positions thumb center at this percentage
-      // To reach visible thumb edge (radius 12px), we need to add a small offset
-      // Convert 12px to percentage based on slider width
       const sliderRect = sliderRef.current.getBoundingClientRect();
-      const sliderWidth = sliderRect.width;
-      const thumbVisibleRadius = 12; // Visible thumb radius
-      const radiusPercentage = (thumbVisibleRadius / sliderWidth) * 100;
+      const container = sliderRef.current.parentElement;
       
-      // Add radius percentage to reach visible edge instead of center
-      const adjustedPercentage = Math.min(percentage + radiusPercentage, 100);
-      
-      sliderRef.current.style.setProperty('--progress', `${adjustedPercentage}%`);
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const trackTop = sliderRect.top - containerRect.top + (sliderRect.height / 2) - 4;
+        
+        const sliderWidth = sliderRect.width;
+        const thumbTouchArea = 44;
+        const thumbPadding = thumbTouchArea / 2; // 22px
+        const thumbVisibleRadius = 12;
+        
+        // Calculate thumb center position
+        const trackWidth = sliderWidth - (thumbPadding * 2);
+        const thumbCenterPos = thumbPadding + (percentage / 100) * trackWidth;
+        
+        // Line should reach right edge of visible thumb
+        const lineWidth = thumbCenterPos + thumbVisibleRadius;
+        
+        lineRef.current.style.display = 'block';
+        lineRef.current.style.top = `${trackTop}px`;
+        lineRef.current.style.left = '0px';
+        lineRef.current.style.width = `${lineWidth}px`;
+      }
     }
   }, [age, preferNotToSay]);
 
-  // Update slider progress on mount and when age/preferNotToSay changes
+  // Update line position on mount and when age/preferNotToSay changes
   useEffect(() => {
-    if (!preferNotToSay) {
-      updateSliderProgress();
-    }
-  }, [age, preferNotToSay, updateSliderProgress]);
+    const update = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateLinePosition();
+        });
+      });
+    };
+    
+    update();
+    window.addEventListener('resize', update);
+    
+    return () => {
+      window.removeEventListener('resize', update);
+    };
+  }, [age, preferNotToSay, updateLinePosition]);
 
   const getAgeComment = (age: number) => {
     if (age >= 16 && age <= 29) {
@@ -98,7 +123,7 @@ export default function AgePage() {
           touch-action: pan-x !important;
           cursor: pointer;
           pointer-events: auto;
-          background: linear-gradient(to right, #6B9D47 0%, #6B9D47 var(--progress, 0%), #d1d5db var(--progress, 0%), #d1d5db 100%);
+          background: #d1d5db;
         }
         
         .slider::-webkit-slider-thumb {
@@ -204,6 +229,16 @@ export default function AgePage() {
               style={{ touchAction: 'pan-x' }}
             >
               <div className="px-2 relative">
+                {/* Green line overlay */}
+                {!preferNotToSay && (
+                  <div
+                    ref={lineRef}
+                    className="absolute h-[8px] bg-[#6B9D47] rounded-l-[4px] pointer-events-none z-[1]"
+                    style={{
+                      display: 'none'
+                    }}
+                  />
+                )}
                 <input
                   type="range"
                   min="16"
@@ -212,12 +247,12 @@ export default function AgePage() {
                   onChange={(e) => {
                     const newAge = Number(e.target.value);
                     setAge(newAge);
-                    updateSliderProgress(newAge);
+                    requestAnimationFrame(() => updateLinePosition(newAge));
                   }}
                   onInput={(e) => {
                     const newAge = Number((e.target as HTMLInputElement).value);
                     setAge(newAge);
-                    updateSliderProgress(newAge);
+                    requestAnimationFrame(() => updateLinePosition(newAge));
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
@@ -226,7 +261,7 @@ export default function AgePage() {
                     e.stopPropagation();
                     if (sliderRef.current) {
                       const currentValue = Number(sliderRef.current.value);
-                      updateSliderProgress(currentValue);
+                      requestAnimationFrame(() => updateLinePosition(currentValue));
                     }
                   }}
                   onMouseDown={(e) => {
@@ -237,7 +272,7 @@ export default function AgePage() {
                       e.stopPropagation();
                       if (sliderRef.current) {
                         const currentValue = Number(sliderRef.current.value);
-                        updateSliderProgress(currentValue);
+                        requestAnimationFrame(() => updateLinePosition(currentValue));
                       }
                     }
                   }}
