@@ -292,7 +292,7 @@ export default function MedicationsPage() {
               </div>
             )}
           </div>
-          )}
+        )}
         </div>
       </main>
 
@@ -324,7 +324,7 @@ export default function MedicationsPage() {
               </div>
             )}
           </div>
-          )}
+        )}
         </div>
   );
 }

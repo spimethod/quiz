@@ -55,15 +55,15 @@ export default function MainGoalPage() {
 
   const handleCustomSelect = async ({
     autoFocus = true,
-    startRecording = false,
+    shouldStartRecording = false,
   }: {
     autoFocus?: boolean;
-    startRecording?: boolean;
+    shouldStartRecording?: boolean;
   } = {}) => {
     setSelectedGoal('custom');
     setIsExpanded(true);
     setShouldAutoFocus(autoFocus);
-    if (startRecording) {
+    if (shouldStartRecording) {
       await startRecording();
     }
   };
@@ -287,15 +287,15 @@ export default function MainGoalPage() {
                   if (e.target instanceof HTMLInputElement) {
                     e.target.style.fontSize = '16px';
                   }
-                  handleCustomSelect({ autoFocus: true, startRecording: false });
+                  handleCustomSelect({ autoFocus: true, shouldStartRecording: false });
                 }}
-                onClick={() => handleCustomSelect({ autoFocus: true, startRecording: false })}
+                onClick={() => handleCustomSelect({ autoFocus: true, shouldStartRecording: false })}
                 placeholder="+ Add Your Own"
                 className="flex-1 bg-transparent outline-none text-sm sm:text-base text-gray-700 placeholder-gray-400 cursor-text"
                 style={{ fontSize: '16px' }}
               />
               <button
-                onClick={() => handleCustomSelect({ autoFocus: false, startRecording: true })}
+                onClick={() => handleCustomSelect({ autoFocus: false, shouldStartRecording: true })}
                 className="bg-[#6B9D47] hover:bg-[#5d8a3d] text-white px-5 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold transition-all shadow-sm hover:shadow-md flex-shrink-0"
               >
                 Start talking
@@ -355,12 +355,12 @@ export default function MainGoalPage() {
                 </svg>
               </button>
             </div>
-            {/* Error message */}
-            {recorderError && (
-              <div className="mt-2 text-sm text-red-500 text-center">
-                {recorderError}
-              </div>
-            )}
+          )}
+          {/* Error message */}
+          {recorderError && (
+            <div className="mt-2 text-sm text-red-500 text-center">
+              {recorderError}
+            </div>
           )}
         </div>
 
