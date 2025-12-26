@@ -8,6 +8,20 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 31536000, // 1 year cache
     remotePatterns: [],
   },
+  async redirects() {
+    return [
+      {
+        source: '/quiz',
+        destination: '/',
+        permanent: true, // 308 redirect (permanent)
+      },
+      {
+        source: '/page404',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
